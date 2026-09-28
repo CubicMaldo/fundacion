@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EstudiaRouteImport } from './routes/estudia'
+import { Route as PortalInformativoRouteImport } from './routes/portal-informativo'
+import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EstudiaRoute = EstudiaRouteImport.update({
+  id: '/estudia',
+  path: '/estudia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalInformativoRoute = PortalInformativoRouteImport.update({
+  id: '/portal-informativo',
+  path: '/portal-informativo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuienesSomosRoute = QuienesSomosRouteImport.update({
+  id: '/quienes-somos',
+  path: '/quienes-somos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/estudia': typeof EstudiaRoute
+  '/portal-informativo': typeof PortalInformativoRoute
+  '/quienes-somos': typeof QuienesSomosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/estudia': typeof EstudiaRoute
+  '/portal-informativo': typeof PortalInformativoRoute
+  '/quienes-somos': typeof QuienesSomosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/estudia': typeof EstudiaRoute
+  '/portal-informativo': typeof PortalInformativoRoute
+  '/quienes-somos': typeof QuienesSomosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
+  id: '__root__' | '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EstudiaRoute: typeof EstudiaRoute
+  PortalInformativoRoute: typeof PortalInformativoRoute
+  QuienesSomosRoute: typeof QuienesSomosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/estudia': {
+      id: '/estudia'
+      path: '/estudia'
+      fullPath: '/estudia'
+      preLoaderRoute: typeof EstudiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal-informativo': {
+      id: '/portal-informativo'
+      path: '/portal-informativo'
+      fullPath: '/portal-informativo'
+      preLoaderRoute: typeof PortalInformativoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quienes-somos': {
+      id: '/quienes-somos'
+      path: '/quienes-somos'
+      fullPath: '/quienes-somos'
+      preLoaderRoute: typeof QuienesSomosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EstudiaRoute: EstudiaRoute,
+  PortalInformativoRoute: PortalInformativoRoute,
+  QuienesSomosRoute: QuienesSomosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
