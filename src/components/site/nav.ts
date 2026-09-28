@@ -36,9 +36,8 @@ export const navegacion: NavItem[] = [
     label: "Estudia con FUNASF",
     to: "/estudia",
     children: [
-      { label: "Catálogo de programas", to: "/programas" },
-      { label: "Oferta por áreas", to: "/estudia", hash: "programas" },
-      { label: "Becas (hasta 90 %)", to: "/estudia", hash: "becas" },
+      { label: "Programas académicos", to: "/estudia", hash: "programas" },
+      { label: "Becas", to: "/estudia", hash: "becas" },
       { label: "Instituciones aliadas", to: "/estudia", hash: "instituciones-aliadas" },
       { label: "Requisitos", to: "/estudia", hash: "requisitos" },
       { label: "Matrículas", to: "/estudia", hash: "matriculas" },

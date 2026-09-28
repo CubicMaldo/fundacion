@@ -17,7 +17,6 @@ import {
   faq,
   org,
 } from "@/data/funasf";
-import { getSlugPorNombre } from "@/data/programas";
 
 export const Route = createFileRoute("/estudia")({
   head: () => ({
@@ -68,51 +67,19 @@ function Estudia() {
         />
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {categoriasProgramas.map((cat) => (
-            <article key={cat.id} className="card-institucional flex flex-col justify-between">
-              <div>
-                <h3 className="text-brand-green-deep text-lg font-bold">{cat.categoria}</h3>
-                <ul className="text-muted-foreground mt-4 space-y-2.5 text-sm">
-                  {cat.programas.map((p) => {
-                    const slug = getSlugPorNombre(p);
-                    return (
-                      <li key={p} className="flex items-start gap-2">
-                        <span
-                          aria-hidden
-                          className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
-                        />
-                        <Link
-                          to="/programas/$slug"
-                          params={{ slug }}
-                          className="hover:text-brand-green font-medium text-foreground/90 transition-colors hover:underline"
-                        >
-                          {p}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
+            <article key={cat.id} className="card-institucional">
+              <h3 className="text-brand-green-deep text-lg">{cat.categoria}</h3>
+              <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
+                {cat.programas.map((p) => (
+                  <li key={p} className="flex gap-2">
+                    <span aria-hidden className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
-
-        <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 rounded-2xl border border-brand-green/20 bg-brand-green-soft/30 p-6">
-          <div>
-            <h4 className="text-brand-green-deep text-base font-bold">
-              ¿Quieres consultar fichas individuales o buscar por palabra clave?
-            </h4>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Visita el catálogo interactivo para filtrar los 19 programas oficiales y acceder a los
-              requisitos de cada uno.
-            </p>
-          </div>
-          <Button asChild variant="default" className="shrink-0">
-            <Link to="/programas">
-              Ver catálogo con buscador <ArrowRight aria-hidden className="ml-1.5 size-4" />
-            </Link>
-          </Button>
-        </div>
-
         <p className="text-muted-foreground mt-8 text-sm">
           La duración, la modalidad y las condiciones de cada programa dependen de la institución
           aliada responsable y de la convocatoria vigente.
@@ -167,10 +134,7 @@ function Estudia() {
             <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
               {modeloAlianzas.responsabilidades.items.map((i) => (
                 <li key={i} className="flex gap-2">
-                  <span
-                    aria-hidden
-                    className="bg-brand-brown mt-2 size-1.5 shrink-0 rounded-full"
-                  />
+                  <span aria-hidden className="bg-brand-brown mt-2 size-1.5 shrink-0 rounded-full" />
                   {i}
                 </li>
               ))}
@@ -201,8 +165,8 @@ function Estudia() {
           [REQUISITOS ESPECÍFICOS POR PROGRAMA PENDIENTES DE SUMINISTRAR]
         </p>
         <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-relaxed">
-          Si deseas conocer los requisitos de un programa en particular, escríbenos y te orientamos
-          durante todo el proceso.
+          Si deseas conocer los requisitos de un programa en particular, escríbenos y te
+          orientamos durante todo el proceso.
         </p>
       </Section>
 
