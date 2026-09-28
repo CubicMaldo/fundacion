@@ -20,15 +20,16 @@ export function MediaPlaceholder({
       role="img"
       aria-label={`Imagen institucional pendiente: ${label}`}
       className={cn(
-        "flex h-full w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed p-6 text-center",
+        "relative flex h-full min-h-64 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-lg border border-dashed p-6 text-center",
         tone === "light"
-          ? "border-border bg-surface text-muted-foreground"
-          : "border-primary-foreground/25 bg-primary-foreground/5 text-primary-foreground/80",
+          ? "border-brand-brown/35 bg-brand-sand text-brand-brown"
+          : "border-primary-foreground/30 bg-primary-foreground/5 text-primary-foreground/80",
         className,
       )}
     >
+      <span aria-hidden className="bg-brand-brown/10 absolute inset-x-0 top-0 h-1" />
       <ImageIcon aria-hidden className="size-7 opacity-60" />
-      <span className="text-xs font-semibold tracking-[0.12em] uppercase">{label}</span>
+      <span className="max-w-72 text-xs font-semibold tracking-[0.12em] uppercase">{label}</span>
     </div>
   );
 }

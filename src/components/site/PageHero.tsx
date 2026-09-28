@@ -6,10 +6,10 @@ export function PageHero({
   description,
   children,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
-  children?: ReactNode;
+  description?: string | undefined;
+  children?: ReactNode | undefined;
 }) {
   return (
     <header className="surface-hero relative overflow-hidden">

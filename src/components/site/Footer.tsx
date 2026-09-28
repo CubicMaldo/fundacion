@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, Phone } from "lucide-react";
-import { org } from "@/data/funasf";
+import { org, telefonoPrincipal } from "@/data/funasf";
 
 const columnas = [
   {
@@ -57,7 +57,7 @@ export function Footer() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <a
-                href={`tel:+57${org.telefonos[0].replace(/\s/g, "")}`}
+                 href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
                 className="border-primary-foreground/25 hover:bg-primary-foreground/10 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
               >
                 <Phone aria-hidden className="size-4" /> Llamar
@@ -90,7 +90,7 @@ export function Footer() {
                     <li key={e.label}>
                       <Link
                         to={e.to}
-                        hash={e.hash}
+                         {...(e.hash ? { hash: e.hash } : {})}
                         className="text-primary-foreground/80 hover:text-primary-foreground text-sm transition-colors"
                       >
                         {e.label}

@@ -191,8 +191,8 @@ function QuienesSomos() {
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{s.descripcion}</p>
               <div className="mt-4 space-y-1.5">
                 <Dato etiqueta="Dirección" valor={s.direccion} />
-                <Dato etiqueta="Teléfono" valor={s.telefono} />
-                <Dato etiqueta="WhatsApp" valor={s.whatsapp} />
+                 <Dato etiqueta="Teléfono" valor={s.telefono ?? PENDIENTE} />
+                 <Dato etiqueta="WhatsApp" valor={s.whatsapp ?? PENDIENTE} />
                 <Dato etiqueta="Horario" valor={s.horario} />
                 <Dato etiqueta="Mapa" valor={s.mapa} />
               </div>

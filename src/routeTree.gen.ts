@@ -10,18 +10,51 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogRouteImport } from './routes/blog'
+import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as EstudiaRouteImport } from './routes/estudia'
+import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as PoliticaPrivacidadRouteImport } from './routes/politica-privacidad'
+import { Route as PortalEstudiantilRouteImport } from './routes/portal-estudiantil'
 import { Route as PortalInformativoRouteImport } from './routes/portal-informativo'
 import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
+import { Route as TerminosCondicionesRouteImport } from './routes/terminos-condiciones'
+import { Route as TrabajaConNosotrosRouteImport } from './routes/trabaja-con-nosotros'
+import { Route as TratamientoDatosRouteImport } from './routes/tratamiento-datos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactoRoute = ContactoRouteImport.update({
+  id: '/contacto',
+  path: '/contacto',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EstudiaRoute = EstudiaRouteImport.update({
   id: '/estudia',
   path: '/estudia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GaleriaRoute = GaleriaRouteImport.update({
+  id: '/galeria',
+  path: '/galeria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaPrivacidadRoute = PoliticaPrivacidadRouteImport.update({
+  id: '/politica-privacidad',
+  path: '/politica-privacidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalEstudiantilRoute = PortalEstudiantilRouteImport.update({
+  id: '/portal-estudiantil',
+  path: '/portal-estudiantil',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalInformativoRoute = PortalInformativoRouteImport.update({
@@ -34,39 +67,123 @@ const QuienesSomosRoute = QuienesSomosRouteImport.update({
   path: '/quienes-somos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TerminosCondicionesRoute = TerminosCondicionesRouteImport.update({
+  id: '/terminos-condiciones',
+  path: '/terminos-condiciones',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrabajaConNosotrosRoute = TrabajaConNosotrosRouteImport.update({
+  id: '/trabaja-con-nosotros',
+  path: '/trabaja-con-nosotros',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TratamientoDatosRoute = TratamientoDatosRouteImport.update({
+  id: '/tratamiento-datos',
+  path: '/tratamiento-datos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
+  '/galeria': typeof GaleriaRoute
+  '/politica-privacidad': typeof PoliticaPrivacidadRoute
+  '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
   '/quienes-somos': typeof QuienesSomosRoute
+  '/terminos-condiciones': typeof TerminosCondicionesRoute
+  '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
+  '/tratamiento-datos': typeof TratamientoDatosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
+  '/galeria': typeof GaleriaRoute
+  '/politica-privacidad': typeof PoliticaPrivacidadRoute
+  '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
   '/quienes-somos': typeof QuienesSomosRoute
+  '/terminos-condiciones': typeof TerminosCondicionesRoute
+  '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
+  '/tratamiento-datos': typeof TratamientoDatosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/blog': typeof BlogRoute
+  '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
+  '/galeria': typeof GaleriaRoute
+  '/politica-privacidad': typeof PoliticaPrivacidadRoute
+  '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
   '/quienes-somos': typeof QuienesSomosRoute
+  '/terminos-condiciones': typeof TerminosCondicionesRoute
+  '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
+  '/tratamiento-datos': typeof TratamientoDatosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
+  fullPaths:
+    | '/'
+    | '/blog'
+    | '/contacto'
+    | '/estudia'
+    | '/galeria'
+    | '/politica-privacidad'
+    | '/portal-estudiantil'
+    | '/portal-informativo'
+    | '/quienes-somos'
+    | '/terminos-condiciones'
+    | '/trabaja-con-nosotros'
+    | '/tratamiento-datos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
-  id: '__root__' | '/' | '/estudia' | '/portal-informativo' | '/quienes-somos'
+  to:
+    | '/'
+    | '/blog'
+    | '/contacto'
+    | '/estudia'
+    | '/galeria'
+    | '/politica-privacidad'
+    | '/portal-estudiantil'
+    | '/portal-informativo'
+    | '/quienes-somos'
+    | '/terminos-condiciones'
+    | '/trabaja-con-nosotros'
+    | '/tratamiento-datos'
+  id:
+    | '__root__'
+    | '/'
+    | '/blog'
+    | '/contacto'
+    | '/estudia'
+    | '/galeria'
+    | '/politica-privacidad'
+    | '/portal-estudiantil'
+    | '/portal-informativo'
+    | '/quienes-somos'
+    | '/terminos-condiciones'
+    | '/trabaja-con-nosotros'
+    | '/tratamiento-datos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BlogRoute: typeof BlogRoute
+  ContactoRoute: typeof ContactoRoute
   EstudiaRoute: typeof EstudiaRoute
+  GaleriaRoute: typeof GaleriaRoute
+  PoliticaPrivacidadRoute: typeof PoliticaPrivacidadRoute
+  PortalEstudiantilRoute: typeof PortalEstudiantilRoute
   PortalInformativoRoute: typeof PortalInformativoRoute
   QuienesSomosRoute: typeof QuienesSomosRoute
+  TerminosCondicionesRoute: typeof TerminosCondicionesRoute
+  TrabajaConNosotrosRoute: typeof TrabajaConNosotrosRoute
+  TratamientoDatosRoute: typeof TratamientoDatosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,11 +195,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacto': {
+      id: '/contacto'
+      path: '/contacto'
+      fullPath: '/contacto'
+      preLoaderRoute: typeof ContactoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/estudia': {
       id: '/estudia'
       path: '/estudia'
       fullPath: '/estudia'
       preLoaderRoute: typeof EstudiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/galeria': {
+      id: '/galeria'
+      path: '/galeria'
+      fullPath: '/galeria'
+      preLoaderRoute: typeof GaleriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-privacidad': {
+      id: '/politica-privacidad'
+      path: '/politica-privacidad'
+      fullPath: '/politica-privacidad'
+      preLoaderRoute: typeof PoliticaPrivacidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal-estudiantil': {
+      id: '/portal-estudiantil'
+      path: '/portal-estudiantil'
+      fullPath: '/portal-estudiantil'
+      preLoaderRoute: typeof PortalEstudiantilRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal-informativo': {
@@ -99,14 +251,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuienesSomosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terminos-condiciones': {
+      id: '/terminos-condiciones'
+      path: '/terminos-condiciones'
+      fullPath: '/terminos-condiciones'
+      preLoaderRoute: typeof TerminosCondicionesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trabaja-con-nosotros': {
+      id: '/trabaja-con-nosotros'
+      path: '/trabaja-con-nosotros'
+      fullPath: '/trabaja-con-nosotros'
+      preLoaderRoute: typeof TrabajaConNosotrosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tratamiento-datos': {
+      id: '/tratamiento-datos'
+      path: '/tratamiento-datos'
+      fullPath: '/tratamiento-datos'
+      preLoaderRoute: typeof TratamientoDatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BlogRoute: BlogRoute,
+  ContactoRoute: ContactoRoute,
   EstudiaRoute: EstudiaRoute,
+  GaleriaRoute: GaleriaRoute,
+  PoliticaPrivacidadRoute: PoliticaPrivacidadRoute,
+  PortalEstudiantilRoute: PortalEstudiantilRoute,
   PortalInformativoRoute: PortalInformativoRoute,
   QuienesSomosRoute: QuienesSomosRoute,
+  TerminosCondicionesRoute: TerminosCondicionesRoute,
+  TrabajaConNosotrosRoute: TrabajaConNosotrosRoute,
+  TratamientoDatosRoute: TratamientoDatosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

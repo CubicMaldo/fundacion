@@ -29,7 +29,8 @@ export const org = {
   formularioInscripcion: "https://forms.gle/kYUoX2v1dewKUrMX8",
 };
 
-export const whatsappLink = `https://wa.me/57${org.telefonos[0].replace(/\s/g, "")}`;
+export const telefonoPrincipal = org.telefonos[0] ?? "";
+export const whatsappLink = `https://wa.me/57${telefonoPrincipal.replace(/\s/g, "")}`;
 
 export const quienesSomos = {
   intro:

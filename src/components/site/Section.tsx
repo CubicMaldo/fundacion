@@ -7,9 +7,9 @@ export function Section({
   className,
   tone = "default",
 }: {
-  id?: string;
+  id?: string | undefined;
   children: ReactNode;
-  className?: string;
+  className?: string | undefined;
   tone?: "default" | "soft" | "surface" | "deep";
 }) {
   return (
@@ -36,9 +36,9 @@ export function SectionHeading({
   as: Tag = "h2",
   invert = false,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
+  description?: string | undefined;
   align?: "left" | "center";
   as?: "h1" | "h2" | "h3";
   invert?: boolean;

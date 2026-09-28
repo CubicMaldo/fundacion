@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Preserve the imported FUNASF public route structure and concentrate future visual changes in shared semantic tokens, because the client requested the current direction remain intact.

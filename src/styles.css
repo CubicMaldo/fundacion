@@ -72,54 +72,54 @@
 :root {
   --radius: 0.75rem;
 
-  --background: oklch(0.985 0.008 95);
-  --foreground: oklch(0.245 0.028 148);
+  --background: oklch(0.988 0.006 95);
+  --foreground: oklch(0.225 0.028 148);
 
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.245 0.028 148);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.245 0.028 148);
 
-  --primary: oklch(0.44 0.094 152);
+  --primary: oklch(0.405 0.095 151);
   --primary-foreground: oklch(0.985 0.01 95);
 
-  --secondary: oklch(0.945 0.022 88);
-  --secondary-foreground: oklch(0.33 0.05 70);
+  --secondary: oklch(0.95 0.022 88);
+  --secondary-foreground: oklch(0.34 0.055 62);
 
-  --muted: oklch(0.955 0.014 92);
-  --muted-foreground: oklch(0.49 0.024 120);
+  --muted: oklch(0.958 0.012 92);
+  --muted-foreground: oklch(0.43 0.025 125);
 
-  --accent: oklch(0.45 0.072 58);
+  --accent: oklch(0.42 0.072 55);
   --accent-foreground: oklch(0.985 0.01 95);
 
   --destructive: oklch(0.55 0.2 27);
   --destructive-foreground: oklch(0.985 0.01 95);
 
-  --border: oklch(0.9 0.018 92);
-  --input: oklch(0.9 0.018 92);
-  --ring: oklch(0.44 0.094 152);
+  --border: oklch(0.885 0.02 91);
+  --input: oklch(0.885 0.02 91);
+  --ring: oklch(0.405 0.095 151);
 
   /* Marca */
-  --brand-green: oklch(0.44 0.094 152);
-  --brand-green-deep: oklch(0.29 0.062 155);
-  --brand-green-soft: oklch(0.94 0.028 150);
-  --brand-brown: oklch(0.45 0.072 58);
-  --brand-brown-soft: oklch(0.93 0.03 70);
-  --brand-sand: oklch(0.955 0.024 85);
-  --brand-gold: oklch(0.74 0.115 78);
-  --surface: oklch(0.975 0.013 92);
-  --surface-strong: oklch(0.955 0.02 88);
+  --brand-green: oklch(0.405 0.095 151);
+  --brand-green-deep: oklch(0.255 0.06 154);
+  --brand-green-soft: oklch(0.945 0.031 148);
+  --brand-brown: oklch(0.42 0.072 55);
+  --brand-brown-soft: oklch(0.94 0.027 70);
+  --brand-sand: oklch(0.962 0.022 86);
+  --brand-gold: oklch(0.79 0.105 83);
+  --surface: oklch(0.976 0.011 92);
+  --surface-strong: oklch(0.95 0.021 88);
 
   --gradient-hero: linear-gradient(
     135deg,
-    oklch(0.29 0.062 155) 0%,
-    oklch(0.38 0.084 150) 48%,
-    oklch(0.36 0.06 70) 100%
+    oklch(0.255 0.06 154) 0%,
+    oklch(0.335 0.08 151) 62%,
+    oklch(0.31 0.055 62) 100%
   );
   --gradient-soft: linear-gradient(
     160deg,
-    oklch(0.975 0.018 95) 0%,
-    oklch(0.945 0.03 140) 100%
+    oklch(0.982 0.012 95) 0%,
+    oklch(0.95 0.027 140) 100%
   );
   --shadow-soft: 0 1px 2px oklch(0.29 0.062 155 / 0.06),
     0 12px 32px -18px oklch(0.29 0.062 155 / 0.35);
@@ -152,6 +152,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -160,7 +161,7 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
-    letter-spacing: -0.015em;
+    letter-spacing: 0;
   }
 
   :focus-visible {
@@ -203,6 +204,7 @@
   background-color: var(--color-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
+  padding: 1.5rem;
   box-shadow: var(--shadow-soft);
   transition:
     transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),

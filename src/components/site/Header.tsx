@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { navegacion } from "./nav";
-import { org } from "@/data/funasf";
+import { org, telefonoPrincipal } from "@/data/funasf";
 import { cn } from "@/lib/utils";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
@@ -86,7 +86,7 @@ export function Header() {
         <div className="container-page flex items-center justify-between gap-6">
           <p className="tracking-wide">{org.eslogan}</p>
           <div className="flex items-center gap-5">
-            <a className="hover:text-brand-gold inline-flex items-center gap-2 transition-colors" href={`tel:+57${org.telefonos[0].replace(/\s/g, "")}`}>
+            <a className="hover:text-brand-gold inline-flex items-center gap-2 transition-colors" href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}>
               <Phone aria-hidden className="size-3.5" />
               {org.telefonos[0]}
             </a>
@@ -123,7 +123,7 @@ export function Header() {
                   </DropdownMenuItem>
                   {item.children.map((child) => (
                     <DropdownMenuItem key={child.label} asChild>
-                      <Link to={child.to} hash={child.hash}>
+                      <Link to={child.to} {...(child.hash ? { hash: child.hash } : {})}>
                         {child.label}
                       </Link>
                     </DropdownMenuItem>
@@ -181,7 +181,7 @@ export function Header() {
                             <Link
                               key={child.label}
                               to={child.to}
-                              hash={child.hash}
+                              {...(child.hash ? { hash: child.hash } : {})}
                               className="text-muted-foreground hover:text-primary block rounded-md px-4 py-2 text-sm"
                             >
                               {child.label}
