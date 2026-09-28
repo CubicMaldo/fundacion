@@ -3,24 +3,27 @@ import {
   ArrowLeft,
   ArrowRight,
   Award,
+  BookOpen,
+  Briefcase,
   CheckCircle2,
   Clock,
   GraduationCap,
-  HelpCircle,
   Laptop,
   MessageCircle,
+  Phone,
   ShieldCheck,
 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
 import {
-  getProgramaPorSlug,
-  getWhatsappProgramaUrl,
-  PENDIENTE_DATO,
-  programasFunasf,
-} from "@/data/programas";
-import { org } from "@/data/funasf";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { getProgramaPorSlug, getWhatsappProgramaUrl, programasFunasf } from "@/data/programas";
+import { org, telefonoPrincipal } from "@/data/funasf";
 
 export const Route = createFileRoute("/programas/$slug")({
   loader: ({ params }) => {
@@ -132,7 +135,7 @@ function ProgramaDetalle() {
         </div>
       </PageHero>
 
-      {/* BLOQUE DE VALOR Y RESUMEN TÉCNICO */}
+      {/* BLOQUE DE VALOR Y RESUMEN RÁPIDO */}
       <Section tone="surface">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="card-institucional">
@@ -173,123 +176,271 @@ function ProgramaDetalle() {
         </div>
       </Section>
 
-      {/* FORMACIÓN Y PERFIL DEL PROGRAMA */}
+      {/* SECCIÓN PRINCIPAL: ACORDEÓN DESPLEGABLE DE INFORMACIÓN */}
       <Section>
-        <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-start">
           <div>
             <SectionHeading
-              eyebrow="Formación académica"
-              title="Sobre este programa"
-              description={programa.descripcion}
+              eyebrow="Estructura del programa"
+              title="Información detallada"
+              description="Haz clic en cada sección desplegable para conocer el perfil, plan de estudios, requisitos, campo laboral y condiciones de certificación."
             />
 
-            <div className="mt-8 space-y-6">
-              <div className="border-border bg-card rounded-xl border p-6">
-                <h3 className="text-brand-green-deep text-lg font-semibold">
-                  Certificación y titulación
-                </h3>
-                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                  {programa.titulacion}
-                </p>
-                <p className="text-muted-foreground mt-3 text-xs">
-                  FUNASF acompaña, orienta y canaliza becas de apoyo social para el ingreso al
-                  programa. La institución educativa aliada evalúa y expide los certificados
-                  correspondientes.
-                </p>
-              </div>
+            {/* ACORDEÓN DESPLEGABLE AL ESTILO DEL SITIO DE REFERENCIA */}
+            <div className="mt-8">
+              <Accordion
+                type="multiple"
+                defaultValue={["formacion-perfil", "plan-estudio", "campo-laboral", "requisitos"]}
+                className="w-full space-y-4"
+              >
+                {/* 1. FORMACIÓN Y PERFIL DE EGRESO */}
+                <AccordionItem
+                  value="formacion-perfil"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <GraduationCap className="size-4" />
+                      </span>
+                      Formación y perfil del egresado
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <p>{programa.descripcion}</p>
+                    <div className="bg-muted/40 mt-4 rounded-lg p-4">
+                      <h4 className="text-foreground font-semibold">Certificación otorgada:</h4>
+                      <p className="mt-1">{programa.titulacion}</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
 
-              <div className="border-border bg-card rounded-xl border p-6">
-                <h3 className="text-brand-green-deep text-lg font-semibold">
-                  Plan de estudios y módulos
-                </h3>
-                <p className="text-brand-brown mt-2 text-sm font-semibold">
-                  [PLAN DE ESTUDIOS ESPECÍFICO PENDIENTE DE ASIGNACIÓN SEGÚN INSTITUCIÓN ALIADA]
-                </p>
-                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                  {programa.planEstudioPendiente}
-                </p>
-              </div>
+                {/* 2. PLAN DE ESTUDIO */}
+                <AccordionItem
+                  value="plan-estudio"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <BookOpen className="size-4" />
+                      </span>
+                      Plan de estudio y módulos
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <p className="text-brand-brown font-semibold">
+                      [PLAN DE ESTUDIOS POR MÓDULOS PENDIENTE DE ASIGNACIÓN SEGÚN LA INSTITUCIÓN
+                      EDUCATIVA ALIADA]
+                    </p>
+                    <p className="mt-2">{programa.planEstudioPendiente}</p>
+                    <p className="mt-3 text-xs italic">
+                      Los módulos teóricos, prácticas y talleres son administrados por el cuerpo
+                      docente de la institución formadora aliada responsable del programa.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 3. MODALIDAD, DURACIÓN Y HORARIOS */}
+                <AccordionItem
+                  value="modalidad-duracion"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <Clock className="size-4" />
+                      </span>
+                      Modalidad, duración y horarios
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <div className="border-border bg-background rounded-lg border p-3.5">
+                        <strong className="text-foreground block text-xs tracking-wider uppercase">
+                          Modalidad
+                        </strong>
+                        <span className="mt-1 block text-sm">{programa.modalidad}</span>
+                      </div>
+                      <div className="border-border bg-background rounded-lg border p-3.5">
+                        <strong className="text-foreground block text-xs tracking-wider uppercase">
+                          Horarios y duración
+                        </strong>
+                        <span className="text-brand-brown mt-1 block text-xs font-semibold">
+                          [SUJETOS A DISPONIBILIDAD DE CADA CONVOCATORIA]
+                        </span>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 4. CAMPO LABORAL */}
+                <AccordionItem
+                  value="campo-laboral"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <Briefcase className="size-4" />
+                      </span>
+                      Campo laboral y salidas ocupacionales
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <p>
+                      Al culminar el proceso de formación y certificación con la institución aliada,
+                      el egresado podrá desempeñarse en:
+                    </p>
+                    <ul className="mt-3 space-y-2">
+                      {programa.campoLaboral.map((campo) => (
+                        <li key={campo} className="flex items-start gap-2">
+                          <span
+                            aria-hidden="true"
+                            className="bg-brand-green mt-2 size-1.5 shrink-0 rounded-full"
+                          />
+                          <span>{campo}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 5. REQUISITOS DE INGRESO */}
+                <AccordionItem
+                  value="requisitos"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <CheckCircle2 className="size-4" />
+                      </span>
+                      Requisitos de ingreso
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <ul className="space-y-2.5">
+                      {programa.requisitosGenerales.map((req) => (
+                        <li key={req} className="flex items-start gap-2">
+                          <span
+                            aria-hidden="true"
+                            className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
+                          />
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="border-border/60 mt-4 border-t pt-3">
+                      <p className="text-brand-brown text-xs font-semibold">
+                        [REQUISITOS ADICIONALES ESPECÍFICOS DE LA INSTITUCIÓN ALIADA PENDIENTES DE
+                        SUMINISTRAR]
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 6. BECAS Y MATRÍCULA */}
+                <AccordionItem
+                  value="becas-costos"
+                  className="border-border bg-card rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green-soft text-brand-green-deep flex size-8 items-center justify-center rounded-md">
+                        <Award className="size-4" />
+                      </span>
+                      Becas FUNASF, costos y matrícula
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <p className="text-foreground font-semibold">{programa.beneficioBeca}</p>
+                    <p className="mt-2">{programa.matricula}</p>
+                    <p className="mt-3 text-xs leading-relaxed">
+                      El propósito de FUNASF es que la situación económica no sea una barrera para
+                      estudiar. Las becas se asignan conforme a la disponibilidad de cada
+                      convocatoria.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* 7. RECUERDA: MARCO LEGAL */}
+                <AccordionItem
+                  value="recuerda"
+                  className="border-brand-green/30 bg-brand-green-soft/20 rounded-xl border px-6 shadow-2xs"
+                >
+                  <AccordionTrigger className="text-brand-green-deep hover:text-brand-green py-5 text-base font-bold hover:no-underline">
+                    <span className="flex items-center gap-3">
+                      <span className="bg-brand-green text-primary-foreground flex size-8 items-center justify-center rounded-md">
+                        <ShieldCheck className="size-4" />
+                      </span>
+                      Recuerda: Modelo institucional y marco legal
+                    </span>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground pt-1 pb-6 text-sm leading-relaxed">
+                    <p className="text-foreground font-medium">{programa.avisoLegal}</p>
+                    <p className="border-brand-green mt-3 border-l-3 pl-3 text-xs italic">
+                      “FUNASF acompaña, gestiona y promueve oportunidades. Nuestras instituciones
+                      aliadas forman y certifican.”
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </div>
 
-          {/* REQUISITOS Y PROCEDIMIENTO */}
-          <div className="space-y-6">
-            <div className="border-border bg-card rounded-xl border p-6">
-              <h3 className="text-brand-green-deep flex items-center gap-2 text-lg font-semibold">
-                <CheckCircle2 aria-hidden="true" className="text-brand-green size-5" />
-                Requisitos de ingreso
-              </h3>
-              <ul className="mt-4 space-y-3">
-                {programa.requisitosGenerales.map((req) => (
-                  <li key={req} className="flex gap-2 text-sm text-muted-foreground">
-                    <span
-                      aria-hidden="true"
-                      className="bg-brand-gold mt-1.5 size-1.5 shrink-0 rounded-full"
-                    />
-                    <span>{req}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="border-border/60 mt-4 border-t pt-4">
-                <p className="text-brand-brown text-xs font-semibold">
-                  [REQUISITOS ADICIONALES ESPECÍFICOS DE LA INSTITUCIÓN ALIADA PENDIENTES DE
-                  SUMINISTRAR]
-                </p>
-              </div>
-            </div>
-
-            {/* CAJA DE CONVERSIÓN RÁPIDA */}
-            <div className="bg-brand-green-soft/50 border-brand-green/20 rounded-xl border p-6">
-              <h3 className="text-brand-green-deep text-base font-semibold">
-                ¿Te interesa estudiar este programa?
+          {/* COLUMNA LATERAL: CAJA DE CONVERSIÓN Y DATOS */}
+          <aside className="sticky top-28 space-y-6">
+            <div className="border-border bg-card rounded-2xl border p-6 shadow-sm">
+              <span className="text-brand-gold text-xs font-bold tracking-wider uppercase">
+                Inscripción y orientación
+              </span>
+              <h3 className="text-brand-green-deep mt-2 text-xl font-bold">
+                ¿Deseas estudiar {programa.nombre}?
               </h3>
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">
-                Postúlate hoy mediante el formulario de inscripción o comunícate directamente con un
-                orientador de FUNASF vía WhatsApp.
+                Completa el formulario oficial para postularte a las becas de hasta el 90 % o
+                comunícate directamente con nuestro equipo de admisiones.
               </p>
-              <div className="mt-5 flex flex-col gap-3">
-                <Button asChild variant="default" className="w-full">
+
+              <div className="mt-6 flex flex-col gap-3">
+                <Button asChild variant="gold" className="w-full">
                   <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-                    Completar inscripción
+                    Formulario de inscripción <ArrowRight aria-hidden className="ml-1.5 size-4" />
                   </a>
                 </Button>
-                <Button asChild variant="outline" className="w-full">
+                <Button asChild variant="default" className="w-full">
                   <a href={whatsappUrl} target="_blank" rel="noreferrer">
                     <MessageCircle aria-hidden className="mr-2 size-4" />
-                    Preguntar por WhatsApp
+                    Consultar por WhatsApp
                   </a>
                 </Button>
               </div>
-            </div>
-          </div>
-        </div>
-      </Section>
 
-      {/* BLOQUE RECUERDA: MARCO LEGAL INSTITUCIONAL */}
-      <Section tone="deep">
-        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div className="max-w-3xl">
-            <span className="text-brand-gold text-xs font-bold tracking-wider uppercase">
-              Marco institucional y legal
-            </span>
-            <h2 className="text-primary-foreground mt-2 text-2xl font-bold">
-              Recuerda: Modelo de formación con instituciones aliadas
-            </h2>
-            <p className="text-primary-foreground/85 mt-4 text-sm leading-relaxed">
-              {programa.avisoLegal}
-            </p>
-            <p className="text-primary-foreground/70 mt-3 text-xs italic">
-              “FUNASF acompaña, gestiona y promueve oportunidades. Nuestras instituciones aliadas
-              forman y certifican.”
-            </p>
-          </div>
-          <div className="shrink-0">
-            <Button asChild variant="gold" size="lg">
-              <Link to="/estudia" hash="instituciones-aliadas">
-                Conocer el modelo de alianzas
-              </Link>
-            </Button>
-          </div>
+              <div className="border-border/60 mt-6 border-t pt-4 text-xs text-muted-foreground">
+                <p className="flex items-center gap-2">
+                  <Phone aria-hidden className="size-3.5" />
+                  Línea de atención:{" "}
+                  <a
+                    href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                    className="text-foreground font-semibold hover:underline"
+                  >
+                    {telefonoPrincipal}
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <div className="border-border bg-muted/40 rounded-xl border p-5">
+              <h4 className="text-foreground text-sm font-semibold">Resumen de condiciones</h4>
+              <ul className="text-muted-foreground mt-3 space-y-2 text-xs">
+                <li>• Beca de hasta el 90 % sujeta a convocatoria.</li>
+                <li>• Sin cobro de matrícula en convocatorias aplicables.</li>
+                <li>• Certificación expedida por la institución aliada.</li>
+                <li>• Horarios y cupos limitados por periodo.</li>
+              </ul>
+            </div>
+          </aside>
         </div>
       </Section>
 

@@ -6,6 +6,12 @@ import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   areasAcademicas,
   getWhatsappProgramaUrl,
   programasFunasf,
@@ -176,6 +182,24 @@ function CatalogoProgramas() {
                           {programa.modalidad}
                         </p>
                       </div>
+
+                      <Accordion type="single" collapsible className="mt-2 w-full">
+                        <AccordionItem value="detalles" className="border-none">
+                          <AccordionTrigger className="text-brand-green hover:text-brand-green-deep py-1 text-xs font-semibold hover:no-underline">
+                            Ver detalles rápidos
+                          </AccordionTrigger>
+                          <AccordionContent className="text-muted-foreground space-y-2 pt-2 text-xs leading-relaxed">
+                            <p>
+                              <strong className="text-foreground">Certificación:</strong>{" "}
+                              {programa.titulacion}
+                            </p>
+                            <p>
+                              <strong className="text-foreground">Salidas laborales:</strong>{" "}
+                              {programa.campoLaboral.slice(0, 2).join(", ")}...
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
                     </div>
 
                     <div className="mt-6 flex flex-col gap-2 border-t pt-4">

@@ -77,6 +77,7 @@ export type ProgramaAcademico = {
   requisitosGenerales: string[];
   requisitosEspecificos: string;
   planEstudioPendiente: string;
+  campoLaboral: string[];
   avisoLegal: string;
 };
 
@@ -113,6 +114,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios, asignaturas y horas de práctica clínica son definidos y administrados por la institución educativa aliada legalmente acreditada.",
+    campoLaboral: [
+      "Clínicas, hospitales y centros de atención médica.",
+      "Servicios de atención y cuidado domiciliario de pacientes.",
+      "Instituciones Prestadoras de Salud (IPS) públicas y privadas.",
+      "Programas comunitarios de promoción y prevención en salud.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -137,6 +144,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios por módulos y prácticas farmacéuticas corresponde a la institución aliada.",
+    campoLaboral: [
+      "Farmacias comunitarias y droguerías comerciales.",
+      "Servicios farmacéuticos hospitalarios y ambulatorios.",
+      "Depósitos y almacenes de distribución de medicamentos.",
+      "Dispensarios y centros de salud de atención básica.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -161,6 +174,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios institucional es expedido y avalado por la entidad educativa aliada.",
+    campoLaboral: [
+      "Entidades Promotoras de Salud (EPS).",
+      "Instituciones Prestadoras de Salud (IPS) y centros médicos.",
+      "Áreas de admisión, atención al usuario y agendamiento.",
+      "Departamentos de facturación y auditoría médica preliminar.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
 
@@ -187,6 +206,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios y módulos normativos son administrados por la institución aliada.",
+    campoLaboral: [
+      "Empresas industriales, manufactureras y comerciales.",
+      "Empresas del sector de la construcción y obras civiles.",
+      "Apoyo operativo al Sistema de Gestión de Seguridad y Salud (SG-SST).",
+      "Comités paritarios (COPASST) y brigadas de emergencia laboral.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
 
@@ -213,6 +238,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios corresponde a la institución educativa aliada responsable.",
+    campoLaboral: [
+      "Empresas comerciales, financieras y de servicios.",
+      "Áreas de gestión administrativa y soporte operativo en pymes.",
+      "Organizaciones sociales, fundaciones y entidades comunitarias.",
+      "Emprendimiento y gestión de negocios propios.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -237,6 +268,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios contable y administrativo es establecido por la entidad aliada certificadora.",
+    campoLaboral: [
+      "Departamentos de contabilidad y finanzas corporativas.",
+      "Causación de facturas, cuentas por pagar y por cobrar.",
+      "Elaboración preliminar de nóminas y conciliaciones bancarias.",
+      "Firmas contables y asesorías tributarias para pymes.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -261,6 +298,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios de ventas y mercadeo corresponde a la entidad formadora aliada.",
+    campoLaboral: [
+      "Fuerzas de ventas en empresas de consumo masivo y servicios.",
+      "Asesoría comercial en locales y cadenas minoristas.",
+      "Atención y fidelización de clientes en canales digitales.",
+      "Impulso y promoción de nuevos productos en ferias y eventos.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -284,6 +327,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de estudios logístico es estructurado por la institución aliada responsable.",
+    campoLaboral: [
+      "Bodegas, almacenes y centros de acopio y distribución.",
+      "Empresas de logística, transporte de carga y mensajería.",
+      "Control de inventarios y recepción de insumos en fábricas.",
+      "Despacho y coordinación de rutas en comercios electrónicos.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -308,6 +357,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "Los módulos y talleres de secretariado son certificados por la entidad aliada.",
+    campoLaboral: [
+      "Asistente ejecutiva de gerencia en empresas y corporaciones.",
+      "Recepción y gestión de correspondencia oficial e institucional.",
+      "Despachos jurídicos, notarías y oficinas profesionales.",
+      "Coordinación de reuniones, actas y agendas ejecutivas.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
 
@@ -334,6 +389,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan pedagógico y requisitos de práctica infantil corresponden a la institución educativa aliada.",
+    campoLaboral: [
+      "Jardines infantiles y centros de educación inicial.",
+      "Centros de Desarrollo Infantil (CDI) y programas comunitarios.",
+      "Fundaciones de atención y protección a la niñez.",
+      "Cuidado y estimulación pedagógica en programas familiares.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
 
@@ -359,6 +420,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosGenerales: REQUISITOS_GENERALES_BASE,
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente: "El plan de estudios práctico es coordinado por la institución aliada.",
+    campoLaboral: [
+      "Salones de belleza, centros de estética y peluquerías.",
+      "Barberías y centros de cuidado masculino.",
+      "Prestación de servicios independientes y a domicilio.",
+      "Emprendimiento de salón de belleza o estética propio.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -383,6 +450,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El marco de niveles y metodología corresponde a la institución aliada correspondiente.",
+    campoLaboral: [
+      "Centros de contacto bilingües y servicio al cliente global.",
+      "Empresas turísticas, agencias de viaje y hoteles internacionales.",
+      "Soporte comercial para empresas con relaciones en el exterior.",
+      "Oportunidades de becas y continuidad de estudios superiores.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -407,6 +480,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "Los módulos de seguridad y normatividad corresponden a la entidad aliada.",
+    campoLaboral: [
+      "Empresas formales de vigilancia y seguridad privada.",
+      "Control de accesos en conjuntos residenciales y urbanizaciones.",
+      "Seguridad en centros comerciales, supermercados y bodegas.",
+      "Custodia de instalaciones corporativas y eventos masivos.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -430,6 +509,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosGenerales: REQUISITOS_GENERALES_BASE,
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente: "El plan de estudios turístico es determinado por la institución aliada.",
+    campoLaboral: [
+      "Hoteles, hostales, posadas turísticas y centros vacacionales.",
+      "Agencias de viajes, operadores receptivos y venta de paquetes.",
+      "Recepción, servicio al huésped y áreas de reservas hoteleras.",
+      "Logística de eventos turísticos, ferias y convenciones.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -454,6 +539,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "Los módulos técnicos y normas de seguridad eléctrica son administrados por la entidad aliada.",
+    campoLaboral: [
+      "Instalaciones eléctricas residenciales y comerciales.",
+      "Mantenimiento eléctrico preventivo en edificios y fábricas.",
+      "Cuadrillas de instaladores en proyectos de construcción civil.",
+      "Servicio técnico eléctrico independiente y a domicilio.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -477,6 +568,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosGenerales: REQUISITOS_GENERALES_BASE,
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente: "El plan de taller mecánico es expedido por la institución aliada.",
+    campoLaboral: [
+      "Talleres mecánicos y centros de diagnóstico de motocicletas.",
+      "Servicios de mantenimiento en concesionarios oficiales.",
+      "Almacenes de repuestos, lubricantes y accesorios para motos.",
+      "Creación y administración de taller mecánico independiente.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -501,6 +598,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de módulos y prácticas de construcción corresponde a la entidad formadora aliada.",
+    campoLaboral: [
+      "Obras de edificación residencial, comercial e institucional.",
+      "Cuadrillas de albañilería, mampostería y acabados de obra.",
+      "Proyectos comunitarios de mejora y autoconstrucción de vivienda.",
+      "Remodelaciones y mantenimiento locativo de inmuebles.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
   {
@@ -525,6 +628,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "El plan de ensambles e instrumentos musicales corresponde a la entidad aliada.",
+    campoLaboral: [
+      "Iniciación musical en centros culturales y talleres comunitarios.",
+      "Participación en agrupaciones, bandas y coros locales.",
+      "Acompañamiento musical en actividades comunitarias y eclesiales.",
+      "Proyectos artísticos y culturales independientes.",
+    ],
     avisoLegal: AVISO_LEGAL_BASE,
   },
 
@@ -556,6 +665,12 @@ export const programasFunasf: ProgramaAcademico[] = [
     requisitosEspecificos: PENDIENTE_DATO,
     planEstudioPendiente:
       "La estructura por ciclos lectivos especiales y materias académicas es administrada por la institución educativa aliada responsable.",
+    campoLaboral: [
+      "Requisito indispensable para acceder a programas de formación técnica y superior.",
+      "Habilitación formal para convocatorias de empleo formal.",
+      "Cumplimiento del ciclo educativo básico y medio para el desarrollo del proyecto de vida.",
+      "Superación personal y apertura de nuevas oportunidades laborales.",
+    ],
     avisoLegal:
       "FUNASF no emite títulos de bachiller. La validación, formación por ciclos y expedición del título de bachiller corresponde exclusivamente a la institución educativa aliada con autorización de la Secretaría de Educación.",
   },
