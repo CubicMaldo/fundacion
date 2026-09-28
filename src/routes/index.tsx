@@ -203,7 +203,10 @@ function Inicio() {
               <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
                 {cat.programas.map((p) => (
                   <li key={p} className="flex gap-2">
-                    <span aria-hidden className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full" />
+                    <span
+                      aria-hidden
+                      className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
+                    />
                     {p}
                   </li>
                 ))}
@@ -224,12 +227,7 @@ function Inicio() {
       <Section tone="deep">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <SectionHeading
-              invert
-              eyebrow="Becas"
-              title={becas.titulo}
-              description={becas.intro}
-            />
+            <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
             <p className="text-primary-foreground/80 mt-5 leading-relaxed">{becas.proposito}</p>
             <p className="text-brand-gold mt-8 text-2xl font-semibold">{becas.destacado}</p>
             <Button asChild className="mt-8" variant="gold">

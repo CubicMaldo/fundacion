@@ -2,7 +2,7 @@ export type NavItem = {
   label: string;
   to: string;
   hash?: string;
-  children?: { label: string; to: string; hash?: string }[];
+  children?: { label: string; to: string; hash?: string; description?: string }[];
 };
 
 export const navegacion: NavItem[] = [
@@ -11,41 +11,110 @@ export const navegacion: NavItem[] = [
     label: "Quiénes somos",
     to: "/quienes-somos",
     children: [
-      { label: "Visión", to: "/quienes-somos", hash: "vision" },
-      { label: "Misión", to: "/quienes-somos", hash: "mision" },
-      { label: "Reseña histórica", to: "/quienes-somos", hash: "resena-historica" },
-      { label: "Nuestro propósito", to: "/quienes-somos", hash: "proposito" },
-      { label: "Nuestros valores", to: "/quienes-somos", hash: "valores" },
-      { label: "Nuestro alcance", to: "/quienes-somos", hash: "alcance" },
-      { label: "Sedes", to: "/quienes-somos", hash: "sedes" },
+      {
+        label: "Misión y visión",
+        to: "/quienes-somos",
+        hash: "mision",
+        description: "Nuestro propósito y horizonte social",
+      },
+      {
+        label: "Reseña histórica",
+        to: "/quienes-somos",
+        hash: "resena-historica",
+        description: "Trayectoria y origen de FUNASF",
+      },
+      {
+        label: "Propósito y valores",
+        to: "/quienes-somos",
+        hash: "valores",
+        description: "Principios éticos y vocación comunitaria",
+      },
+      {
+        label: "Alcance y sedes",
+        to: "/quienes-somos",
+        hash: "sedes",
+        description: "Presencia territorial y cobertura",
+      },
     ],
   },
   {
-    label: "Portal informativo",
-    to: "/portal-informativo",
-    children: [
-      { label: "Talleres", to: "/portal-informativo", hash: "talleres" },
-      { label: "Formación", to: "/portal-informativo", hash: "formacion" },
-      { label: "Emprendimiento", to: "/portal-informativo", hash: "emprendimiento" },
-      { label: "Programas sociales", to: "/portal-informativo", hash: "programas-sociales" },
-      { label: "Voluntariado", to: "/portal-informativo", hash: "voluntariado" },
-      { label: "Alianzas", to: "/portal-informativo", hash: "alianzas" },
-    ],
-  },
-  {
-    label: "Estudia con FUNASF",
+    label: "Estudia",
     to: "/estudia",
     children: [
-      { label: "Programas académicos", to: "/estudia", hash: "programas" },
-      { label: "Becas", to: "/estudia", hash: "becas" },
-      { label: "Instituciones aliadas", to: "/estudia", hash: "instituciones-aliadas" },
-      { label: "Requisitos", to: "/estudia", hash: "requisitos" },
-      { label: "Matrículas", to: "/estudia", hash: "matriculas" },
+      {
+        label: "Programas académicos",
+        to: "/programas",
+        description: "Catálogo completo de áreas y programas",
+      },
+      {
+        label: "Convocatoria de becas",
+        to: "/estudia",
+        hash: "becas",
+        description: "Apoyo educativo para poblaciones prioritarias",
+      },
+      {
+        label: "Requisitos y matrícula",
+        to: "/estudia",
+        hash: "matriculas",
+        description: "Proceso de admisión paso a paso",
+      },
+      {
+        label: "Portal estudiantil",
+        to: "/portal-estudiantil",
+        description: "Servicios y recursos para estudiantes",
+      },
     ],
   },
-  { label: "Portal estudiantil", to: "/portal-estudiantil" },
-  { label: "Galería", to: "/galeria" },
-  { label: "Blog estudiantil", to: "/blog" },
+  {
+    label: "Iniciativas",
+    to: "/portal-informativo",
+    children: [
+      {
+        label: "Talleres y formación",
+        to: "/portal-informativo",
+        hash: "talleres",
+        description: "Capacitación práctica y cursos breves",
+      },
+      {
+        label: "Emprendimiento",
+        to: "/portal-informativo",
+        hash: "emprendimiento",
+        description: "Impulso a proyectos comunitarios",
+      },
+      {
+        label: "Programas sociales",
+        to: "/portal-informativo",
+        hash: "programas-sociales",
+        description: "Bienestar, inclusión y apoyo a familias",
+      },
+      {
+        label: "Voluntariado y alianzas",
+        to: "/portal-informativo",
+        hash: "voluntariado",
+        description: "Suma tus talentos y capacidades",
+      },
+    ],
+  },
+  {
+    label: "Comunidad",
+    to: "/blog",
+    children: [
+      {
+        label: "Blog institucional",
+        to: "/blog",
+        description: "Noticias, testimonios y reflexiones",
+      },
+      {
+        label: "Galería de actividades",
+        to: "/galeria",
+        description: "Registros de eventos y experiencias",
+      },
+      {
+        label: "Trabaja con nosotros",
+        to: "/trabaja-con-nosotros",
+        description: "Oportunidades docentes y voluntarias",
+      },
+    ],
+  },
   { label: "Contacto", to: "/contacto" },
-  { label: "Trabaja con nosotros", to: "/trabaja-con-nosotros" },
 ];

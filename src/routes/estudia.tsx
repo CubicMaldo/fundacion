@@ -72,7 +72,10 @@ function Estudia() {
               <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
                 {cat.programas.map((p) => (
                   <li key={p} className="flex gap-2">
-                    <span aria-hidden className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full" />
+                    <span
+                      aria-hidden
+                      className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
+                    />
                     {p}
                   </li>
                 ))}
@@ -134,7 +137,10 @@ function Estudia() {
             <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
               {modeloAlianzas.responsabilidades.items.map((i) => (
                 <li key={i} className="flex gap-2">
-                  <span aria-hidden className="bg-brand-brown mt-2 size-1.5 shrink-0 rounded-full" />
+                  <span
+                    aria-hidden
+                    className="bg-brand-brown mt-2 size-1.5 shrink-0 rounded-full"
+                  />
                   {i}
                 </li>
               ))}
@@ -165,8 +171,8 @@ function Estudia() {
           [REQUISITOS ESPECÍFICOS POR PROGRAMA PENDIENTES DE SUMINISTRAR]
         </p>
         <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-relaxed">
-          Si deseas conocer los requisitos de un programa en particular, escríbenos y te
-          orientamos durante todo el proceso.
+          Si deseas conocer los requisitos de un programa en particular, escríbenos y te orientamos
+          durante todo el proceso.
         </p>
       </Section>
 

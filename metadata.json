@@ -1,0 +1,6 @@
+{
+  "name": "FUNASF — Fundación Internacional Amigos Sin Fronteras",
+  "description": "Fundación Internacional Amigos Sin Fronteras – FUNASF: educación, formación, becas, emprendimiento y programas sociales. Porque la educación no tiene fronteras.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

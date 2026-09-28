@@ -116,15 +116,11 @@
     oklch(0.335 0.08 151) 62%,
     oklch(0.31 0.055 62) 100%
   );
-  --gradient-soft: linear-gradient(
-    160deg,
-    oklch(0.982 0.012 95) 0%,
-    oklch(0.95 0.027 140) 100%
-  );
-  --shadow-soft: 0 1px 2px oklch(0.29 0.062 155 / 0.06),
-    0 12px 32px -18px oklch(0.29 0.062 155 / 0.35);
-  --shadow-lift: 0 2px 6px oklch(0.29 0.062 155 / 0.08),
-    0 26px 50px -26px oklch(0.29 0.062 155 / 0.45);
+  --gradient-soft: linear-gradient(160deg, oklch(0.982 0.012 95) 0%, oklch(0.95 0.027 140) 100%);
+  --shadow-soft:
+    0 1px 2px oklch(0.29 0.062 155 / 0.06), 0 12px 32px -18px oklch(0.29 0.062 155 / 0.35);
+  --shadow-lift:
+    0 2px 6px oklch(0.29 0.062 155 / 0.08), 0 26px 50px -26px oklch(0.29 0.062 155 / 0.45);
 
   --chart-1: oklch(0.44 0.094 152);
   --chart-2: oklch(0.45 0.072 58);
