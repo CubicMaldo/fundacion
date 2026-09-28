@@ -125,7 +125,10 @@ export const proposito = {
 };
 
 export const valores = [
-  { nombre: "Solidaridad", texto: "Ayudar a quien lo necesita y trabajar por el bienestar colectivo." },
+  {
+    nombre: "Solidaridad",
+    texto: "Ayudar a quien lo necesita y trabajar por el bienestar colectivo.",
+  },
   { nombre: "Respeto", texto: "Reconocer la dignidad y los derechos de cada persona." },
   { nombre: "Responsabilidad", texto: "Cumplir nuestros compromisos con la comunidad." },
   { nombre: "Inclusión", texto: "Crear oportunidades sin discriminación." },
@@ -278,8 +281,7 @@ export const modeloAlianzas = {
     "Fortalecer la formación para el trabajo.",
     "Generar oportunidades de desarrollo para las comunidades.",
   ],
-  destacado:
-    "FUNASF conecta oportunidades con personas que quieren transformar su futuro.",
+  destacado: "FUNASF conecta oportunidades con personas que quieren transformar su futuro.",
   responsabilidades: {
     intro:
       "FUNASF no sustituye a las instituciones educativas aliadas. La institución aliada correspondiente es responsable de los aspectos académicos del programa, incluyendo, según corresponda:",
@@ -411,13 +413,23 @@ export const alianzas = {
 };
 
 export const transparencia = [
-  { nombre: "Transparencia", texto: "Manejo responsable de los recursos y de los procesos institucionales." },
+  {
+    nombre: "Transparencia",
+    texto: "Manejo responsable de los recursos y de los procesos institucionales.",
+  },
   {
     nombre: "Responsabilidad",
-    texto: "Cumplimiento de nuestros compromisos con estudiantes, beneficiarios, voluntarios y aliados.",
+    texto:
+      "Cumplimiento de nuestros compromisos con estudiantes, beneficiarios, voluntarios y aliados.",
   },
-  { nombre: "Solidaridad", texto: "Trabajamos pensando en quienes necesitan mayores oportunidades." },
-  { nombre: "Inclusión", texto: "Creemos en el respeto por la dignidad y las diferencias de cada persona." },
+  {
+    nombre: "Solidaridad",
+    texto: "Trabajamos pensando en quienes necesitan mayores oportunidades.",
+  },
+  {
+    nombre: "Inclusión",
+    texto: "Creemos en el respeto por la dignidad y las diferencias de cada persona.",
+  },
   { nombre: "Compromiso", texto: "Cada proyecto representa una responsabilidad con la comunidad." },
   { nombre: "Trabajo en equipo", texto: "Los grandes resultados se construyen colectivamente." },
 ];
@@ -439,7 +451,8 @@ export const faq = [
   },
   {
     pregunta: "¿Puedo estudiar virtualmente?",
-    respuesta: "Sí. Algunos programas cuentan con modalidad virtual, de acuerdo con la oferta vigente.",
+    respuesta:
+      "Sí. Algunos programas cuentan con modalidad virtual, de acuerdo con la oferta vigente.",
   },
   {
     pregunta: "¿Puedo estudiar sin salir de mi municipio?",

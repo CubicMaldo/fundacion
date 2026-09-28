@@ -34,6 +34,7 @@ import {
   llamadoAccion,
   valores,
 } from "@/data/funasf";
+import { getSlugPorNombre } from "@/data/programas";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -198,23 +199,43 @@ function Inicio() {
         />
         <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {categoriasProgramas.map((cat) => (
-            <article key={cat.id} className="card-institucional">
-              <h3 className="text-brand-green-deep text-lg">{cat.categoria}</h3>
-              <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
-                {cat.programas.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <span aria-hidden className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
+            <article key={cat.id} className="card-institucional flex flex-col justify-between">
+              <div>
+                <h3 className="text-brand-green-deep text-lg font-bold">{cat.categoria}</h3>
+                <ul className="text-muted-foreground mt-4 space-y-2.5 text-sm">
+                  {cat.programas.map((p) => {
+                    const slug = getSlugPorNombre(p);
+                    return (
+                      <li key={p} className="flex items-start gap-2">
+                        <span
+                          aria-hidden
+                          className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
+                        />
+                        <Link
+                          to="/programas/$slug"
+                          params={{ slug }}
+                          className="hover:text-brand-green font-medium text-foreground/90 transition-colors hover:underline"
+                        >
+                          {p}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </article>
           ))}
         </div>
-        <div className="mt-10">
+        <div className="mt-10 flex flex-wrap gap-3">
+          <Button asChild variant="default">
+            <Link to="/programas">
+              Ver catálogo completo con buscador{" "}
+              <ArrowRight aria-hidden className="ml-1.5 size-4" />
+            </Link>
+          </Button>
           <Button asChild variant="outline">
-            <Link to="/estudia" hash="programas">
-              Ver toda la oferta <ArrowRight aria-hidden className="size-4" />
+            <Link to="/estudia" hash="becas">
+              Conocer las becas (hasta 90 %)
             </Link>
           </Button>
         </div>
@@ -224,12 +245,7 @@ function Inicio() {
       <Section tone="deep">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
-            <SectionHeading
-              invert
-              eyebrow="Becas"
-              title={becas.titulo}
-              description={becas.intro}
-            />
+            <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
             <p className="text-primary-foreground/80 mt-5 leading-relaxed">{becas.proposito}</p>
             <p className="text-brand-gold mt-8 text-2xl font-semibold">{becas.destacado}</p>
             <Button asChild className="mt-8" variant="gold">

@@ -23,7 +23,8 @@ export function PendingPage({
           </span>
           <h2 className="text-foreground mt-6 text-3xl">Contenido en preparación</h2>
           <p className="text-muted-foreground mt-4 leading-relaxed">
-            Este espacio está reservado para la información oficial que FUNASF publicará próximamente.
+            Este espacio está reservado para la información oficial que FUNASF publicará
+            próximamente.
           </p>
           <Button asChild className="mt-8" variant="outline">
             <Link to="/">Volver al inicio</Link>

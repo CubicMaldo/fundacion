@@ -15,6 +15,7 @@ const columnas = [
   {
     titulo: "Estudia",
     enlaces: [
+      { label: "Catálogo", to: "/programas", hash: undefined },
       { label: "Programas", to: "/estudia", hash: "programas" },
       { label: "Becas", to: "/estudia", hash: "becas" },
       { label: "Matrículas", to: "/estudia", hash: "matriculas" },
@@ -57,7 +58,7 @@ export function Footer() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <a
-                 href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
                 className="border-primary-foreground/25 hover:bg-primary-foreground/10 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
               >
                 <Phone aria-hidden className="size-4" /> Llamar
@@ -90,7 +91,7 @@ export function Footer() {
                     <li key={e.label}>
                       <Link
                         to={e.to}
-                         {...(e.hash ? { hash: e.hash } : {})}
+                        {...(e.hash ? { hash: e.hash } : {})}
                         className="text-primary-foreground/80 hover:text-primary-foreground text-sm transition-colors"
                       >
                         {e.label}
@@ -118,7 +119,12 @@ export function Footer() {
                 <a href={`mailto:${org.correo}`} className="hover:text-primary-foreground">
                   {org.correo}
                 </a>
-                <a href={org.instagramUrl} target="_blank" rel="noreferrer" className="hover:text-primary-foreground">
+                <a
+                  href={org.instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-primary-foreground"
+                >
                   {org.instagram}
                 </a>
               </div>

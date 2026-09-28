@@ -86,7 +86,10 @@ export function Header() {
         <div className="container-page flex items-center justify-between gap-6">
           <p className="tracking-wide">{org.eslogan}</p>
           <div className="flex items-center gap-5">
-            <a className="hover:text-brand-gold inline-flex items-center gap-2 transition-colors" href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}>
+            <a
+              className="hover:text-brand-gold inline-flex items-center gap-2 transition-colors"
+              href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+            >
               <Phone aria-hidden className="size-3.5" />
               {org.telefonos[0]}
             </a>

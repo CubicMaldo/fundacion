@@ -131,7 +131,11 @@ function QuienesSomos() {
       </Section>
 
       <Section id="proposito" tone="surface">
-        <SectionHeading eyebrow="Nuestro propósito" title={proposito.titulo} description={proposito.intro} />
+        <SectionHeading
+          eyebrow="Nuestro propósito"
+          title={proposito.titulo}
+          description={proposito.intro}
+        />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {proposito.ejes.map((e) => (
             <article key={e.nombre} className="card-institucional">
@@ -155,7 +159,11 @@ function QuienesSomos() {
       </Section>
 
       <Section id="alcance" tone="soft">
-        <SectionHeading eyebrow="Nuestro alcance" title="Dónde estamos" description={alcance.intro} />
+        <SectionHeading
+          eyebrow="Nuestro alcance"
+          title="Dónde estamos"
+          description={alcance.intro}
+        />
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           <div className="card-institucional">
             <h3 className="text-brand-green-deep text-base">Presencia actual</h3>
@@ -191,8 +199,8 @@ function QuienesSomos() {
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{s.descripcion}</p>
               <div className="mt-4 space-y-1.5">
                 <Dato etiqueta="Dirección" valor={s.direccion} />
-                 <Dato etiqueta="Teléfono" valor={s.telefono ?? PENDIENTE} />
-                 <Dato etiqueta="WhatsApp" valor={s.whatsapp ?? PENDIENTE} />
+                <Dato etiqueta="Teléfono" valor={s.telefono ?? PENDIENTE} />
+                <Dato etiqueta="WhatsApp" valor={s.whatsapp ?? PENDIENTE} />
                 <Dato etiqueta="Horario" valor={s.horario} />
                 <Dato etiqueta="Mapa" valor={s.mapa} />
               </div>

@@ -21,6 +21,8 @@ import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
 import { Route as TerminosCondicionesRouteImport } from './routes/terminos-condiciones'
 import { Route as TrabajaConNosotrosRouteImport } from './routes/trabaja-con-nosotros'
 import { Route as TratamientoDatosRouteImport } from './routes/tratamiento-datos'
+import { Route as ProgramasIndexRouteImport } from './routes/programas/index'
+import { Route as ProgramasSlugRouteImport } from './routes/programas/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -82,6 +84,16 @@ const TratamientoDatosRoute = TratamientoDatosRouteImport.update({
   path: '/tratamiento-datos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgramasIndexRoute = ProgramasIndexRouteImport.update({
+  id: '/programas/',
+  path: '/programas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramasSlugRoute = ProgramasSlugRouteImport.update({
+  id: '/programas/$slug',
+  path: '/programas/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,6 +108,8 @@ export interface FileRoutesByFullPath {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/programas/$slug': typeof ProgramasSlugRoute
+  '/programas/': typeof ProgramasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,6 +124,8 @@ export interface FileRoutesByTo {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/programas/$slug': typeof ProgramasSlugRoute
+  '/programas': typeof ProgramasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -125,6 +141,8 @@ export interface FileRoutesById {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/programas/$slug': typeof ProgramasSlugRoute
+  '/programas/': typeof ProgramasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +159,8 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/programas/$slug'
+    | '/programas/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -155,6 +175,8 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/programas/$slug'
+    | '/programas'
   id:
     | '__root__'
     | '/'
@@ -169,6 +191,8 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/programas/$slug'
+    | '/programas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -184,6 +208,8 @@ export interface RootRouteChildren {
   TerminosCondicionesRoute: typeof TerminosCondicionesRoute
   TrabajaConNosotrosRoute: typeof TrabajaConNosotrosRoute
   TratamientoDatosRoute: typeof TratamientoDatosRoute
+  ProgramasSlugRoute: typeof ProgramasSlugRoute
+  ProgramasIndexRoute: typeof ProgramasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -272,6 +298,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TratamientoDatosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/programas/': {
+      id: '/programas/'
+      path: '/programas'
+      fullPath: '/programas/'
+      preLoaderRoute: typeof ProgramasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programas/$slug': {
+      id: '/programas/$slug'
+      path: '/programas/$slug'
+      fullPath: '/programas/$slug'
+      preLoaderRoute: typeof ProgramasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -288,6 +328,8 @@ const rootRouteChildren: RootRouteChildren = {
   TerminosCondicionesRoute: TerminosCondicionesRoute,
   TrabajaConNosotrosRoute: TrabajaConNosotrosRoute,
   TratamientoDatosRoute: TratamientoDatosRoute,
+  ProgramasSlugRoute: ProgramasSlugRoute,
+  ProgramasIndexRoute: ProgramasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

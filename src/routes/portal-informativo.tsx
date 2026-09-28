@@ -153,7 +153,11 @@ function PortalInformativo() {
       </Section>
 
       <Section id="alianzas">
-        <SectionHeading eyebrow="Alianzas" title="Construimos juntos" description={alianzas.intro} />
+        <SectionHeading
+          eyebrow="Alianzas"
+          title="Construimos juntos"
+          description={alianzas.intro}
+        />
         <div className="mt-10 flex flex-wrap gap-3">
           {alianzas.tipos.map((t) => (
             <span
