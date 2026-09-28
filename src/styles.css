@@ -1,0 +1,257 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * FUNASF — Sistema de diseño institucional.
+ * Paleta de marca: verde, marrón y blanco (fondo cálido).
+ * Todos los colores en oklch y expuestos como tokens semánticos.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Karla", ui-sans-serif, system-ui, sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+
+  /* Tokens propios de marca */
+  --color-brand-green: var(--brand-green);
+  --color-brand-green-deep: var(--brand-green-deep);
+  --color-brand-green-soft: var(--brand-green-soft);
+  --color-brand-brown: var(--brand-brown);
+  --color-brand-brown-soft: var(--brand-brown-soft);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-gold: var(--brand-gold);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  --background: oklch(0.985 0.008 95);
+  --foreground: oklch(0.245 0.028 148);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.245 0.028 148);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.245 0.028 148);
+
+  --primary: oklch(0.44 0.094 152);
+  --primary-foreground: oklch(0.985 0.01 95);
+
+  --secondary: oklch(0.945 0.022 88);
+  --secondary-foreground: oklch(0.33 0.05 70);
+
+  --muted: oklch(0.955 0.014 92);
+  --muted-foreground: oklch(0.49 0.024 120);
+
+  --accent: oklch(0.45 0.072 58);
+  --accent-foreground: oklch(0.985 0.01 95);
+
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.985 0.01 95);
+
+  --border: oklch(0.9 0.018 92);
+  --input: oklch(0.9 0.018 92);
+  --ring: oklch(0.44 0.094 152);
+
+  /* Marca */
+  --brand-green: oklch(0.44 0.094 152);
+  --brand-green-deep: oklch(0.29 0.062 155);
+  --brand-green-soft: oklch(0.94 0.028 150);
+  --brand-brown: oklch(0.45 0.072 58);
+  --brand-brown-soft: oklch(0.93 0.03 70);
+  --brand-sand: oklch(0.955 0.024 85);
+  --brand-gold: oklch(0.74 0.115 78);
+  --surface: oklch(0.975 0.013 92);
+  --surface-strong: oklch(0.955 0.02 88);
+
+  --gradient-hero: linear-gradient(
+    135deg,
+    oklch(0.29 0.062 155) 0%,
+    oklch(0.38 0.084 150) 48%,
+    oklch(0.36 0.06 70) 100%
+  );
+  --gradient-soft: linear-gradient(
+    160deg,
+    oklch(0.975 0.018 95) 0%,
+    oklch(0.945 0.03 140) 100%
+  );
+  --shadow-soft: 0 1px 2px oklch(0.29 0.062 155 / 0.06),
+    0 12px 32px -18px oklch(0.29 0.062 155 / 0.35);
+  --shadow-lift: 0 2px 6px oklch(0.29 0.062 155 / 0.08),
+    0 26px 50px -26px oklch(0.29 0.062 155 / 0.45);
+
+  --chart-1: oklch(0.44 0.094 152);
+  --chart-2: oklch(0.45 0.072 58);
+  --chart-3: oklch(0.74 0.115 78);
+  --chart-4: oklch(0.29 0.062 155);
+  --chart-5: oklch(0.6 0.05 120);
+
+  --sidebar: oklch(0.975 0.013 92);
+  --sidebar-foreground: oklch(0.245 0.028 148);
+  --sidebar-primary: oklch(0.44 0.094 152);
+  --sidebar-primary-foreground: oklch(0.985 0.01 95);
+  --sidebar-accent: oklch(0.94 0.028 150);
+  --sidebar-accent-foreground: oklch(0.29 0.062 155);
+  --sidebar-border: oklch(0.9 0.018 92);
+  --sidebar-ring: oklch(0.44 0.094 152);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6.5rem;
+  }
+}
+
+/* Contenedor institucional */
+@utility container-page {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (min-width: 1024px) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Etiqueta de sección */
+@utility eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-brand-brown);
+}
+
+/* Superficie de tarjeta institucional */
+@utility card-institucional {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+    border-color: color-mix(in oklab, var(--color-brand-green) 35%, transparent);
+  }
+}
+
+@utility surface-hero {
+  background-image: var(--gradient-hero);
+}
+
+@utility surface-soft {
+  background-image: var(--gradient-soft);
+}
+
+@utility text-balance-pretty {
+  text-wrap: pretty;
+}
+
+/* Animación suave de entrada */
+@utility fade-up {
+  animation: funasf-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes funasf-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
