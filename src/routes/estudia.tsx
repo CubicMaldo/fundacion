@@ -65,23 +65,29 @@ function Estudia() {
           title="Oferta de formación por áreas"
           description={formacionAcademica.parrafos[1]}
         />
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {categoriasProgramas.map((cat) => (
-            <article key={cat.id} className="card-institucional">
-              <h3 className="text-brand-green-deep text-lg">{cat.categoria}</h3>
-              <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
-                {cat.programas.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <span
-                      aria-hidden
-                      className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
-                    />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {categoriasProgramas.map((cat, i) => (
+              <AccordionItem key={cat.id} value={`cat-${i}`} className="border-border">
+                <AccordionTrigger className="text-left text-lg font-medium text-brand-green-deep hover:text-brand-green hover:no-underline">
+                  {cat.categoria}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="text-muted-foreground mt-2 space-y-3 p-2 text-base">
+                    {cat.programas.map((p) => (
+                      <li key={p} className="flex items-start gap-3">
+                        <span
+                          aria-hidden
+                          className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
+                        />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
         <p className="text-muted-foreground mt-8 text-sm">
           La duración, la modalidad y las condiciones de cada programa dependen de la institución
@@ -101,7 +107,7 @@ function Estudia() {
             {becas.beneficios.map((b) => (
               <li
                 key={b}
-                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm"
+                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm transition-all hover:bg-primary-foreground/10 hover:-translate-y-0.5"
               >
                 {b}
               </li>

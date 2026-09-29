@@ -196,25 +196,31 @@ function Inicio() {
           title="Programas de formación por áreas"
           description="Programas desarrollados con instituciones educativas aliadas responsables de la formación, la certificación y la expedición de títulos."
         />
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {categoriasProgramas.map((cat) => (
-            <article key={cat.id} className="card-institucional">
-              <h3 className="text-brand-green-deep text-lg">{cat.categoria}</h3>
-              <ul className="text-muted-foreground mt-4 space-y-2 text-sm">
-                {cat.programas.map((p) => (
-                  <li key={p} className="flex gap-2">
-                    <span
-                      aria-hidden
-                      className="bg-brand-gold mt-2 size-1.5 shrink-0 rounded-full"
-                    />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </article>
-          ))}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {categoriasProgramas.map((cat, i) => (
+              <AccordionItem key={cat.id} value={`cat-home-${i}`} className="border-border">
+                <AccordionTrigger className="text-left text-lg font-medium text-brand-green-deep hover:text-brand-green hover:no-underline">
+                  {cat.categoria}
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="text-muted-foreground mt-2 space-y-3 p-2 text-base">
+                    {cat.programas.map((p) => (
+                      <li key={p} className="flex items-start gap-3">
+                        <span
+                          aria-hidden
+                          className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
+                        />
+                        <span>{p}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
-        <div className="mt-10">
+        <div className="mt-10 flex justify-center">
           <Button asChild variant="outline">
             <Link to="/estudia" hash="programas">
               Ver toda la oferta <ArrowRight aria-hidden className="size-4" />
@@ -240,7 +246,7 @@ function Inicio() {
             {becas.beneficios.map((b) => (
               <li
                 key={b}
-                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm"
+                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm transition-all hover:bg-primary-foreground/10 hover:-translate-y-0.5"
               >
                 {b}
               </li>
@@ -308,10 +314,10 @@ function Inicio() {
       {/* VALORES */}
       <Section tone="surface">
         <SectionHeading eyebrow="Nuestros valores" title="Lo que nos sostiene" align="center" />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {valores.map((v) => (
-            <div key={v.nombre} className="border-border bg-card rounded-xl border p-5">
-              <h3 className="text-brand-green-deep text-base">{v.nombre}</h3>
+            <div key={v.nombre} className="card-institucional">
+              <h3 className="text-brand-green-deep text-base font-semibold">{v.nombre}</h3>
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{v.texto}</p>
             </div>
           ))}
@@ -344,14 +350,14 @@ function Inicio() {
           title={llamadoAccion.titulo}
           description={llamadoAccion.subtitulo}
         />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {llamadoAccion.bloques.map((b) => (
             <div
               key={b.titulo}
-              className="border-primary-foreground/20 bg-primary-foreground/5 rounded-xl border p-5"
+              className="border-primary-foreground/20 bg-primary-foreground/5 rounded-xl border p-5 transition-all hover:bg-primary-foreground/10 hover:border-brand-gold/30 hover:-translate-y-1 shadow-sm"
             >
-              <h3 className="text-brand-gold text-base">{b.titulo}</h3>
-              <p className="text-primary-foreground/80 mt-2 text-sm leading-relaxed">{b.texto}</p>
+              <h3 className="text-brand-gold text-base font-medium">{b.titulo}</h3>
+              <p className="text-primary-foreground/80 mt-3 text-sm leading-relaxed">{b.texto}</p>
             </div>
           ))}
         </div>

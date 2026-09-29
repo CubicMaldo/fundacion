@@ -62,8 +62,12 @@ function Contacto() {
               className="card-institucional group"
             >
               <Phone aria-hidden className="text-primary size-5" />
-              <h2 className="text-foreground mt-4 text-xl">Teléfono</h2>
-              <p className="text-muted-foreground mt-2 text-sm">{telefonoPrincipal}</p>
+              <h2 className="text-foreground mt-4 text-xl">Líneas de atención</h2>
+              <ul className="text-muted-foreground mt-2 text-sm space-y-1">
+                {org.telefonos.map(t => (
+                  <li key={t}>{t}</li>
+                ))}
+              </ul>
             </a>
             <a
               href={org.instagramUrl}
