@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown, Mail, Menu, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -164,7 +164,7 @@ export function Header() {
               {org.eslogan}
             </p>
           </div>
-          <div className="text-primary-foreground/80 flex items-center gap-4 text-[11px]">
+          <div className="text-primary-foreground/80 flex items-center gap-3.5 text-[11px]">
             <a
               className="hover:text-brand-gold inline-flex items-center gap-1.5 transition-colors"
               href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
@@ -182,6 +182,21 @@ export function Header() {
               <Mail aria-hidden className="text-brand-gold/90 size-3" />
               <span>{org.correo}</span>
             </a>
+            <span className="text-primary-foreground/30" aria-hidden="true">
+              |
+            </span>
+            <Link
+              to="/portal-estudiantil"
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-semibold transition-all",
+                pathname === "/portal-estudiantil"
+                  ? "bg-brand-gold text-brand-green-deep font-bold shadow-xs"
+                  : "text-brand-gold hover:bg-white/10 hover:text-white",
+              )}
+            >
+              <GraduationCap aria-hidden className="size-3.5" />
+              <span>Portal Estudiantil</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -297,11 +312,28 @@ export function Header() {
         </nav>
 
         {/* Zona 3: Acción destacada y menú móvil */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className={cn(
+              "hidden sm:inline-flex h-9 rounded-full px-3.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border",
+              pathname === "/portal-estudiantil"
+                ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-2 ring-brand-green/20 shadow-xs"
+                : "border-border/90 bg-background text-foreground/85 hover:border-brand-green/50 hover:bg-brand-green-soft/40 hover:text-brand-green-deep",
+            )}
+          >
+            <Link to="/portal-estudiantil">
+              <GraduationCap className="size-4 text-brand-green" />
+              <span>Portal Estudiantil</span>
+            </Link>
+          </Button>
+
           <Button
             asChild
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground hidden h-9 rounded-full px-5 text-xs font-semibold tracking-wider whitespace-nowrap uppercase shadow-xs transition-all hover:shadow sm:inline-flex"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground hidden md:inline-flex h-9 rounded-full px-5 text-xs font-semibold tracking-wider whitespace-nowrap uppercase shadow-xs transition-all hover:shadow"
           >
             <Link to="/estudia" hash="becas">
               Conoce las becas
@@ -342,6 +374,33 @@ export function Header() {
                     <Mail className="text-brand-gold size-3" /> {org.correo}
                   </a>
                 </div>
+              </div>
+
+              {/* Acceso destacado al Portal Estudiantil en móvil */}
+              <div className="p-3.5 border-b border-border/70 bg-brand-green-soft/20">
+                <Link
+                  to="/portal-estudiantil"
+                  onClick={() => setAbierto(false)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl border p-3 transition-all shadow-2xs",
+                    pathname === "/portal-estudiantil"
+                      ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/30"
+                      : "border-border bg-card text-foreground hover:border-brand-green/40 hover:bg-brand-green-soft/30",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 items-center justify-center rounded-lg bg-brand-green text-primary-foreground shadow-xs">
+                      <GraduationCap className="size-5" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold leading-tight">Portal Estudiantil</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        Campus virtual, notas y certificados
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 text-brand-green shrink-0" />
+                </Link>
               </div>
               <nav aria-label="Navegación móvil" className="flex-1 space-y-1 px-4 py-4">
                 <Accordion type="multiple" className="w-full">
