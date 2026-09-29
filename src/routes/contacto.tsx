@@ -64,7 +64,7 @@ function Contacto() {
               <Phone aria-hidden className="text-primary size-5" />
               <h2 className="text-foreground mt-4 text-xl">Líneas de atención</h2>
               <ul className="text-muted-foreground mt-2 text-sm space-y-1">
-                {org.telefonos.map(t => (
+                {org.telefonos.map((t) => (
                   <li key={t}>{t}</li>
                 ))}
               </ul>
