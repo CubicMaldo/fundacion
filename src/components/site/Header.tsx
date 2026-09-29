@@ -89,6 +89,7 @@ export function Header() {
   const [abierto, setAbierto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const hash = useRouterState({ select: (s) => s.location.hash });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -163,7 +164,7 @@ export function Header() {
                   className={cn(
                     "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
                     active
-                      ? "bg-brand-green-soft text-brand-green-deep font-semibold shadow-xs"
+                      ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
                       : "text-foreground/75 group-hover:bg-brand-green-soft/50 group-hover:text-foreground",
                   )}
                 >
@@ -190,21 +191,32 @@ export function Header() {
                       </Link>
                     </div>
                     <div className="space-y-0.5">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          to={child.to}
-                          {...(child.hash ? { hash: child.hash } : {})}
-                          className="flex flex-col items-start px-2.5 py-2 hover:bg-brand-green-soft/70 cursor-pointer rounded-lg transition-colors"
-                        >
-                          <span className="text-foreground text-sm font-medium">{child.label}</span>
-                          {child.description && (
-                            <span className="text-muted-foreground mt-0.5 text-[11px] leading-snug">
-                              {child.description}
-                            </span>
-                          )}
-                        </Link>
-                      ))}
+                      {item.children.map((child) => {
+                        const currentHash = hash || "";
+                        const targetHash = child.hash || "";
+                        const isChildActive = child.to === pathname && currentHash === targetHash;
+                        
+                        return (
+                          <Link
+                            key={child.label}
+                            to={child.to}
+                            {...(child.hash ? { hash: child.hash } : {})}
+                            className={cn(
+                              "flex flex-col items-start px-2.5 py-2 cursor-pointer rounded-lg transition-colors",
+                              isChildActive
+                                ? "bg-brand-green-soft/80 text-brand-green-deep ring-1 ring-brand-green/20 shadow-xs"
+                                : "hover:bg-brand-green-soft/50"
+                            )}
+                          >
+                            <span className={cn("text-sm", isChildActive ? "font-bold" : "font-medium text-foreground")}>{child.label}</span>
+                            {child.description && (
+                              <span className={cn("mt-0.5 text-[11px] leading-snug", isChildActive ? "text-brand-green-deep/80" : "text-muted-foreground")}>
+                                {child.description}
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
@@ -216,7 +228,7 @@ export function Header() {
                 className={cn(
                   "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
                   active
-                    ? "bg-brand-green-soft text-brand-green-deep font-semibold shadow-xs"
+                    ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
                     : "text-foreground/75 hover:bg-brand-green-soft/50 hover:text-foreground",
                 )}
               >
