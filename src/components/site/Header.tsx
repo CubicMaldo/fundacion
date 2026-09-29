@@ -90,6 +90,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const hash = useRouterState({ select: (s) => s.location.hash });
+  const [activeHash, setActiveHash] = useState(hash);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -97,6 +98,49 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (hash) setActiveHash(hash);
+  }, [hash]);
+
+  // Observer para actualizar el activeHash según el scroll (ScrollSpy)
+  useEffect(() => {
+    const hashesToObserve = navegacion
+      .flatMap((item) => item.children || [])
+      .filter((child) => child.to === pathname && child.hash)
+      .map((child) => child.hash!);
+
+    if (hashesToObserve.length === 0) {
+      setActiveHash(hash);
+      return;
+    }
+
+    let observer: IntersectionObserver;
+    const timeoutId = setTimeout(() => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          let visibleId = "";
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              visibleId = entry.target.id;
+            }
+          });
+          if (visibleId) setActiveHash(visibleId);
+        },
+        { rootMargin: "-80px 0px -60% 0px" },
+      );
+
+      hashesToObserve.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      if (observer) observer.disconnect();
+    };
+  }, [pathname]);
 
   useEffect(() => {
     setAbierto(false);
@@ -192,7 +236,7 @@ export function Header() {
                     </div>
                     <div className="space-y-0.5">
                       {item.children.map((child) => {
-                        const currentHash = hash || "";
+                        const currentHash = activeHash || "";
                         const targetHash = child.hash || "";
                         const isChildActive = child.to === pathname && currentHash === targetHash;
 
