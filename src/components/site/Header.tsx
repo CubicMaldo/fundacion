@@ -157,51 +157,45 @@ export function Header() {
             const active = isRouteActive(item.to, item.children, pathname);
 
             return item.children ? (
-              <DropdownMenu key={item.label}>
-                <DropdownMenuTrigger
+              <div key={item.label} className="relative group inline-block">
+                <Link
+                  to={item.to}
                   className={cn(
-                    "group inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
+                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
                     active
                       ? "bg-brand-green-soft text-brand-green-deep font-semibold shadow-xs"
-                      : "text-foreground/75 hover:bg-brand-green-soft/50 hover:text-foreground",
+                      : "text-foreground/75 group-hover:bg-brand-green-soft/50 group-hover:text-foreground",
                   )}
                 >
                   <span>{item.label}</span>
                   <ChevronDown
                     aria-hidden="true"
                     className={cn(
-                      "size-3.5 transition-transform duration-200 group-data-[state=open]:rotate-180",
+                      "size-3.5 transition-transform duration-200 group-hover:rotate-180",
                       active
                         ? "text-brand-green-deep opacity-90"
                         : "text-muted-foreground opacity-60",
                     )}
                   />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  sideOffset={8}
-                  className="border-border/80 bg-popover/95 w-72 rounded-xl border p-1.5 shadow-xl backdrop-blur-md"
-                >
-                  <div className="border-border/60 mb-1 border-b px-2.5 py-1.5">
-                    <Link
-                      to={item.to}
-                      className="text-primary hover:text-brand-green-deep group flex items-center justify-between text-xs font-semibold transition-colors"
-                    >
-                      <span>Explorar todo en {item.label}</span>
-                      <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-                    </Link>
-                  </div>
-                  <div className="space-y-0.5">
-                    {item.children.map((child) => (
-                      <DropdownMenuItem
-                        key={child.label}
-                        asChild
-                        className="focus:bg-brand-green-soft/70 cursor-pointer rounded-lg"
+                </Link>
+                <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="border-border/80 bg-popover/95 w-72 rounded-xl border p-1.5 shadow-xl backdrop-blur-md">
+                    <div className="border-border/60 mb-1 border-b px-2.5 py-1.5">
+                      <Link
+                        to={item.to}
+                        className="text-primary hover:text-brand-green-deep group/link flex items-center justify-between text-xs font-semibold transition-colors"
                       >
+                        <span>Explorar todo en {item.label}</span>
+                        <ArrowRight className="size-3 transition-transform group-hover/link:translate-x-0.5" />
+                      </Link>
+                    </div>
+                    <div className="space-y-0.5">
+                      {item.children.map((child) => (
                         <Link
+                          key={child.label}
                           to={child.to}
                           {...(child.hash ? { hash: child.hash } : {})}
-                          className="flex flex-col items-start px-2.5 py-2"
+                          className="flex flex-col items-start px-2.5 py-2 hover:bg-brand-green-soft/70 cursor-pointer rounded-lg transition-colors"
                         >
                           <span className="text-foreground text-sm font-medium">{child.label}</span>
                           {child.description && (
@@ -210,11 +204,11 @@ export function Header() {
                             </span>
                           )}
                         </Link>
-                      </DropdownMenuItem>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </div>
+              </div>
             ) : (
               <Link
                 key={item.label}
