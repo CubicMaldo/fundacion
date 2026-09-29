@@ -195,7 +195,7 @@ export function Header() {
                         const currentHash = hash || "";
                         const targetHash = child.hash || "";
                         const isChildActive = child.to === pathname && currentHash === targetHash;
-                        
+
                         return (
                           <Link
                             key={child.label}
@@ -205,12 +205,26 @@ export function Header() {
                               "flex flex-col items-start px-2.5 py-2 cursor-pointer rounded-lg transition-colors",
                               isChildActive
                                 ? "bg-brand-green-soft/80 text-brand-green-deep ring-1 ring-brand-green/20 shadow-xs"
-                                : "hover:bg-brand-green-soft/50"
+                                : "hover:bg-brand-green-soft/50",
                             )}
                           >
-                            <span className={cn("text-sm", isChildActive ? "font-bold" : "font-medium text-foreground")}>{child.label}</span>
+                            <span
+                              className={cn(
+                                "text-sm",
+                                isChildActive ? "font-bold" : "font-medium text-foreground",
+                              )}
+                            >
+                              {child.label}
+                            </span>
                             {child.description && (
-                              <span className={cn("mt-0.5 text-[11px] leading-snug", isChildActive ? "text-brand-green-deep/80" : "text-muted-foreground")}>
+                              <span
+                                className={cn(
+                                  "mt-0.5 text-[11px] leading-snug",
+                                  isChildActive
+                                    ? "text-brand-green-deep/80"
+                                    : "text-muted-foreground",
+                                )}
+                              >
                                 {child.description}
                               </span>
                             )}
