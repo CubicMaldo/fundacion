@@ -92,4 +92,3 @@ export type Beca = z.infer<typeof BecaSchema>;
 export type LlamadoAccion = z.infer<typeof LlamadoAccionSchema>;
 export type Alcance = z.infer<typeof AlcanceSchema>;
 export type Valor = z.infer<typeof ValorSchema>;
-
