@@ -15,8 +15,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { org } from "@/data/funasf";
 import { programasAcademicos } from "@/data/programas";
+import { getProgramaBySlug } from "@/services/api";
+import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 
 export const Route = createFileRoute("/programas/$slug")({
+  loader: async ({ params }) => {
+    return await getProgramaBySlug(params.slug);
+  },
   head: ({ params }) => {
     const programa = programasAcademicos.find((p) => p.slug === params.slug);
     const title = programa
@@ -41,7 +46,8 @@ export const Route = createFileRoute("/programas/$slug")({
 
 function ProgramaDetailComponent() {
   const { slug } = Route.useParams();
-  const programa = programasAcademicos.find((p) => p.slug === slug);
+  const loaderData = Route.useLoaderData();
+  const programa = loaderData || programasAcademicos.find((p) => p.slug === slug);
 
   if (!programa) {
     return (
@@ -243,17 +249,15 @@ function ProgramaDetailComponent() {
               </div>
 
               <div className="mt-6 space-y-2.5">
-                <Button asChild size="lg" className="w-full" variant="default">
-                  <a
-                    href={org.formularioInscripcion}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    Postularme a una beca
-                    <ArrowRight className="size-4" />
-                  </a>
-                </Button>
+                <ModalInscripcion
+                  programaNombre={programa.nombre}
+                  triggerButton={
+                    <Button size="lg" className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold">
+                      Postularme a una beca
+                      <ArrowRight className="size-4 ml-2" />
+                    </Button>
+                  }
+                />
 
                 <Button asChild size="lg" variant="outline" className="w-full">
                   <Link to="/contacto">Consultar por este programa</Link>

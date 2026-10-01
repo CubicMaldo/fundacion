@@ -4,23 +4,27 @@ import { ArrowRight, BookOpen, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { categoriasProgramas } from "@/data/funasf";
-import { programasAcademicos } from "@/data/programas";
+import { programasAcademicos, type ProgramaAcademico } from "@/data/programas";
 import { cn } from "@/lib/utils";
 
-export function ProgramCatalog() {
+export function ProgramCatalog({
+  programas = programasAcademicos,
+}: {
+  programas?: ProgramaAcademico[] | undefined;
+} = {}) {
   const [busqueda, setBusqueda] = useState("");
   const [categoria, setCategoria] = useState("todas");
 
   const resultados = useMemo(() => {
     const termino = busqueda.trim().toLocaleLowerCase("es");
-    return programasAcademicos.filter(
+    return programas.filter(
       (programa) =>
         (categoria === "todas" || programa.categoriaId === categoria) &&
         (!termino ||
           programa.nombre.toLocaleLowerCase("es").includes(termino) ||
           programa.categoria.toLocaleLowerCase("es").includes(termino)),
     );
-  }, [busqueda, categoria]);
+  }, [busqueda, categoria, programas]);
 
   return (
     <div>

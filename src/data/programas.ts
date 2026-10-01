@@ -8,8 +8,8 @@ export interface ProgramaAcademico {
   modalidades: string[];
   perfilOcupacional: string[];
   requisitos: string[];
-  certificacionNota?: string;
-  duracionEstimada?: string;
+  certificacionNota?: string | undefined;
+  duracionEstimada?: string | undefined;
 }
 
 export const programasAcademicos: ProgramaAcademico[] = [

@@ -21,8 +21,22 @@ import { Route as QuienesSomosRouteImport } from './routes/quienes-somos'
 import { Route as TerminosCondicionesRouteImport } from './routes/terminos-condiciones'
 import { Route as TrabajaConNosotrosRouteImport } from './routes/trabaja-con-nosotros'
 import { Route as TratamientoDatosRouteImport } from './routes/tratamiento-datos'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as ProgramasIndexRouteImport } from './routes/programas/index'
 import { Route as ProgramasSlugRouteImport } from './routes/programas/$slug'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
+import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
+import { Route as AdminBlogNuevoRouteImport } from './routes/admin/blog/nuevo'
+import { Route as AdminConfiguracionIndexRouteImport } from './routes/admin/configuracion/index'
+import { Route as AdminGaleriaIndexRouteImport } from './routes/admin/galeria/index'
+import { Route as AdminInscripcionesIndexRouteImport } from './routes/admin/inscripciones/index'
+import { Route as AdminMensajesIndexRouteImport } from './routes/admin/mensajes/index'
+import { Route as AdminProgramasIndexRouteImport } from './routes/admin/programas/index'
+import { Route as AdminProgramasIdRouteImport } from './routes/admin/programas/$id'
+import { Route as AdminProgramasNuevoRouteImport } from './routes/admin/programas/nuevo'
+import { Route as AdminUsuariosIndexRouteImport } from './routes/admin/usuarios/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -84,6 +98,21 @@ const TratamientoDatosRoute = TratamientoDatosRouteImport.update({
   path: '/tratamiento-datos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const ProgramasIndexRoute = ProgramasIndexRouteImport.update({
   id: '/programas/',
   path: '/programas/',
@@ -94,10 +123,65 @@ const ProgramasSlugRoute = ProgramasSlugRouteImport.update({
   path: '/programas/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/admin/blog/',
+  path: '/admin/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogIdRoute = AdminBlogIdRouteImport.update({
+  id: '/admin/blog/$id',
+  path: '/admin/blog/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogNuevoRoute = AdminBlogNuevoRouteImport.update({
+  id: '/admin/blog/nuevo',
+  path: '/admin/blog/nuevo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminConfiguracionIndexRoute = AdminConfiguracionIndexRouteImport.update({
+  id: '/admin/configuracion/',
+  path: '/admin/configuracion/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminGaleriaIndexRoute = AdminGaleriaIndexRouteImport.update({
+  id: '/admin/galeria/',
+  path: '/admin/galeria/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminInscripcionesIndexRoute = AdminInscripcionesIndexRouteImport.update({
+  id: '/admin/inscripciones/',
+  path: '/admin/inscripciones/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMensajesIndexRoute = AdminMensajesIndexRouteImport.update({
+  id: '/admin/mensajes/',
+  path: '/admin/mensajes/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProgramasIndexRoute = AdminProgramasIndexRouteImport.update({
+  id: '/admin/programas/',
+  path: '/admin/programas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProgramasIdRoute = AdminProgramasIdRouteImport.update({
+  id: '/admin/programas/$id',
+  path: '/admin/programas/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProgramasNuevoRoute = AdminProgramasNuevoRouteImport.update({
+  id: '/admin/programas/nuevo',
+  path: '/admin/programas/nuevo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsuariosIndexRoute = AdminUsuariosIndexRouteImport.update({
+  id: '/admin/usuarios/',
+  path: '/admin/usuarios/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
@@ -108,12 +192,26 @@ export interface FileRoutesByFullPath {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/programas/$slug': typeof ProgramasSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/programas/': typeof ProgramasIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
+  '/admin/programas/$id': typeof AdminProgramasIdRoute
+  '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/configuracion/': typeof AdminConfiguracionIndexRoute
+  '/admin/galeria/': typeof AdminGaleriaIndexRoute
+  '/admin/inscripciones/': typeof AdminInscripcionesIndexRoute
+  '/admin/mensajes/': typeof AdminMensajesIndexRoute
+  '/admin/programas/': typeof AdminProgramasIndexRoute
+  '/admin/usuarios/': typeof AdminUsuariosIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
@@ -124,13 +222,27 @@ export interface FileRoutesByTo {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/programas/$slug': typeof ProgramasSlugRoute
+  '/admin': typeof AdminIndexRoute
   '/programas': typeof ProgramasIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
+  '/admin/programas/$id': typeof AdminProgramasIdRoute
+  '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/configuracion': typeof AdminConfiguracionIndexRoute
+  '/admin/galeria': typeof AdminGaleriaIndexRoute
+  '/admin/inscripciones': typeof AdminInscripcionesIndexRoute
+  '/admin/mensajes': typeof AdminMensajesIndexRoute
+  '/admin/programas': typeof AdminProgramasIndexRoute
+  '/admin/usuarios': typeof AdminUsuariosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
@@ -141,8 +253,22 @@ export interface FileRoutesById {
   '/terminos-condiciones': typeof TerminosCondicionesRoute
   '/trabaja-con-nosotros': typeof TrabajaConNosotrosRoute
   '/tratamiento-datos': typeof TratamientoDatosRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/programas/$slug': typeof ProgramasSlugRoute
+  '/admin/': typeof AdminIndexRoute
   '/programas/': typeof ProgramasIndexRoute
+  '/admin/blog/$id': typeof AdminBlogIdRoute
+  '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
+  '/admin/programas/$id': typeof AdminProgramasIdRoute
+  '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/configuracion/': typeof AdminConfiguracionIndexRoute
+  '/admin/galeria/': typeof AdminGaleriaIndexRoute
+  '/admin/inscripciones/': typeof AdminInscripcionesIndexRoute
+  '/admin/mensajes/': typeof AdminMensajesIndexRoute
+  '/admin/programas/': typeof AdminProgramasIndexRoute
+  '/admin/usuarios/': typeof AdminUsuariosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -159,8 +285,22 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/admin/login'
+    | '/blog/$slug'
     | '/programas/$slug'
+    | '/admin/'
     | '/programas/'
+    | '/admin/blog/$id'
+    | '/admin/blog/nuevo'
+    | '/admin/programas/$id'
+    | '/admin/programas/nuevo'
+    | '/admin/blog/'
+    | '/admin/configuracion/'
+    | '/admin/galeria/'
+    | '/admin/inscripciones/'
+    | '/admin/mensajes/'
+    | '/admin/programas/'
+    | '/admin/usuarios/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -175,8 +315,22 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/admin/login'
+    | '/blog/$slug'
     | '/programas/$slug'
+    | '/admin'
     | '/programas'
+    | '/admin/blog/$id'
+    | '/admin/blog/nuevo'
+    | '/admin/programas/$id'
+    | '/admin/programas/nuevo'
+    | '/admin/blog'
+    | '/admin/configuracion'
+    | '/admin/galeria'
+    | '/admin/inscripciones'
+    | '/admin/mensajes'
+    | '/admin/programas'
+    | '/admin/usuarios'
   id:
     | '__root__'
     | '/'
@@ -191,13 +345,27 @@ export interface FileRouteTypes {
     | '/terminos-condiciones'
     | '/trabaja-con-nosotros'
     | '/tratamiento-datos'
+    | '/admin/login'
+    | '/blog/$slug'
     | '/programas/$slug'
+    | '/admin/'
     | '/programas/'
+    | '/admin/blog/$id'
+    | '/admin/blog/nuevo'
+    | '/admin/programas/$id'
+    | '/admin/programas/nuevo'
+    | '/admin/blog/'
+    | '/admin/configuracion/'
+    | '/admin/galeria/'
+    | '/admin/inscripciones/'
+    | '/admin/mensajes/'
+    | '/admin/programas/'
+    | '/admin/usuarios/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   ContactoRoute: typeof ContactoRoute
   EstudiaRoute: typeof EstudiaRoute
   GaleriaRoute: typeof GaleriaRoute
@@ -208,8 +376,21 @@ export interface RootRouteChildren {
   TerminosCondicionesRoute: typeof TerminosCondicionesRoute
   TrabajaConNosotrosRoute: typeof TrabajaConNosotrosRoute
   TratamientoDatosRoute: typeof TratamientoDatosRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   ProgramasSlugRoute: typeof ProgramasSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   ProgramasIndexRoute: typeof ProgramasIndexRoute
+  AdminBlogIdRoute: typeof AdminBlogIdRoute
+  AdminBlogNuevoRoute: typeof AdminBlogNuevoRoute
+  AdminProgramasIdRoute: typeof AdminProgramasIdRoute
+  AdminProgramasNuevoRoute: typeof AdminProgramasNuevoRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+  AdminConfiguracionIndexRoute: typeof AdminConfiguracionIndexRoute
+  AdminGaleriaIndexRoute: typeof AdminGaleriaIndexRoute
+  AdminInscripcionesIndexRoute: typeof AdminInscripcionesIndexRoute
+  AdminMensajesIndexRoute: typeof AdminMensajesIndexRoute
+  AdminProgramasIndexRoute: typeof AdminProgramasIndexRoute
+  AdminUsuariosIndexRoute: typeof AdminUsuariosIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -298,6 +479,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TratamientoDatosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/programas/': {
       id: '/programas/'
       path: '/programas'
@@ -312,12 +514,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramasSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/admin/blog'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog/$id': {
+      id: '/admin/blog/$id'
+      path: '/admin/blog/$id'
+      fullPath: '/admin/blog/$id'
+      preLoaderRoute: typeof AdminBlogIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog/nuevo': {
+      id: '/admin/blog/nuevo'
+      path: '/admin/blog/nuevo'
+      fullPath: '/admin/blog/nuevo'
+      preLoaderRoute: typeof AdminBlogNuevoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/configuracion/': {
+      id: '/admin/configuracion/'
+      path: '/admin/configuracion'
+      fullPath: '/admin/configuracion/'
+      preLoaderRoute: typeof AdminConfiguracionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/galeria/': {
+      id: '/admin/galeria/'
+      path: '/admin/galeria'
+      fullPath: '/admin/galeria/'
+      preLoaderRoute: typeof AdminGaleriaIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/inscripciones/': {
+      id: '/admin/inscripciones/'
+      path: '/admin/inscripciones'
+      fullPath: '/admin/inscripciones/'
+      preLoaderRoute: typeof AdminInscripcionesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/mensajes/': {
+      id: '/admin/mensajes/'
+      path: '/admin/mensajes'
+      fullPath: '/admin/mensajes/'
+      preLoaderRoute: typeof AdminMensajesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/programas/': {
+      id: '/admin/programas/'
+      path: '/admin/programas'
+      fullPath: '/admin/programas/'
+      preLoaderRoute: typeof AdminProgramasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/programas/$id': {
+      id: '/admin/programas/$id'
+      path: '/admin/programas/$id'
+      fullPath: '/admin/programas/$id'
+      preLoaderRoute: typeof AdminProgramasIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/programas/nuevo': {
+      id: '/admin/programas/nuevo'
+      path: '/admin/programas/nuevo'
+      fullPath: '/admin/programas/nuevo'
+      preLoaderRoute: typeof AdminProgramasNuevoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/usuarios/': {
+      id: '/admin/usuarios/'
+      path: '/admin/usuarios'
+      fullPath: '/admin/usuarios/'
+      preLoaderRoute: typeof AdminUsuariosIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   ContactoRoute: ContactoRoute,
   EstudiaRoute: EstudiaRoute,
   GaleriaRoute: GaleriaRoute,
@@ -328,8 +617,21 @@ const rootRouteChildren: RootRouteChildren = {
   TerminosCondicionesRoute: TerminosCondicionesRoute,
   TrabajaConNosotrosRoute: TrabajaConNosotrosRoute,
   TratamientoDatosRoute: TratamientoDatosRoute,
+  AdminLoginRoute: AdminLoginRoute,
   ProgramasSlugRoute: ProgramasSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
   ProgramasIndexRoute: ProgramasIndexRoute,
+  AdminBlogIdRoute: AdminBlogIdRoute,
+  AdminBlogNuevoRoute: AdminBlogNuevoRoute,
+  AdminProgramasIdRoute: AdminProgramasIdRoute,
+  AdminProgramasNuevoRoute: AdminProgramasNuevoRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
+  AdminConfiguracionIndexRoute: AdminConfiguracionIndexRoute,
+  AdminGaleriaIndexRoute: AdminGaleriaIndexRoute,
+  AdminInscripcionesIndexRoute: AdminInscripcionesIndexRoute,
+  AdminMensajesIndexRoute: AdminMensajesIndexRoute,
+  AdminProgramasIndexRoute: AdminProgramasIndexRoute,
+  AdminUsuariosIndexRoute: AdminUsuariosIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

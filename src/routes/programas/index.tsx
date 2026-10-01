@@ -4,6 +4,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { ProgramCatalog } from "@/components/site/ProgramCatalog";
 import { Button } from "@/components/ui/button";
 import { becas, formacionAcademica } from "@/data/funasf";
+import { getProgramasAcademicos } from "@/services/api";
 
 export const Route = createFileRoute("/programas/")({
   head: () => ({
@@ -24,10 +25,14 @@ export const Route = createFileRoute("/programas/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  loader: async () => {
+    return await getProgramasAcademicos();
+  },
   component: ProgramasIndexComponent,
 });
 
 function ProgramasIndexComponent() {
+  const programas = Route.useLoaderData();
   return (
     <div className="flex flex-col">
       <PageHero
@@ -80,7 +85,7 @@ function ProgramasIndexComponent() {
           </p>
         </div>
 
-        <ProgramCatalog />
+        <ProgramCatalog programas={programas} />
 
         {/* Bloque explicativo de cómo funciona la alianza educativa */}
         <section className="mt-16 rounded-2xl border border-border bg-card p-6 md:p-10 shadow-sm">

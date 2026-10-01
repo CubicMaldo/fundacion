@@ -10,3 +10,15 @@
 - [x] Crear páginas individuales para cada programa con la información oficial disponible.
 - [x] Integrar el catálogo en inicio, navegación y flujo de inscripción.
 - [x] Verificar cada recorrido, enlace, vista móvil y metadatos.
+- [x] Sincronizar la última versión de GitHub y continuar.
+- [x] Diseñar e implementar esquema relacional PostgreSQL en Supabase con RLS y disparadores.
+- [x] Generar migración y seed inicial con los 15 programas oficiales y datos de FUNASF.
+- [x] Construir arquitectura híbrida con fallback resiliente en `src/services/api.ts`.
+- [x] Implementar autenticación y shell administrativo responsivo (`/admin` y `/admin/login`).
+- [x] Construir CRUD de programas académicos con sincronización en el catálogo público.
+- [x] Construir editor de datos institucionales (canales, sedes, identidad y becas).
+- [x] Construir buzón de mensajes de contacto y formulario reactivo en `/contacto`.
+- [x] Construir bandeja de postulaciones/inscripciones a becas y modal directo en el sitio.
+- [x] Activar el Blog y Galería en la web pública con sus gestores en el panel administrativo.
+- [x] Implementar control de acceso RBAC para Administradores y Editores con gestión de roles.
+- [x] Verificar 0 errores en TypeScript (`tsc --noEmit`) y build completo de producción.
