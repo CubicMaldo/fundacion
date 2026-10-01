@@ -175,16 +175,26 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
+SET search_path = public
 AS $$
+DECLARE
+  v_role public.app_role := 'editor';
 BEGIN
+  IF NEW.raw_user_meta_data->>'rol' = 'admin' THEN
+    v_role := 'admin';
+  END IF;
+
   INSERT INTO public.perfiles (id, email, nombre_completo, rol)
   VALUES (
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'nombre_completo', split_part(NEW.email, '@', 1)),
-    COALESCE((NEW.raw_user_meta_data->>'rol')::public.app_role, 'editor')
+    v_role
   )
   ON CONFLICT (id) DO NOTHING;
+  RETURN NEW;
+EXCEPTION WHEN OTHERS THEN
+  -- Garantizar que nunca rompa el proceso de autenticación de Supabase GoTrue
   RETURN NEW;
 END;
 $$;
