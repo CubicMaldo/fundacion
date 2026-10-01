@@ -17,25 +17,26 @@ import {
   faq,
   org,
 } from "@/data/funasf";
+import { programasAcademicos } from "@/data/programas";
+import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/estudia")({
-  head: () => ({
-    meta: [
-      { title: "Estudia con FUNASF — Programas y becas" },
-      {
-        name: "description",
-        content:
-          "Programas técnicos en salud, administración, educación y otras áreas, con becas de hasta el 90 % según convocatoria, a través de instituciones aliadas.",
-      },
-      { property: "og:title", content: "Estudia con FUNASF — Programas y becas" },
-      {
-        property: "og:description",
-        content: "Formación técnica y becas de hasta el 90 %, según convocatoria.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Estudia con FUNASF Colombia | Becas de hasta 90 % — EduFUNASF",
+      description:
+        "Accede a programas de formación técnica y laboral en alianza: salud, administración, seguridad en el trabajo y validación de bachillerato. Convocatorias de becas de hasta el 90 % en Colombia.",
+      canonicalPath: "/estudia",
+      keywords:
+        "estudiar con FUNASF, becas FUNASF Colombia, EduFUNASF, becas 90 por ciento, programas tecnicos Cali Atlantico, capacitacion laboral, validacion bachillerato",
+      jsonLd: [
+        getBreadcrumbSchema([
+          { name: "Inicio", path: "/" },
+          { name: "Estudia con FUNASF", path: "/estudia" },
+        ]),
+        getFaqSchema(),
+      ],
+    }),
   component: Estudia,
 });
 
@@ -74,22 +75,54 @@ function Estudia() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <ul className="text-muted-foreground mt-2 space-y-3 p-2 text-base">
-                    {cat.programas.map((p) => (
-                      <li key={p} className="flex items-start gap-3">
-                        <span
-                          aria-hidden
-                          className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
-                        />
-                        <span>{p}</span>
-                      </li>
-                    ))}
+                    {cat.programas.map((p) => {
+                      const matchProg = programasAcademicos.find(
+                        (pa) =>
+                          pa.nombre.toLowerCase() === p.toLowerCase() ||
+                          p.toLowerCase().includes(pa.nombre.toLowerCase()) ||
+                          (p.toLowerCase().includes("bachillerato") &&
+                            pa.slug === "validacion-del-bachillerato"),
+                      );
+
+                      return (
+                        <li key={p} className="flex items-start gap-3">
+                          <span
+                            aria-hidden
+                            className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
+                          />
+                          {matchProg ? (
+                            <Link
+                              to="/programas/$slug"
+                              params={{ slug: matchProg.slug }}
+                              className="font-medium text-foreground hover:text-brand-green transition-colors inline-flex items-center gap-1.5 group"
+                            >
+                              <span>{p}</span>
+                              <ArrowRight
+                                aria-hidden
+                                className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-brand-green shrink-0"
+                              />
+                            </Link>
+                          ) : (
+                            <span>{p}</span>
+                          )}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
         </div>
-        <p className="text-muted-foreground mt-8 text-sm">
+        <div className="mt-8 flex justify-center">
+          <Button asChild variant="outline">
+            <Link to="/programas">
+              Ver catálogo completo con filtros y fichas técnicas
+              <ArrowRight aria-hidden className="size-4 ml-2" />
+            </Link>
+          </Button>
+        </div>
+        <p className="text-muted-foreground mt-6 text-center text-xs">
           La duración, la modalidad y las condiciones de cada programa dependen de la institución
           aliada responsable y de la convocatoria vigente.
         </p>
@@ -171,15 +204,58 @@ function Estudia() {
         <SectionHeading
           eyebrow="Requisitos"
           title="Antes de inscribirte"
-          description="Los requisitos dependen de cada programa y de la convocatoria vigente de la institución aliada responsable."
+          description="Los requisitos generales dependen de cada programa y de la convocatoria vigente de la institución aliada responsable."
         />
-        <p className="text-brand-brown mt-6 font-semibold">
-          [REQUISITOS ESPECÍFICOS POR PROGRAMA PENDIENTES DE SUMINISTRAR]
-        </p>
-        <p className="text-muted-foreground mt-4 max-w-3xl text-sm leading-relaxed">
-          Si deseas conocer los requisitos de un programa en particular, escríbenos y te orientamos
-          durante todo el proceso.
-        </p>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="card-institucional">
+            <span className="text-brand-gold font-bold text-xs uppercase tracking-wider">
+              Criterio 1
+            </span>
+            <h3 className="font-semibold text-foreground text-sm mt-1">Identidad</h3>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              Documento de identidad vigente (cédula de ciudadanía, tarjeta de identidad o documento
+              válido según corresponda).
+            </p>
+          </div>
+          <div className="card-institucional">
+            <span className="text-brand-gold font-bold text-xs uppercase tracking-wider">
+              Criterio 2
+            </span>
+            <h3 className="font-semibold text-foreground text-sm mt-1">Escolaridad previa</h3>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              Certificado de noveno grado o diploma de bachiller, conforme al plan de estudios del
+              programa y la institución responsable.
+            </p>
+          </div>
+          <div className="card-institucional">
+            <span className="text-brand-gold font-bold text-xs uppercase tracking-wider">
+              Criterio 3
+            </span>
+            <h3 className="font-semibold text-foreground text-sm mt-1">Convocatoria</h3>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              Cumplimiento de las condiciones, fechas y disponibilidad de cupos establecidas en cada
+              convocatoria de becas.
+            </p>
+          </div>
+          <div className="card-institucional">
+            <span className="text-brand-gold font-bold text-xs uppercase tracking-wider">
+              Criterio 4
+            </span>
+            <h3 className="font-semibold text-foreground text-sm mt-1">Requisitos específicos</h3>
+            <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+              Cada programa detalla sus requerimientos particulares (por ejemplo, esquema de
+              vacunación en el área de salud).
+            </p>
+          </div>
+        </div>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/programas">Consultar requisitos detallados en el catálogo</Link>
+          </Button>
+          <span className="text-xs text-muted-foreground">
+            O comunícate a nuestras líneas de atención para recibir orientación personalizada.
+          </span>
+        </div>
       </Section>
 
       <Section id="matriculas" tone="surface">

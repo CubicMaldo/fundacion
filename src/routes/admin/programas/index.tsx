@@ -61,7 +61,14 @@ function AdminProgramasIndex() {
   useEffect(() => {
     async function loadProgramas() {
       if (!isConfigured) {
-        setProgramas(programasAcademicos.map((p, i) => ({ ...p, id: `local-${i}`, activo: true, orden: i + 1 })));
+        setProgramas(
+          programasAcademicos.map((p, i) => ({
+            ...p,
+            id: `local-${i}`,
+            activo: true,
+            orden: i + 1,
+          })),
+        );
         setLoading(false);
         return;
       }
@@ -73,7 +80,14 @@ function AdminProgramasIndex() {
           .order("orden", { ascending: true });
 
         if (error || !data || data.length === 0) {
-          setProgramas(programasAcademicos.map((p, i) => ({ ...p, id: `local-${i}`, activo: true, orden: i + 1 })));
+          setProgramas(
+            programasAcademicos.map((p, i) => ({
+              ...p,
+              id: `local-${i}`,
+              activo: true,
+              orden: i + 1,
+            })),
+          );
         } else {
           setProgramas(
             data.map((row) => ({
@@ -91,12 +105,19 @@ function AdminProgramasIndex() {
               duracionEstimada: row.duracion_estimada || undefined,
               activo: row.activo,
               orden: row.orden,
-            }))
+            })),
           );
         }
       } catch (err) {
         console.warn("Error cargando programas:", err);
-        setProgramas(programasAcademicos.map((p, i) => ({ ...p, id: `local-${i}`, activo: true, orden: i + 1 })));
+        setProgramas(
+          programasAcademicos.map((p, i) => ({
+            ...p,
+            id: `local-${i}`,
+            activo: true,
+            orden: i + 1,
+          })),
+        );
       } finally {
         setLoading(false);
       }
@@ -131,15 +152,12 @@ function AdminProgramasIndex() {
   const toggleEstado = async (item: ProgramaAdminItem) => {
     const nuevoEstado = !item.activo;
     setProgramas((prev) =>
-      prev.map((p) => (p.slug === item.slug ? { ...p, activo: nuevoEstado } : p))
+      prev.map((p) => (p.slug === item.slug ? { ...p, activo: nuevoEstado } : p)),
     );
 
     if (isConfigured && item.id && !item.id.startsWith("local-")) {
       try {
-        await supabase
-          .from("programas")
-          .update({ activo: nuevoEstado })
-          .eq("id", item.id);
+        await supabase.from("programas").update({ activo: nuevoEstado }).eq("id", item.id);
       } catch (err) {
         console.error("Error actualizando estado:", err);
       }
@@ -196,7 +214,10 @@ function AdminProgramasIndex() {
         </div>
 
         {/* Botón Nuevo Programa */}
-        <Button asChild className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground shrink-0">
+        <Button
+          asChild
+          className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground shrink-0"
+        >
           <Link to="/admin/programas/nuevo">
             <Plus className="size-4 mr-2" />
             Nuevo Programa
@@ -238,7 +259,9 @@ function AdminProgramasIndex() {
                   </TableCell>
                   <TableCell>
                     <div className="font-medium text-foreground">{item.nombre}</div>
-                    <div className="text-xs text-muted-foreground font-mono">/programas/{item.slug}</div>
+                    <div className="text-xs text-muted-foreground font-mono">
+                      /programas/{item.slug}
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline" className="font-normal text-xs">
@@ -248,7 +271,10 @@ function AdminProgramasIndex() {
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {item.modalidades.map((m) => (
-                        <span key={m} className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                        <span
+                          key={m}
+                          className="rounded-md bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground"
+                        >
                           {m}
                         </span>
                       ))}
@@ -274,13 +300,25 @@ function AdminProgramasIndex() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Button asChild variant="ghost" size="icon" className="size-8" title="Ver en la web pública">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        title="Ver en la web pública"
+                      >
                         <a href={`/programas/${item.slug}`} target="_blank" rel="noreferrer">
                           <Eye className="size-4 text-muted-foreground" />
                         </a>
                       </Button>
 
-                      <Button asChild variant="ghost" size="icon" className="size-8" title="Editar programa">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        title="Editar programa"
+                      >
                         <Link to="/admin/programas/$id" params={{ id: item.id || item.slug }}>
                           <Edit className="size-4 text-brand-green" />
                         </Link>
@@ -312,13 +350,16 @@ function AdminProgramasIndex() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Deseas eliminar este programa?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción eliminará el programa <strong>{itemToDelete?.nombre}</strong> del catálogo público.
-              Los aspirantes existentes no se perderán.
+              Esta acción eliminará el programa <strong>{itemToDelete?.nombre}</strong> del catálogo
+              público. Los aspirantes existentes no se perderán.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmarEliminar} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmarEliminar}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Eliminar Programa
             </AlertDialogAction>
           </AlertDialogFooter>

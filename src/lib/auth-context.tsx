@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -37,8 +30,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function isSupabaseConfigured(): boolean {
   try {
-    const url = import.meta.env["VITE_SUPABASE_URL"] || (typeof process !== "undefined" ? process.env?.["SUPABASE_URL"] : undefined);
-    const key = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] || (typeof process !== "undefined" ? process.env?.["SUPABASE_PUBLISHABLE_KEY"] : undefined);
+    const url =
+      import.meta.env["VITE_SUPABASE_URL"] ||
+      (typeof process !== "undefined" ? process.env?.["SUPABASE_URL"] : undefined);
+    const key =
+      import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
+      (typeof process !== "undefined" ? process.env?.["SUPABASE_PUBLISHABLE_KEY"] : undefined);
     return Boolean(url && key);
   } catch {
     return false;
@@ -51,43 +48,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const configured = isSupabaseConfigured();
 
-  const fetchProfile = useCallback(async (userId: string, userEmail: string): Promise<UserProfile> => {
-    try {
-      const { data, error } = await supabase
-        .from("perfiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
+  const fetchProfile = useCallback(
+    async (userId: string, userEmail: string): Promise<UserProfile> => {
+      try {
+        const { data, error } = await supabase
+          .from("perfiles")
+          .select("*")
+          .eq("id", userId)
+          .maybeSingle();
 
-      if (error || !data) {
-        // Si no existe perfil en la tabla pero está autenticado, asignamos editor o admin por defecto
-        const fallbackProfile: UserProfile = {
+        if (error || !data) {
+          // Si no existe perfil en la tabla pero está autenticado, asignamos editor o admin por defecto
+          const fallbackProfile: UserProfile = {
+            id: userId,
+            email: userEmail,
+            nombre_completo: userEmail.split("@")[0] ?? "Usuario",
+            rol: "admin", // Primer usuario como admin
+            avatar_url: null,
+          };
+          return fallbackProfile;
+        }
+
+        return {
+          id: data.id,
+          email: data.email,
+          nombre_completo: data.nombre_completo,
+          rol: (data.rol as UserRole) || "editor",
+          avatar_url: data.avatar_url,
+        };
+      } catch {
+        return {
           id: userId,
           email: userEmail,
           nombre_completo: userEmail.split("@")[0] ?? "Usuario",
-          rol: "admin", // Primer usuario como admin
+          rol: "admin",
           avatar_url: null,
         };
-        return fallbackProfile;
       }
-
-      return {
-        id: data.id,
-        email: data.email,
-        nombre_completo: data.nombre_completo,
-        rol: (data.rol as UserRole) || "editor",
-        avatar_url: data.avatar_url,
-      };
-    } catch {
-      return {
-        id: userId,
-        email: userEmail,
-        nombre_completo: userEmail.split("@")[0] ?? "Usuario",
-        rol: "admin",
-        avatar_url: null,
-      };
-    }
-  }, []);
+    },
+    [],
+  );
 
   const refreshProfile = useCallback(async () => {
     if (!user) return;
@@ -105,7 +105,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     async function initSession() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
         if (session?.user && isMounted) {
           setUser(session.user);
           const p = await fetchProfile(session.user.id, session.user.email ?? "");
@@ -120,20 +122,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!isMounted) return;
-        if (session?.user) {
-          setUser(session.user);
-          const p = await fetchProfile(session.user.id, session.user.email ?? "");
-          if (isMounted) setProfile(p);
-        } else {
-          setUser(null);
-          setProfile(null);
-        }
-        setIsLoading(false);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!isMounted) return;
+      if (session?.user) {
+        setUser(session.user);
+        const p = await fetchProfile(session.user.id, session.user.email ?? "");
+        if (isMounted) setProfile(p);
+      } else {
+        setUser(null);
+        setProfile(null);
       }
-    );
+      setIsLoading(false);
+    });
 
     return () => {
       isMounted = false;

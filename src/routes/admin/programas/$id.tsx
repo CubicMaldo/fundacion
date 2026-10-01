@@ -26,9 +26,7 @@ function EditarProgramaPage() {
     async function loadPrograma() {
       if (!isConfigured) {
         // Buscar en datos locales por id o por slug
-        const local =
-          programasAcademicos.find((p) => p.slug === id) ||
-          programasAcademicos[0];
+        const local = programasAcademicos.find((p) => p.slug === id) || programasAcademicos[0];
         if (local) {
           setPrograma({ ...local, id: `local-${local.slug}`, activo: true, orden: 1 });
         }
@@ -121,4 +119,3 @@ function EditarProgramaPage() {
     </AdminLayout>
   );
 }
-

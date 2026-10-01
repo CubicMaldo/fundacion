@@ -94,7 +94,7 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
                   "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase",
                   isAdmin
                     ? "bg-brand-green/15 text-brand-green-deep"
-                    : "bg-brand-brown/15 text-brand-brown"
+                    : "bg-brand-brown/15 text-brand-brown",
                 )}
               >
                 <Shield className="size-2.5" />
@@ -127,10 +127,15 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
                   "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   active
                     ? "bg-brand-green text-primary-foreground font-semibold shadow-xs"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
-                <Icon className={cn("size-4 shrink-0", active ? "text-primary-foreground" : "text-muted-foreground")} />
+                <Icon
+                  className={cn(
+                    "size-4 shrink-0",
+                    active ? "text-primary-foreground" : "text-muted-foreground",
+                  )}
+                />
                 <span>{item.label}</span>
               </Link>
             );

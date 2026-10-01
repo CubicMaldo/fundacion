@@ -13,24 +13,22 @@ import {
   formacionAcademica,
 } from "@/data/funasf";
 
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
+
 export const Route = createFileRoute("/portal-informativo")({
-  head: () => ({
-    meta: [
-      { title: "Portal informativo | FUNASF" },
-      {
-        name: "description",
-        content:
-          "Talleres, formación, emprendimiento, programas sociales, voluntariado y alianzas de la Fundación Internacional Amigos Sin Fronteras.",
-      },
-      { property: "og:title", content: "Portal informativo | FUNASF" },
-      {
-        property: "og:description",
-        content: "Formación, emprendimiento, programas sociales, voluntariado y alianzas.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Iniciativas y Programas Sociales | Portal Informativo FUNASF",
+      description:
+        "Conoce las iniciativas de FUNASF: Educación Sin Fronteras, Salud para Todos, Amigos por la Vida, Eco Amigos, Casa de Emprendimiento, voluntariado y alianzas.",
+      canonicalPath: "/portal-informativo",
+      keywords:
+        "programas sociales FUNASF, emprendimiento solidario, voluntariado FUNASF, alianzas educativas, Eco Amigos, Salud para Todos",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Iniciativas y Programas Sociales", path: "/portal-informativo" },
+      ]),
+    }),
   component: PortalInformativo,
 });
 

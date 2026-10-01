@@ -1,6 +1,15 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Instagram, Loader2, Mail, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import {
+  CheckCircle2,
+  Instagram,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Send,
+} from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
@@ -9,25 +18,32 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { org, telefonoPrincipal, whatsappLink } from "@/data/funasf";
 import { enviarMensajeContacto } from "@/services/api";
+import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/contacto")({
-  head: () => ({
-    meta: [
-      { title: "Contacto | FUNASF" },
-      {
-        name: "description",
-        content:
-          "Canales oficiales de contacto de la Fundación Internacional Amigos Sin Fronteras.",
-      },
-      { property: "og:title", content: "Contacto | FUNASF" },
-      {
-        property: "og:description",
-        content: "Habla con FUNASF sobre programas, becas, voluntariado y alianzas.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Contacto | FUNASF Colombia — Líneas de Orientación y Sede Cali",
+      description:
+        "Canales oficiales de FUNASF Colombia (EduFUNASF). Comunícate por WhatsApp (313 577 9384), correo o en nuestra sede en Cali para orientación sobre programas técnicos, becas de hasta 90 % y alianzas.",
+      canonicalPath: "/contacto",
+      keywords:
+        "Contacto FUNASF, FUNASF Colombia, EduFUNASF, teléfono FUNASF 3135779384, sede FUNASF Cali, orientación becas FUNASF Colombia",
+      jsonLd: [
+        getBreadcrumbSchema([
+          { name: "Inicio", path: "/" },
+          { name: "Contacto", path: "/contacto" },
+        ]),
+        {
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          name: "Canales de Contacto Oficial — FUNASF",
+          url: `${SITE_URL}/contacto`,
+          description:
+            "Líneas de atención telefónica, WhatsApp, correo electrónico y formulario de inscripción de la Fundación Internacional Amigos Sin Fronteras.",
+        },
+      ],
+    }),
   component: Contacto,
 });
 
@@ -146,13 +162,10 @@ function Contacto() {
                 </div>
                 <h3 className="text-xl font-bold text-foreground">¡Mensaje enviado con éxito!</h3>
                 <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  Gracias por escribirnos. Tu mensaje ha sido recibido en nuestro buzón administrativo y te responderemos a la mayor brevedad.
+                  Gracias por escribirnos. Tu mensaje ha sido recibido en nuestro buzón
+                  administrativo y te responderemos a la mayor brevedad.
                 </p>
-                <Button
-                  variant="outline"
-                  onClick={() => setEnviadoExito(false)}
-                  className="mt-4"
-                >
+                <Button variant="outline" onClick={() => setEnviadoExito(false)} className="mt-4">
                   Enviar otro mensaje
                 </Button>
               </div>

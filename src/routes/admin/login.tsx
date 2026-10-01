@@ -11,7 +11,10 @@ export const Route = createFileRoute("/admin/login")({
   head: () => ({
     meta: [
       { title: "Acceso Administrativo | FUNASF" },
-      { name: "description", content: "Portal de acceso para administradores y editores de FUNASF." },
+      {
+        name: "description",
+        content: "Portal de acceso para administradores y editores de FUNASF.",
+      },
     ],
   }),
   component: AdminLogin,
@@ -71,9 +74,7 @@ function AdminLogin() {
             <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-white/10 text-white backdrop-blur-xs shadow-inner">
               <ShieldCheck className="size-8" />
             </div>
-            <h1 className="mt-4 font-display text-2xl font-bold tracking-tight">
-              FUNASF Panel
-            </h1>
+            <h1 className="mt-4 font-display text-2xl font-bold tracking-tight">FUNASF Panel</h1>
             <p className="mt-1 text-xs text-primary-foreground/80">
               Administración de contenidos y postulaciones
             </p>
@@ -85,7 +86,8 @@ function AdminLogin() {
               <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-800 dark:text-amber-300">
                 <p className="font-semibold">Modo Demostración Local</p>
                 <p className="mt-1">
-                  Las claves de Supabase no están en .env. Puedes escribir cualquier correo y contraseña para ingresar en modo demo.
+                  Las claves de Supabase no están en .env. Puedes escribir cualquier correo y
+                  contraseña para ingresar en modo demo.
                 </p>
               </div>
             )}

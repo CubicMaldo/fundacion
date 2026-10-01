@@ -88,7 +88,7 @@ function AdminBlogIndexPage() {
               imagenPortada: row.imagen_portada,
               estado: (row.estado as "borrador" | "publicado") || "borrador",
               fechaPublicacion: row.fecha_publicacion || row.created_at,
-            }))
+            })),
           );
         }
       } catch (err) {
@@ -117,16 +117,11 @@ function AdminBlogIndexPage() {
 
   const toggleEstado = async (item: ArticuloAdminItem) => {
     const nuevoEstado = item.estado === "publicado" ? "borrador" : "publicado";
-    setArticulos((prev) =>
-      prev.map((a) => (a.id === item.id ? { ...a, estado: nuevoEstado } : a))
-    );
+    setArticulos((prev) => prev.map((a) => (a.id === item.id ? { ...a, estado: nuevoEstado } : a)));
 
     if (isConfigured && !item.id.startsWith("art-")) {
       try {
-        await supabase
-          .from("articulos")
-          .update({ estado: nuevoEstado })
-          .eq("id", item.id);
+        await supabase.from("articulos").update({ estado: nuevoEstado }).eq("id", item.id);
       } catch (err) {
         console.error("Error actualizando estado del artículo:", err);
       }
@@ -204,7 +199,10 @@ function AdminBlogIndexPage() {
             </Button>
           </div>
 
-          <Button asChild className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground">
+          <Button
+            asChild
+            className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground"
+          >
             <Link to="/admin/blog/nuevo">
               <Plus className="size-4 mr-2" />
               Nuevo Artículo
@@ -276,13 +274,25 @@ function AdminBlogIndexPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <Button asChild variant="ghost" size="icon" className="size-8" title="Ver en el blog">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        title="Ver en el blog"
+                      >
                         <Link to="/blog/$slug" params={{ slug: item.slug }}>
                           <Eye className="size-4 text-muted-foreground" />
                         </Link>
                       </Button>
 
-                      <Button asChild variant="ghost" size="icon" className="size-8" title="Editar artículo">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        size="icon"
+                        className="size-8"
+                        title="Editar artículo"
+                      >
                         <Link to="/admin/blog/$id" params={{ id: item.id }}>
                           <Edit className="size-4 text-brand-green" />
                         </Link>
@@ -319,7 +329,10 @@ function AdminBlogIndexPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmarEliminar} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmarEliminar}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Eliminar Artículo
             </AlertDialogAction>
           </AlertDialogFooter>

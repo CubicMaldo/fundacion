@@ -86,7 +86,7 @@ function AdminUsuariosPage() {
               nombre_completo: row.nombre_completo,
               rol: (row.rol as UserRole) || "editor",
               avatar_url: row.avatar_url,
-            }))
+            })),
           );
         }
       } catch (err) {
@@ -101,9 +101,7 @@ function AdminUsuariosPage() {
   }, [isConfigured]);
 
   const cambiarRol = async (userId: string, nuevoRol: UserRole) => {
-    setUsuarios((prev) =>
-      prev.map((u) => (u.id === userId ? { ...u, rol: nuevoRol } : u))
-    );
+    setUsuarios((prev) => prev.map((u) => (u.id === userId ? { ...u, rol: nuevoRol } : u)));
 
     if (isConfigured && !userId.startsWith("user-")) {
       try {
@@ -122,7 +120,8 @@ function AdminUsuariosPage() {
             <ShieldAlert className="size-5" />
             <AlertTitle className="text-base font-bold">Permisos insuficientes</AlertTitle>
             <AlertDescription className="text-xs mt-1">
-              Esta sección está restringida exclusivamente a Administradores. Tu perfil actual tiene rol de Editor.
+              Esta sección está restringida exclusivamente a Administradores. Tu perfil actual tiene
+              rol de Editor.
             </AlertDescription>
           </Alert>
         </div>
@@ -140,7 +139,9 @@ function AdminUsuariosPage() {
           <div>
             <h3 className="font-semibold text-base text-foreground">Invitar Miembros del Equipo</h3>
             <p className="text-xs text-muted-foreground mt-0.5 max-w-xl">
-              Los nuevos usuarios pueden registrarse o ser dados de alta en Supabase Auth. Una vez creados, aparecerán en este listado y podrás asignarles el rol de Administrador o Editor.
+              Los nuevos usuarios pueden registrarse o ser dados de alta en Supabase Auth. Una vez
+              creados, aparecerán en este listado y podrás asignarles el rol de Administrador o
+              Editor.
             </p>
           </div>
         </div>
@@ -238,7 +239,8 @@ function AdminUsuariosPage() {
             <span>Permisos del Administrador</span>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Acceso absoluto al sistema: puede modificar la configuración institucional y enlaces de contacto, eliminar registros, gestionar usuarios y publicar en todos los módulos.
+            Acceso absoluto al sistema: puede modificar la configuración institucional y enlaces de
+            contacto, eliminar registros, gestionar usuarios y publicar en todos los módulos.
           </p>
         </div>
 
@@ -248,7 +250,9 @@ function AdminUsuariosPage() {
             <span>Permisos del Editor</span>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Acceso operativo: puede crear, editar y pausar programas académicos, publicar artículos de blog, gestionar fotografías de galería y consultar inscripciones y mensajes de contacto.
+            Acceso operativo: puede crear, editar y pausar programas académicos, publicar artículos
+            de blog, gestionar fotografías de galería y consultar inscripciones y mensajes de
+            contacto.
           </p>
         </div>
       </div>

@@ -7,25 +7,22 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { getGaleriaActiva, type ItemGaleria } from "@/services/api";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/galeria")({
-  head: () => ({
-    meta: [
-      { title: "Galería de Actividades | FUNASF" },
-      {
-        name: "description",
-        content:
-          "Registros fotográficos de eventos, programas de formación y actividades comunitarias de la Fundación Internacional Amigos Sin Fronteras.",
-      },
-      { property: "og:title", content: "Galería de Actividades | FUNASF" },
-      {
-        property: "og:description",
-        content: "Fotografías de actividades y programas educativos y sociales de FUNASF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Galería de Actividades | FUNASF — Fundación Internacional Amigos Sin Fronteras",
+      description:
+        "Registros fotográficos de jornadas pedagógicas, talleres comunitarios, graduaciones y actividades de la Fundación Internacional Amigos Sin Fronteras.",
+      canonicalPath: "/galeria",
+      keywords:
+        "galería FUNASF, fotos talleres FUNASF, actividades comunitarias, eventos educativos",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Galería de actividades", path: "/galeria" },
+      ]),
+    }),
   loader: async () => {
     return await getGaleriaActiva();
   },
@@ -60,7 +57,10 @@ function GaleriaPage() {
 
       <Section>
         {/* Filtros de Categoría */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10" aria-label="Filtrar por categoría">
+        <div
+          className="flex flex-wrap items-center justify-center gap-2 mb-10"
+          aria-label="Filtrar por categoría"
+        >
           <Button
             type="button"
             size="sm"
@@ -89,7 +89,9 @@ function GaleriaPage() {
           <div className="py-20 text-center text-muted-foreground">
             <ImageIcon className="size-10 mx-auto text-muted-foreground/60 mb-3" />
             <p className="text-base font-medium text-foreground">No hay fotos en esta categoría</p>
-            <p className="text-sm mt-1">Pronto publicaremos más registros de nuestras actividades.</p>
+            <p className="text-sm mt-1">
+              Pronto publicaremos más registros de nuestras actividades.
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -124,7 +126,9 @@ function GaleriaPage() {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-brand-gold-deep">
                     {foto.categoria}
                   </span>
-                  <p className="font-medium text-xs text-foreground truncate mt-0.5">{foto.titulo}</p>
+                  <p className="font-medium text-xs text-foreground truncate mt-0.5">
+                    {foto.titulo}
+                  </p>
                 </div>
               </div>
             ))}

@@ -15,6 +15,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { AuthProvider } from "@/lib/auth-context";
+import { getOrganizationSchema, DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -81,20 +82,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "FUNASF — Fundación Internacional Amigos Sin Fronteras" },
+      { title: "FUNASF Colombia | Fundación Internacional Amigos Sin Fronteras — EduFUNASF" },
       {
         name: "description",
         content:
-          "Fundación Internacional Amigos Sin Fronteras – FUNASF: educación, formación, becas, emprendimiento y programas sociales. Porque la educación no tiene fronteras.",
+          "Fundación Internacional Amigos Sin Fronteras – FUNASF Colombia (EduFUNASF): educación, formación técnica laboral, becas de hasta el 90 %, emprendimiento y acción comunitaria.",
       },
-      { name: "author", content: "FUNASF" },
-      { property: "og:title", content: "FUNASF — Fundación Internacional Amigos Sin Fronteras" },
+      { name: "author", content: "FUNASF Colombia — EduFUNASF" },
+      {
+        property: "og:site_name",
+        content: "EduFUNASF | FUNASF Colombia",
+      },
+      {
+        property: "og:title",
+        content: "FUNASF Colombia | Fundación Internacional Amigos Sin Fronteras — EduFUNASF",
+      },
       {
         property: "og:description",
-        content: "Porque la educación no tiene fronteras.",
+        content:
+          "Portal oficial de FUNASF en Colombia. Programas de formación técnica y becas de hasta el 90 % en alianza con instituciones educativas.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "es_CO" },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:image", content: DEFAULT_OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "FUNASF — Porque la educación no tiene fronteras" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: DEFAULT_OG_IMAGE },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -105,6 +121,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(getOrganizationSchema()),
+      },
     ],
   }),
   shellComponent: RootShell,

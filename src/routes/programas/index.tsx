@@ -5,26 +5,22 @@ import { ProgramCatalog } from "@/components/site/ProgramCatalog";
 import { Button } from "@/components/ui/button";
 import { becas, formacionAcademica } from "@/data/funasf";
 import { getProgramasAcademicos } from "@/services/api";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/programas/")({
-  head: () => ({
-    meta: [
-      { title: "Programas Académicos | FUNASF — Fundación Internacional Amigos Sin Fronteras" },
-      {
-        name: "description",
-        content:
-          "Explora la oferta académica de FUNASF: programas en salud, seguridad y salud en el trabajo, administración, educación y áreas técnicas con becas de hasta el 90 %.",
-      },
-      { property: "og:title", content: "Programas Académicos | FUNASF" },
-      {
-        property: "og:description",
-        content:
-          "Explora los programas de formación por áreas con apoyo de instituciones educativas aliadas y becas solidarias.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Programas Técnicos y Carreras | FUNASF Colombia — EduFUNASF",
+      description:
+        "Catálogo oficial de programas de formación técnica y laboral de FUNASF Colombia en convenio con instituciones aliadas: salud, administración, seguridad laboral y oficios. Becas de hasta el 90 %.",
+      canonicalPath: "/programas",
+      keywords:
+        "programas técnicos FUNASF, EduFUNASF, FUNASF Colombia, carreras técnicas becas, auxiliar de enfermería Colombia, servicios farmacéuticos, validación bachillerato Cali Atlántico",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Programas", path: "/programas" },
+      ]),
+    }),
   loader: async () => {
     return await getProgramasAcademicos();
   },

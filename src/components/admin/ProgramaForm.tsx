@@ -37,7 +37,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   const [slug, setSlug] = useState(initialData?.slug || "");
   const [categoriaId, setCategoriaId] = useState(initialData?.categoriaId || "salud");
   const [categoria, setCategoria] = useState(
-    initialData?.categoria || CATEGORIAS_PREDEFINIDAS.find((c) => c.id === "salud")?.label || ""
+    initialData?.categoria || CATEGORIAS_PREDEFINIDAS.find((c) => c.id === "salud")?.label || "",
   );
   const [descripcion, setDescripcion] = useState(initialData?.descripcion || "");
   const [objetivo, setObjetivo] = useState(initialData?.objetivo || "");
@@ -47,19 +47,19 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   const [activo, setActivo] = useState(initialData?.activo ?? true);
 
   const [modalidades, setModalidades] = useState<string[]>(
-    initialData?.modalidades || ["Presencial", "Semipresencial"]
+    initialData?.modalidades || ["Presencial", "Semipresencial"],
   );
 
   const [perfilOcupacional, setPerfilOcupacional] = useState<string[]>(
     initialData?.perfilOcupacional && initialData.perfilOcupacional.length > 0
       ? initialData.perfilOcupacional
-      : [""]
+      : [""],
   );
 
   const [requisitos, setRequisitos] = useState<string[]>(
     initialData?.requisitos && initialData.requisitos.length > 0
       ? initialData.requisitos
-      : ["Documento de identidad vigente", "Certificado de noveno grado o diploma de bachiller"]
+      : ["Documento de identidad vigente", "Certificado de noveno grado o diploma de bachiller"],
   );
 
   const handleNombreChange = (val: string) => {
@@ -82,9 +82,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   };
 
   const toggleModalidad = (mod: string) => {
-    setModalidades((prev) =>
-      prev.includes(mod) ? prev.filter((m) => m !== mod) : [...prev, mod]
-    );
+    setModalidades((prev) => (prev.includes(mod) ? prev.filter((m) => m !== mod) : [...prev, mod]));
   };
 
   // Manejo de arrays dinámicos
@@ -92,7 +90,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
     list: string[],
     setList: React.Dispatch<React.SetStateAction<string[]>>,
     index: number,
-    val: string
+    val: string,
   ) => {
     const updated = [...list];
     updated[index] = val;
@@ -106,7 +104,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   const removeArrayItem = (
     list: string[],
     setList: React.Dispatch<React.SetStateAction<string[]>>,
-    index: number
+    index: number,
   ) => {
     if (list.length <= 1) {
       setList([""]);
@@ -277,7 +275,9 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-base text-foreground">Perfil Ocupacional</h3>
-                <p className="text-xs text-muted-foreground">Campos laborales donde podrá desempeñarse el egresado.</p>
+                <p className="text-xs text-muted-foreground">
+                  Campos laborales donde podrá desempeñarse el egresado.
+                </p>
               </div>
               <Button
                 type="button"
@@ -296,7 +296,12 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                   <Input
                     value={item}
                     onChange={(e) =>
-                      handleArrayItemChange(perfilOcupacional, setPerfilOcupacional, index, e.target.value)
+                      handleArrayItemChange(
+                        perfilOcupacional,
+                        setPerfilOcupacional,
+                        index,
+                        e.target.value,
+                      )
                     }
                     placeholder="Ej. Clínicas, hospitales y centros de atención básica"
                   />
@@ -319,7 +324,9 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-semibold text-base text-foreground">Requisitos de Ingreso</h3>
-                <p className="text-xs text-muted-foreground">Documentos o condiciones solicitadas para la inscripción.</p>
+                <p className="text-xs text-muted-foreground">
+                  Documentos o condiciones solicitadas para la inscripción.
+                </p>
               </div>
               <Button
                 type="button"
@@ -365,8 +372,12 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
 
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="activo" className="font-medium">Programa Activo</Label>
-                <p className="text-xs text-muted-foreground">Visible en el catálogo y página de inicio</p>
+                <Label htmlFor="activo" className="font-medium">
+                  Programa Activo
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Visible en el catálogo y página de inicio
+                </p>
               </div>
               <Switch id="activo" checked={activo} onCheckedChange={setActivo} />
             </div>
@@ -381,14 +392,18 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 onChange={(e) => setOrden(Number(e.target.value))}
                 className="h-10"
               />
-              <p className="text-[11px] text-muted-foreground">Determina la posición en la lista (1 = primero).</p>
+              <p className="text-[11px] text-muted-foreground">
+                Determina la posición en la lista (1 = primero).
+              </p>
             </div>
           </div>
 
           {/* Modalidades */}
           <div className="rounded-xl border border-border bg-card p-6 shadow-xs space-y-4">
             <h3 className="font-semibold text-base text-foreground">Modalidades Disponibles</h3>
-            <p className="text-xs text-muted-foreground">Selecciona las modalidades aplicables para este programa.</p>
+            <p className="text-xs text-muted-foreground">
+              Selecciona las modalidades aplicables para este programa.
+            </p>
 
             <div className="space-y-2.5">
               {MODALIDADES_DISPONIBLES.map((mod) => {

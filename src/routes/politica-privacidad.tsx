@@ -1,22 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PendingPage } from "@/components/site/PendingPage";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
+
 export const Route = createFileRoute("/politica-privacidad")({
-  head: () => ({
-    meta: [
-      { title: "Política de privacidad | FUNASF" },
-      {
-        name: "description",
-        content: "Espacio reservado para la política de privacidad oficial de FUNASF.",
-      },
-      { property: "og:title", content: "Política de privacidad | FUNASF" },
-      {
-        property: "og:description",
-        content: "Espacio reservado para la política de privacidad oficial de FUNASF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Política de Privacidad | FUNASF",
+      description:
+        "Términos de la política de privacidad de la Fundación Internacional Amigos Sin Fronteras.",
+      canonicalPath: "/politica-privacidad",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Política de privacidad", path: "/politica-privacidad" },
+      ]),
+    }),
   component: () => (
     <PendingPage
       eyebrow="Legal"

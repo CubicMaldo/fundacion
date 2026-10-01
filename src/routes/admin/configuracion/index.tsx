@@ -70,6 +70,7 @@ function AdminConfiguracionPage() {
         const { data, error } = await supabase.from("configuracion").select("*");
         if (!error && data) {
           data.forEach((row) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const v = row.valor as any;
             if (row.clave === "contacto" && v) {
               if (v.telefonos) setTelefonos(v.telefonos);
@@ -167,7 +168,9 @@ function AdminConfiguracionPage() {
       try {
         await Promise.all([
           supabase.from("configuracion").upsert({ clave: "contacto", valor: configContacto }),
-          supabase.from("configuracion").upsert({ clave: "institucional", valor: configInstitucional }),
+          supabase
+            .from("configuracion")
+            .upsert({ clave: "institucional", valor: configInstitucional }),
           supabase.from("configuracion").upsert({ clave: "becas", valor: configBecas }),
         ]);
       } catch (err) {
@@ -189,7 +192,8 @@ function AdminConfiguracionPage() {
         <div>
           <h2 className="text-xl font-bold text-foreground">Configuración Centralizada</h2>
           <p className="text-xs text-muted-foreground">
-            Los cambios se reflejarán en la cabecera, pie de página, sección de contacto y recorridos de inscripción.
+            Los cambios se reflejarán en la cabecera, pie de página, sección de contacto y
+            recorridos de inscripción.
           </p>
         </div>
 
@@ -216,7 +220,8 @@ function AdminConfiguracionPage() {
 
       {!isAdmin && (
         <div className="mt-4 rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-800 dark:text-amber-300">
-          Nota: Estás conectado con rol de Editor. Solo los Administradores tienen permisos para modificar la configuración institucional.
+          Nota: Estás conectado con rol de Editor. Solo los Administradores tienen permisos para
+          modificar la configuración institucional.
         </div>
       )}
 
@@ -230,7 +235,9 @@ function AdminConfiguracionPage() {
         {/* TAB 1: CONTACTO */}
         <TabsContent value="contacto" className="mt-6 space-y-6">
           <div className="rounded-xl border border-border bg-card p-6 shadow-xs space-y-6">
-            <h3 className="font-semibold text-base text-foreground">Líneas de Atención y Canales Digitales</h3>
+            <h3 className="font-semibold text-base text-foreground">
+              Líneas de Atención y Canales Digitales
+            </h3>
 
             {/* Teléfonos */}
             <div className="space-y-3">
@@ -325,7 +332,9 @@ function AdminConfiguracionPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="formInscripcion">Enlace al formulario de Google Forms (Inscripción)</Label>
+              <Label htmlFor="formInscripcion">
+                Enlace al formulario de Google Forms (Inscripción)
+              </Label>
               <Input
                 id="formInscripcion"
                 value={formularioInscripcion}
@@ -427,7 +436,9 @@ function AdminConfiguracionPage() {
         {/* TAB 3: BECAS */}
         <TabsContent value="becas" className="mt-6 space-y-6">
           <div className="rounded-xl border border-border bg-card p-6 shadow-xs space-y-4">
-            <h3 className="font-semibold text-base text-foreground">Parámetros del Programa de Becas</h3>
+            <h3 className="font-semibold text-base text-foreground">
+              Parámetros del Programa de Becas
+            </h3>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">

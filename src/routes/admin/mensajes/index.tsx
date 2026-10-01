@@ -130,7 +130,7 @@ function AdminMensajesPage() {
               leido: row.leido,
               estado: (row.estado as "nuevo" | "respondido" | "archivado") || "nuevo",
               created_at: row.created_at,
-            }))
+            })),
           );
         }
       } catch (err) {
@@ -151,8 +151,8 @@ function AdminMensajesPage() {
         filtroEstado === "todos"
           ? true
           : filtroEstado === "no_leidos"
-          ? !m.leido
-          : m.estado === filtroEstado;
+            ? !m.leido
+            : m.estado === filtroEstado;
 
       const matchText =
         !q ||
@@ -168,9 +168,7 @@ function AdminMensajesPage() {
   const abrirMensaje = async (item: MensajeItem) => {
     setSelectedMensaje(item);
     if (!item.leido) {
-      setMensajes((prev) =>
-        prev.map((m) => (m.id === item.id ? { ...m, leido: true } : m))
-      );
+      setMensajes((prev) => prev.map((m) => (m.id === item.id ? { ...m, leido: true } : m)));
       if (isConfigured && !item.id.startsWith("msg-")) {
         try {
           await supabase.from("mensajes_contacto").update({ leido: true }).eq("id", item.id);
@@ -182,9 +180,7 @@ function AdminMensajesPage() {
   };
 
   const cambiarEstado = async (id: string, nuevoEstado: "nuevo" | "respondido" | "archivado") => {
-    setMensajes((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, estado: nuevoEstado } : m))
-    );
+    setMensajes((prev) => prev.map((m) => (m.id === id ? { ...m, estado: nuevoEstado } : m)));
     if (selectedMensaje && selectedMensaje.id === id) {
       setSelectedMensaje((prev) => (prev ? { ...prev, estado: nuevoEstado } : null));
     }
@@ -317,8 +313,8 @@ function AdminMensajesPage() {
                         item.estado === "nuevo"
                           ? "default"
                           : item.estado === "respondido"
-                          ? "secondary"
-                          : "outline"
+                            ? "secondary"
+                            : "outline"
                       }
                       className="capitalize text-[11px]"
                     >
@@ -413,7 +409,11 @@ function AdminMensajesPage() {
               {/* Botones de respuesta directa */}
               <div className="flex items-center gap-2">
                 {selectedMensaje.telefono && (
-                  <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8">
+                  <Button
+                    asChild
+                    size="sm"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
+                  >
                     <a
                       href={`https://wa.me/57${selectedMensaje.telefono.replace(/\s+/g, "")}`}
                       target="_blank"
@@ -426,7 +426,7 @@ function AdminMensajesPage() {
                 <Button asChild size="sm" variant="outline" className="text-xs h-8">
                   <a
                     href={`mailto:${selectedMensaje.correo}?subject=Respuesta:%20${encodeURIComponent(
-                      selectedMensaje.asunto
+                      selectedMensaje.asunto,
                     )}`}
                   >
                     <Mail className="size-3.5 mr-1" /> Responder Email

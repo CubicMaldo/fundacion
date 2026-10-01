@@ -106,10 +106,7 @@ const DEMO_INSCRIPCIONES: InscripcionItem[] = [
   },
 ];
 
-const ESTADOS_INFO: Record<
-  InscripcionItem["estado"],
-  { label: string; badgeClass: string }
-> = {
+const ESTADOS_INFO: Record<InscripcionItem["estado"], { label: string; badgeClass: string }> = {
   nuevo: { label: "Nuevo", badgeClass: "bg-amber-500 text-white" },
   contactado: { label: "Contactado", badgeClass: "bg-blue-500 text-white" },
   en_revision: { label: "En revisión", badgeClass: "bg-purple-500 text-white" },
@@ -159,7 +156,7 @@ function AdminInscripcionesPage() {
               estado: (row.estado as InscripcionItem["estado"]) || "nuevo",
               notas_internas: row.notas_internas,
               created_at: row.created_at,
-            }))
+            })),
           );
         }
       } catch (err) {
@@ -200,10 +197,8 @@ function AdminInscripcionesPage() {
 
     setInscripciones((prev) =>
       prev.map((i) =>
-        i.id === selectedItem.id
-          ? { ...i, estado: editEstado, notas_internas: editNotas }
-          : i
-      )
+        i.id === selectedItem.id ? { ...i, estado: editEstado, notas_internas: editNotas } : i,
+      ),
     );
 
     if (isConfigured && !selectedItem.id.startsWith("ins-")) {
@@ -252,7 +247,10 @@ function AdminInscripcionesPage() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `inscripciones_funasf_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `inscripciones_funasf_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

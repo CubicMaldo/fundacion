@@ -102,14 +102,10 @@ function EditarArticuloPage() {
   }
 
   return (
-    <AdminLayout
-      title={`Editar: ${articulo.titulo}`}
-      subtitle={`Slug: /blog/${articulo.slug}`}
-    >
+    <AdminLayout title={`Editar: ${articulo.titulo}`} subtitle={`Slug: /blog/${articulo.slug}`}>
       <div className="py-2">
         <ArticuloForm initialData={articulo} isEdit={true} />
       </div>
     </AdminLayout>
   );
 }
-

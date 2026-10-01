@@ -18,28 +18,40 @@ import { programasAcademicos } from "@/data/programas";
 import { getProgramaBySlug } from "@/services/api";
 import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 
+import { createSeoMeta, getBreadcrumbSchema, getCourseSchema } from "@/lib/seo";
+
 export const Route = createFileRoute("/programas/$slug")({
   loader: async ({ params }) => {
     return await getProgramaBySlug(params.slug);
   },
   head: ({ params }) => {
     const programa = programasAcademicos.find((p) => p.slug === params.slug);
-    const title = programa
-      ? `${programa.nombre} | Programas FUNASF`
-      : "Programa Académico | FUNASF";
-    const description =
-      programa?.descripcion ??
-      "Información de programas de formación académica con becas solidarias de la Fundación Internacional Amigos Sin Fronteras.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-        { name: "twitter:card", content: "summary_large_image" },
+    if (!programa) {
+      return createSeoMeta({
+        title: "Programa no encontrado | FUNASF",
+        description: "El programa de formación solicitado no se encuentra en el catálogo vigente.",
+        canonicalPath: `/programas/${params.slug}`,
+        noindex: true,
+      });
+    }
+
+    const title = `${programa.nombre} | Becas hasta 90 % — FUNASF Colombia`;
+    const description = `${programa.descripcion} Modalidad: ${programa.modalidades.join(" / ")}. Formación técnica en convenio con instituciones aliadas y becas solidarias de FUNASF Colombia (EduFUNASF).`;
+
+    return createSeoMeta({
+      title,
+      description,
+      canonicalPath: `/programas/${programa.slug}`,
+      keywords: `${programa.nombre}, estudiar ${programa.nombre} Colombia, beca ${programa.nombre}, carrera técnica ${programa.nombre}, FUNASF Colombia, EduFUNASF, ${programa.categoria}`,
+      jsonLd: [
+        getBreadcrumbSchema([
+          { name: "Inicio", path: "/" },
+          { name: "Programas", path: "/programas" },
+          { name: programa.nombre, path: `/programas/${programa.slug}` },
+        ]),
+        getCourseSchema(programa),
       ],
-    };
+    });
   },
   component: ProgramaDetailComponent,
 });
@@ -252,7 +264,10 @@ function ProgramaDetailComponent() {
                 <ModalInscripcion
                   programaNombre={programa.nombre}
                   triggerButton={
-                    <Button size="lg" className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold">
+                    <Button
+                      size="lg"
+                      className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold"
+                    >
                       Postularme a una beca
                       <ArrowRight className="size-4 ml-2" />
                     </Button>

@@ -105,7 +105,7 @@ function AdminGaleriaPage() {
               altText: row.alt_text,
               orden: row.orden,
               activo: row.activo,
-            }))
+            })),
           );
         }
       } catch (err) {
@@ -185,9 +185,18 @@ function AdminGaleriaPage() {
       setItems((prev) =>
         prev.map((i) =>
           i.id === editingItem.id
-            ? { ...i, titulo, descripcion, categoria, imagenUrl, altText, orden: Number(orden), activo }
-            : i
-        )
+            ? {
+                ...i,
+                titulo,
+                descripcion,
+                categoria,
+                imagenUrl,
+                altText,
+                orden: Number(orden),
+                activo,
+              }
+            : i,
+        ),
       );
     } else {
       const newItem: GaleriaAdminItem = {
@@ -209,9 +218,7 @@ function AdminGaleriaPage() {
 
   const toggleEstado = async (item: GaleriaAdminItem) => {
     const nuevoEstado = !item.activo;
-    setItems((prev) =>
-      prev.map((i) => (i.id === item.id ? { ...i, activo: nuevoEstado } : i))
-    );
+    setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, activo: nuevoEstado } : i)));
 
     if (isConfigured && !item.id.startsWith("gal-") && !item.id.startsWith("local-")) {
       try {
@@ -226,7 +233,11 @@ function AdminGaleriaPage() {
     if (!itemToDelete) return;
     setItems((prev) => prev.filter((i) => i.id !== itemToDelete.id));
 
-    if (isConfigured && !itemToDelete.id.startsWith("gal-") && !itemToDelete.id.startsWith("local-")) {
+    if (
+      isConfigured &&
+      !itemToDelete.id.startsWith("gal-") &&
+      !itemToDelete.id.startsWith("local-")
+    ) {
       try {
         await supabase.from("galeria").delete().eq("id", itemToDelete.id);
       } catch (err) {
@@ -331,9 +342,13 @@ function AdminGaleriaPage() {
 
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-semibold text-sm text-foreground line-clamp-1">{item.titulo}</h3>
+                  <h3 className="font-semibold text-sm text-foreground line-clamp-1">
+                    {item.titulo}
+                  </h3>
                   {item.descripcion && (
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{item.descripcion}</p>
+                    <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                      {item.descripcion}
+                    </p>
                   )}
                 </div>
 
@@ -457,7 +472,9 @@ function AdminGaleriaPage() {
                 </div>
 
                 <div className="flex items-center justify-between pt-4">
-                  <Label htmlFor="foto-activo" className="text-xs">Visible en web</Label>
+                  <Label htmlFor="foto-activo" className="text-xs">
+                    Visible en web
+                  </Label>
                   <Switch id="foto-activo" checked={activo} onCheckedChange={setActivo} />
                 </div>
               </div>
@@ -490,7 +507,10 @@ function AdminGaleriaPage() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmarEliminar} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={confirmarEliminar}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>

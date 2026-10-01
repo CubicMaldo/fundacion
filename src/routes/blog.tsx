@@ -7,25 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { getArticulosPublicados, type ArticuloBlog } from "@/services/api";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog")({
-  head: () => ({
-    meta: [
-      { title: "Blog Institucional y Comunitario | FUNASF" },
-      {
-        name: "description",
-        content:
-          "Noticias, convocatorias de becas, historias de transformación y novedades de la Fundación Internacional Amigos Sin Fronteras.",
-      },
-      { property: "og:title", content: "Blog Institucional | FUNASF" },
-      {
-        property: "og:description",
-        content: "Noticias y contenidos de la comunidad educativa y social de FUNASF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Blog Institucional y Comunitario | FUNASF",
+      description:
+        "Noticias oficiales, convocatorias de becas técnicas, historias de impacto social y novedades educativas de la Fundación Internacional Amigos Sin Fronteras.",
+      canonicalPath: "/blog",
+      keywords: "blog FUNASF, noticias FUNASF, convocatorias becas, impacto social Colombia Panamá",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Blog institucional", path: "/blog" },
+      ]),
+    }),
   loader: async () => {
     return await getArticulosPublicados();
   },
@@ -119,7 +115,9 @@ function BlogPage() {
           <div className="py-20 text-center text-muted-foreground">
             <Newspaper className="size-10 mx-auto text-muted-foreground/60 mb-3" />
             <p className="text-base font-medium text-foreground">No se encontraron artículos</p>
-            <p className="text-sm mt-1">Prueba con otro término de búsqueda o selecciona otra categoría.</p>
+            <p className="text-sm mt-1">
+              Prueba con otro término de búsqueda o selecciona otra categoría.
+            </p>
           </div>
         ) : (
           <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -175,7 +173,12 @@ function BlogPage() {
                       Por {articulo.autorNombre}
                     </span>
 
-                    <Button asChild variant="link" size="sm" className="p-0 text-brand-green group-hover:translate-x-1 transition-transform">
+                    <Button
+                      asChild
+                      variant="link"
+                      size="sm"
+                      className="p-0 text-brand-green group-hover:translate-x-1 transition-transform"
+                    >
                       <Link to="/blog/$slug" params={{ slug: articulo.slug }}>
                         Leer artículo <ArrowRight className="size-3.5 ml-1" />
                       </Link>

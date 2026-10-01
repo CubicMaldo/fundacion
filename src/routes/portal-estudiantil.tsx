@@ -15,26 +15,22 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { org } from "@/data/funasf";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/portal-estudiantil")({
-  head: () => ({
-    meta: [
-      { title: "Portal Estudiantil | FUNASF — Fundación Internacional Amigos Sin Fronteras" },
-      {
-        name: "description",
-        content:
-          "Accede a los servicios académicos y de apoyo para estudiantes de FUNASF: campus virtual, certificados, calendario y atención estudiantil.",
-      },
-      { property: "og:title", content: "Portal Estudiantil | FUNASF" },
-      {
-        property: "og:description",
-        content:
-          "Punto de acceso institucional para la comunidad de estudiantes FUNASF y sus instituciones educativas aliadas.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Portal Estudiantil | FUNASF — Recursos y Aulas Virtuales",
+      description:
+        "Espacio de acceso académico para estudiantes de FUNASF e instituciones aliadas: plataformas virtuales, trámites de certificados, calendario y orientación estudiantil.",
+      canonicalPath: "/portal-estudiantil",
+      keywords:
+        "portal estudiantil FUNASF, campus virtual FUNASF, certificados FUNASF, atencion estudiantes",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Portal Estudiantil", path: "/portal-estudiantil" },
+      ]),
+    }),
   component: PortalEstudiantilComponent,
 });
 

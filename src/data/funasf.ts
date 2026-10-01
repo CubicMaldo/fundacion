@@ -23,7 +23,7 @@ export const org = {
   direccionPrincipal: "CR 96 45 119, Cali",
   telefonos: ["313 577 9384", "318 915 7015", "323 294 6184", "317 165 7124"],
   correo: "info@funasf.org",
-  sitioWeb: "www.funasf.org",
+  sitioWeb: "www.edufunasf.org",
   instagram: "@funasfinternacional",
   instagramUrl: "https://instagram.com/funasfinternacional",
   formularioInscripcion: "https://forms.gle/kYUoX2v1dewKUrMX8",

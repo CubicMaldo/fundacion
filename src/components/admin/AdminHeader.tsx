@@ -31,9 +31,7 @@ export function AdminHeader({ onOpenMobile, title, subtitle }: AdminHeaderProps)
                 {title}
               </h1>
               {subtitle && (
-                <p className="text-xs text-muted-foreground hidden sm:block">
-                  {subtitle}
-                </p>
+                <p className="text-xs text-muted-foreground hidden sm:block">{subtitle}</p>
               )}
             </div>
           ) : (
@@ -44,13 +42,13 @@ export function AdminHeader({ onOpenMobile, title, subtitle }: AdminHeaderProps)
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs">
-          <span className={`size-2 rounded-full ${isConfigured ? "bg-emerald-500" : "bg-amber-500"}`} />
+          <span
+            className={`size-2 rounded-full ${isConfigured ? "bg-emerald-500" : "bg-amber-500"}`}
+          />
           <span className="text-muted-foreground hidden sm:inline">
             {isConfigured ? "Cloud conectado" : "Modo local"}
           </span>
-          <span className="font-semibold text-foreground capitalize">
-            {role ?? "usuario"}
-          </span>
+          <span className="font-semibold text-foreground capitalize">{role ?? "usuario"}</span>
         </div>
       </div>
     </header>

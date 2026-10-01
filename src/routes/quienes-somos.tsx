@@ -15,25 +15,32 @@ import {
   transparencia,
   PENDIENTE,
 } from "@/data/funasf";
+import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/quienes-somos")({
-  head: () => ({
-    meta: [
-      { title: "Quiénes somos | FUNASF" },
-      {
-        name: "description",
-        content:
-          "Misión, visión, historia, propósito, valores, alcance territorial y sedes de la Fundación Internacional Amigos Sin Fronteras – FUNASF.",
-      },
-      { property: "og:title", content: "Quiénes somos | FUNASF" },
-      {
-        property: "og:description",
-        content: "Conoce la misión, la visión y la historia de FUNASF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Quiénes Somos | FUNASF Colombia — Fundación Internacional Amigos Sin Fronteras",
+      description:
+        "Reseña histórica de FUNASF nacida en Panamá y desarrollada en Colombia: misión, visión, sede en Cali, labor comunitaria y proyección en el departamento del Atlántico y Valledupar.",
+      canonicalPath: "/quienes-somos",
+      keywords:
+        "Quiénes somos FUNASF, FUNASF Colombia, historia FUNASF Panamá Colombia, misión visión FUNASF, sede FUNASF Cali, presencia Atlántico Soledad, EduFUNASF",
+      jsonLd: [
+        getBreadcrumbSchema([
+          { name: "Inicio", path: "/" },
+          { name: "Quiénes somos", path: "/quienes-somos" },
+        ]),
+        {
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          name: "Quiénes somos — FUNASF",
+          url: `${SITE_URL}/quienes-somos`,
+          description:
+            "Misión, visión, valores y reseña histórica de la Fundación Internacional Amigos Sin Fronteras.",
+        },
+      ],
+    }),
   component: QuienesSomos,
 });
 

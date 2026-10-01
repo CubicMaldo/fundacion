@@ -128,22 +128,28 @@ export async function getArticulosPublicados(): Promise<ArticuloBlog[]> {
         id: "art-1",
         slug: "bienvenida-nuevo-ciclo-academico",
         titulo: "Apertura de la nueva convocatoria de becas y formación técnica",
-        resumen: "FUNASF abre postulaciones para programas técnicos en áreas de salud, administración y bienestar comunitario.",
-        contenido: "La Fundación Internacional Amigos Sin Fronteras inicia un nuevo ciclo formativo enfocado en brindar oportunidades reales de desarrollo humano y profesional a jóvenes y adultos de diferentes regiones.\n\nNuestros programas en alianza con instituciones acreditadas permiten acceder a becas de hasta el 90 %, con un acompañamiento cercano para asegurar la permanencia y culminación de los estudios.",
+        resumen:
+          "FUNASF abre postulaciones para programas técnicos en áreas de salud, administración y bienestar comunitario.",
+        contenido:
+          "La Fundación Internacional Amigos Sin Fronteras inicia un nuevo ciclo formativo enfocado en brindar oportunidades reales de desarrollo humano y profesional a jóvenes y adultos de diferentes regiones.\n\nNuestros programas en alianza con instituciones acreditadas permiten acceder a becas de hasta el 90 %, con un acompañamiento cercano para asegurar la permanencia y culminación de los estudios.",
         autorNombre: "Dirección Académica FUNASF",
         categoria: "Convocatorias",
-        imagenPortada: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+        imagenPortada:
+          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
         fechaPublicacion: new Date().toISOString(),
       },
       {
         id: "art-2",
         slug: "el-impacto-de-la-solidaridad-en-las-comunidades",
         titulo: "Cómo la educación transforma territorios vulnerables",
-        resumen: "Reflexiones sobre nuestro trabajo comunitario en el Valle del Cauca y la Costa Atlántica.",
-        contenido: "En FUNASF creemos firmemente que la educación no tiene fronteras. Cuando una persona accede a capacitación técnica de calidad, no solo mejora sus ingresos futuros, sino que eleva el bienestar de su familia y entorno.",
+        resumen:
+          "Reflexiones sobre nuestro trabajo comunitario en el Valle del Cauca y la Costa Atlántica.",
+        contenido:
+          "En FUNASF creemos firmemente que la educación no tiene fronteras. Cuando una persona accede a capacitación técnica de calidad, no solo mejora sus ingresos futuros, sino que eleva el bienestar de su familia y entorno.",
         autorNombre: "Equipo de Trabajo Social",
         categoria: "Comunidad",
-        imagenPortada: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
+        imagenPortada:
+          "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
         fechaPublicacion: new Date(Date.now() - 86400000 * 3).toISOString(),
       },
     ];
@@ -204,7 +210,8 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
         titulo: "Jornadas de orientación vocacional",
         descripcion: "Encuentro con jóvenes y familias para la postulación a becas solidarias.",
         categoria: "Comunidad",
-        imagenUrl: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
+        imagenUrl:
+          "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
         orden: 1,
       },
       {
@@ -212,7 +219,8 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
         titulo: "Talleres de formación práctica",
         descripcion: "Prácticas de laboratorio y desarrollo de habilidades técnicas.",
         categoria: "Talleres",
-        imagenUrl: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
+        imagenUrl:
+          "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
         orden: 2,
       },
       {
@@ -220,7 +228,8 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
         titulo: "Entrega de certificaciones",
         descripcion: "Celebración del logro de nuestros estudiantes graduados.",
         categoria: "Eventos",
-        imagenUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+        imagenUrl:
+          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
         orden: 3,
       },
       {
@@ -228,7 +237,8 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
         titulo: "Brigadas comunitarias de salud",
         descripcion: "Atención preventiva y apoyo a familias en territorios vulnerables.",
         categoria: "Salud",
-        imagenUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
+        imagenUrl:
+          "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
         orden: 4,
       },
     ];
@@ -275,7 +285,9 @@ export interface CrearInscripcionInput {
   programaId?: string | undefined;
 }
 
-export async function crearInscripcion(input: CrearInscripcionInput): Promise<{ ok: boolean; error?: string }> {
+export async function crearInscripcion(
+  input: CrearInscripcionInput,
+): Promise<{ ok: boolean; error?: string }> {
   if (!isSupabaseAvailable()) {
     console.log("[API Local] Inscripción recibida en modo local:", input);
     return { ok: true };
@@ -311,7 +323,9 @@ export interface EnviarMensajeInput {
   mensaje: string;
 }
 
-export async function enviarMensajeContacto(input: EnviarMensajeInput): Promise<{ ok: boolean; error?: string }> {
+export async function enviarMensajeContacto(
+  input: EnviarMensajeInput,
+): Promise<{ ok: boolean; error?: string }> {
   if (!isSupabaseAvailable()) {
     console.log("[API Local] Mensaje de contacto recibido en modo local:", input);
     return { ok: true };
@@ -400,10 +414,7 @@ export async function getLlamadoAccion(): Promise<LlamadoAccion> {
 }
 
 export async function getHomeData() {
-  const [org, programas] = await Promise.all([
-    getOrganizationData(),
-    getProgramasAcademicos(),
-  ]);
+  const [org, programas] = await Promise.all([getOrganizationData(), getProgramasAcademicos()]);
 
   return {
     org,

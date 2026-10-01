@@ -1,23 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PendingPage } from "@/components/site/PendingPage";
+import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/trabaja-con-nosotros")({
-  head: () => ({
-    meta: [
-      { title: "Trabaja con nosotros | FUNASF" },
-      {
-        name: "description",
-        content: "Próximas oportunidades para colaborar profesionalmente con FUNASF.",
-      },
-      { property: "og:title", content: "Trabaja con nosotros | FUNASF" },
-      {
-        property: "og:description",
-        content: "Próximas oportunidades para colaborar profesionalmente con FUNASF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "Trabaja con Nosotros | FUNASF — Oportunidades y Convocatorias",
+      description:
+        "Oportunidades de vinculación laboral y voluntariado en FUNASF para docentes, profesionales y líderes comunitarios.",
+      canonicalPath: "/trabaja-con-nosotros",
+      keywords: "trabajar en FUNASF, empleo fundacion, docentes FUNASF, voluntariado",
+      jsonLd: getBreadcrumbSchema([
+        { name: "Inicio", path: "/" },
+        { name: "Trabaja con nosotros", path: "/trabaja-con-nosotros" },
+      ]),
+    }),
   component: () => (
     <PendingPage
       eyebrow="Talento"

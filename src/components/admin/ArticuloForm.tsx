@@ -36,7 +36,7 @@ export function ArticuloForm({ initialData, isEdit }: ArticuloFormProps) {
   const [contenido, setContenido] = useState(initialData?.contenido || "");
   const [categoria, setCategoria] = useState(initialData?.categoria || "Convocatorias");
   const [autorNombre, setAutorNombre] = useState(
-    initialData?.autorNombre || profile?.nombre_completo || "Comunidad FUNASF"
+    initialData?.autorNombre || profile?.nombre_completo || "Comunidad FUNASF",
   );
   const [imagenPortada, setImagenPortada] = useState(initialData?.imagenPortada || "");
   const [publicado, setPublicado] = useState(initialData?.estado === "publicado");
@@ -194,8 +194,12 @@ export function ArticuloForm({ initialData, isEdit }: ArticuloFormProps) {
 
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="art-publicado" className="font-medium">Publicar en el sitio</Label>
-                <p className="text-xs text-muted-foreground">Si está desactivado se guardará como borrador.</p>
+                <Label htmlFor="art-publicado" className="font-medium">
+                  Publicar en el sitio
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  Si está desactivado se guardará como borrador.
+                </p>
               </div>
               <Switch id="art-publicado" checked={publicado} onCheckedChange={setPublicado} />
             </div>

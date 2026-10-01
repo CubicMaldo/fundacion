@@ -29,7 +29,10 @@ import { programasAcademicos } from "@/data/programas";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
-    meta: [{ title: "Panel Administrativo | FUNASF" }],
+    meta: [
+      { title: "Panel Administrativo | FUNASF" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
   }),
   component: AdminDashboard,
 });
@@ -116,11 +119,25 @@ function AdminDashboard() {
       try {
         const [progRes, inscRes, msgRes, artRes, recentInscRes, recentMsgRes] = await Promise.all([
           supabase.from("programas").select("id", { count: "exact", head: true }),
-          supabase.from("inscripciones").select("id", { count: "exact", head: true }).eq("estado", "nuevo"),
-          supabase.from("mensajes_contacto").select("id", { count: "exact", head: true }).eq("leido", false),
+          supabase
+            .from("inscripciones")
+            .select("id", { count: "exact", head: true })
+            .eq("estado", "nuevo"),
+          supabase
+            .from("mensajes_contacto")
+            .select("id", { count: "exact", head: true })
+            .eq("leido", false),
           supabase.from("articulos").select("id", { count: "exact", head: true }),
-          supabase.from("inscripciones").select("id, nombre_completo, programa_nombre, telefono, estado, created_at").order("created_at", { ascending: false }).limit(5),
-          supabase.from("mensajes_contacto").select("id, nombre, correo, asunto, leido, created_at").order("created_at", { ascending: false }).limit(5),
+          supabase
+            .from("inscripciones")
+            .select("id, nombre_completo, programa_nombre, telefono, estado, created_at")
+            .order("created_at", { ascending: false })
+            .limit(5),
+          supabase
+            .from("mensajes_contacto")
+            .select("id, nombre, correo, asunto, leido, created_at")
+            .order("created_at", { ascending: false })
+            .limit(5),
         ]);
 
         setStats({
@@ -149,7 +166,12 @@ function AdminDashboard() {
   const formatDate = (isoString: string) => {
     try {
       const d = new Date(isoString);
-      return d.toLocaleDateString("es-CO", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+      return d.toLocaleDateString("es-CO", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
     } catch {
       return isoString;
     }
@@ -176,7 +198,12 @@ function AdminDashboard() {
             <div className="text-2xl font-bold text-foreground">{stats.programasCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Oferta formativa oficial activa</p>
             <div className="mt-3">
-              <Button asChild variant="link" size="sm" className="p-0 h-auto text-brand-green text-xs">
+              <Button
+                asChild
+                variant="link"
+                size="sm"
+                className="p-0 h-auto text-brand-green text-xs"
+              >
                 <Link to="/admin/programas">Gestionar programas &rarr;</Link>
               </Button>
             </div>
@@ -200,9 +227,16 @@ function AdminDashboard() {
                 <Badge className="bg-amber-500 text-white text-[10px]">Por revisar</Badge>
               )}
             </div>
-            <p className="text-xs text-muted-foreground mt-1">Postulaciones y solicitudes de beca</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Postulaciones y solicitudes de beca
+            </p>
             <div className="mt-3">
-              <Button asChild variant="link" size="sm" className="p-0 h-auto text-brand-gold-deep text-xs">
+              <Button
+                asChild
+                variant="link"
+                size="sm"
+                className="p-0 h-auto text-brand-gold-deep text-xs"
+              >
                 <Link to="/admin/inscripciones">Ver aspirantes &rarr;</Link>
               </Button>
             </div>
@@ -223,7 +257,9 @@ function AdminDashboard() {
             <div className="text-2xl font-bold text-foreground flex items-center gap-2">
               {stats.mensajesNoLeidos}
               {stats.mensajesNoLeidos > 0 && (
-                <Badge variant="destructive" className="text-[10px]">Sin leer</Badge>
+                <Badge variant="destructive" className="text-[10px]">
+                  Sin leer
+                </Badge>
               )}
             </div>
             <p className="text-xs text-muted-foreground mt-1">Consultas desde la web pública</p>
@@ -249,7 +285,12 @@ function AdminDashboard() {
             <div className="text-2xl font-bold text-foreground">{stats.articulosCount}</div>
             <p className="text-xs text-muted-foreground mt-1">Publicaciones de la comunidad</p>
             <div className="mt-3">
-              <Button asChild variant="link" size="sm" className="p-0 h-auto text-purple-600 text-xs">
+              <Button
+                asChild
+                variant="link"
+                size="sm"
+                className="p-0 h-auto text-purple-600 text-xs"
+              >
                 <Link to="/admin/blog">Redactar artículo &rarr;</Link>
               </Button>
             </div>
@@ -261,7 +302,11 @@ function AdminDashboard() {
       <div className="mt-8">
         <h2 className="text-base font-semibold text-foreground mb-4">Acciones Rápidas</h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Button asChild variant="outline" className="h-auto p-4 justify-start border-dashed hover:border-brand-green hover:bg-brand-green/5">
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto p-4 justify-start border-dashed hover:border-brand-green hover:bg-brand-green/5"
+          >
             <Link to="/admin/programas/nuevo">
               <PlusCircle className="size-5 text-brand-green mr-3 shrink-0" />
               <div className="text-left">
@@ -271,7 +316,11 @@ function AdminDashboard() {
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="h-auto p-4 justify-start border-dashed hover:border-purple-600 hover:bg-purple-500/5">
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto p-4 justify-start border-dashed hover:border-purple-600 hover:bg-purple-500/5"
+          >
             <Link to="/admin/blog/nuevo">
               <PlusCircle className="size-5 text-purple-600 mr-3 shrink-0" />
               <div className="text-left">
@@ -281,7 +330,11 @@ function AdminDashboard() {
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="h-auto p-4 justify-start border-dashed hover:border-brand-gold-deep hover:bg-brand-gold/5">
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto p-4 justify-start border-dashed hover:border-brand-gold-deep hover:bg-brand-gold/5"
+          >
             <Link to="/admin/galeria">
               <PlusCircle className="size-5 text-brand-gold-deep mr-3 shrink-0" />
               <div className="text-left">
@@ -291,7 +344,11 @@ function AdminDashboard() {
             </Link>
           </Button>
 
-          <Button asChild variant="outline" className="h-auto p-4 justify-start border-dashed hover:border-brand-brown hover:bg-brand-brown/5">
+          <Button
+            asChild
+            variant="outline"
+            className="h-auto p-4 justify-start border-dashed hover:border-brand-brown hover:bg-brand-brown/5"
+          >
             <Link to="/admin/configuracion">
               <Sliders className="size-5 text-brand-brown mr-3 shrink-0" />
               <div className="text-left">
@@ -309,7 +366,9 @@ function AdminDashboard() {
         <Card className="border-border">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base font-semibold">Últimas Inscripciones a Becas</CardTitle>
+              <CardTitle className="text-base font-semibold">
+                Últimas Inscripciones a Becas
+              </CardTitle>
               <CardDescription>Aspirantes registrados recientemente</CardDescription>
             </div>
             <Button asChild variant="outline" size="sm">
@@ -326,8 +385,12 @@ function AdminDashboard() {
                 {recentInscripciones.map((item) => (
                   <div key={item.id} className="py-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-medium text-sm text-foreground truncate">{item.nombre_completo}</p>
-                      <p className="text-xs text-muted-foreground truncate">{item.programa_nombre}</p>
+                      <p className="font-medium text-sm text-foreground truncate">
+                        {item.nombre_completo}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {item.programa_nombre}
+                      </p>
                       <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-0.5">
                         <Clock className="size-3" /> {formatDate(item.created_at)}
                       </p>
@@ -378,9 +441,14 @@ function AdminDashboard() {
                   <div key={item.id} className="py-3 flex items-center justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="font-medium text-sm text-foreground truncate">{item.nombre}</p>
+                        <p className="font-medium text-sm text-foreground truncate">
+                          {item.nombre}
+                        </p>
                         {!item.leido && (
-                          <span className="size-2 rounded-full bg-blue-600 shrink-0" title="No leído" />
+                          <span
+                            className="size-2 rounded-full bg-blue-600 shrink-0"
+                            title="No leído"
+                          />
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground truncate">{item.asunto}</p>

@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Share2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { getArticuloBySlug, type ArticuloBlog } from "@/services/api";
+import { createSeoMeta, getBreadcrumbSchema, getArticleSchema, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -10,18 +11,31 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData, params }) => {
     const articulo = loaderData as ArticuloBlog | null;
-    const title = articulo ? `${articulo.titulo} | Blog FUNASF` : "Artículo | FUNASF";
-    const description = articulo?.resumen ?? "Artículo de la Fundación Internacional Amigos Sin Fronteras.";
-    return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
+    if (!articulo) {
+      return createSeoMeta({
+        title: "Artículo no encontrado | Blog FUNASF",
+        description: "El artículo solicitado no existe o ha sido despublicado.",
+        canonicalPath: `/blog/${params.slug}`,
+        noindex: true,
+      });
+    }
+
+    return createSeoMeta({
+      title: `${articulo.titulo} | Blog FUNASF`,
+      description: articulo.resumen,
+      canonicalPath: `/blog/${articulo.slug}`,
+      ogType: "article",
+      ogImage: articulo.imagenPortada || DEFAULT_OG_IMAGE,
+      keywords: `${articulo.categoria}, noticias FUNASF, ${articulo.titulo}`,
+      jsonLd: [
+        getBreadcrumbSchema([
+          { name: "Inicio", path: "/" },
+          { name: "Blog", path: "/blog" },
+          { name: articulo.titulo, path: `/blog/${articulo.slug}` },
+        ]),
+        getArticleSchema(articulo),
       ],
-    };
+    });
   },
   component: ArticuloDetailPage,
 });

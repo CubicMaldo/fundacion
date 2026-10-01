@@ -32,8 +32,12 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
             <Loader2 className="size-7 animate-spin" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-foreground">Cargando panel administrativo</h2>
-            <p className="text-xs text-muted-foreground mt-1">Verificando credenciales de acceso...</p>
+            <h2 className="text-base font-semibold text-foreground">
+              Cargando panel administrativo
+            </h2>
+            <p className="text-xs text-muted-foreground mt-1">
+              Verificando credenciales de acceso...
+            </p>
           </div>
         </div>
       </div>
@@ -69,15 +73,9 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
 
       {/* Contenido Principal */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <AdminHeader
-          onOpenMobile={() => setMobileOpen(true)}
-          title={title}
-          subtitle={subtitle}
-        />
+        <AdminHeader onOpenMobile={() => setMobileOpen(true)} title={title} subtitle={subtitle} />
         <main className="flex-1 p-4 md:p-8">
-          <div className="mx-auto max-w-7xl">
-            {children}
-          </div>
+          <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
     </div>

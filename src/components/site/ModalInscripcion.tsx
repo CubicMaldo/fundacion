@@ -84,7 +84,8 @@ export function ModalInscripcion({
             Inscripción para {programaNombre}
           </DialogTitle>
           <DialogDescription className="text-xs text-muted-foreground">
-            Diligencia tus datos para recibir asesoría sobre requisitos, horarios y asignación de beca solidaria.
+            Diligencia tus datos para recibir asesoría sobre requisitos, horarios y asignación de
+            beca solidaria.
           </DialogDescription>
         </DialogHeader>
 
@@ -95,10 +96,16 @@ export function ModalInscripcion({
             </div>
             <h3 className="text-xl font-bold text-foreground">¡Postulación registrada!</h3>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              Hemos recibido tus datos correctamente. Nuestro equipo de admisiones te contactará por WhatsApp o llamada para formalizar tu proceso.
+              Hemos recibido tus datos correctamente. Nuestro equipo de admisiones te contactará por
+              WhatsApp o llamada para formalizar tu proceso.
             </p>
             <div className="pt-4 flex flex-col sm:flex-row gap-2 justify-center">
-              <Button onClick={() => { setEnviadoExito(false); setOpen(false); }}>
+              <Button
+                onClick={() => {
+                  setEnviadoExito(false);
+                  setOpen(false);
+                }}
+              >
                 Entendido
               </Button>
               <Button asChild variant="outline">

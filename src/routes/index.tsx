@@ -25,25 +25,19 @@ import { ValoresSection } from "@/components/site/home/ValoresSection";
 import { FaqSection } from "@/components/site/home/FaqSection";
 import { CtaSection } from "@/components/site/home/CtaSection";
 
+import { createSeoMeta, getFaqSchema } from "@/lib/seo";
+
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "FUNASF — Porque la educación no tiene fronteras" },
-      {
-        name: "description",
-        content:
-          "Fundación Internacional Amigos Sin Fronteras. Programas de formación técnica, becas de hasta el 90 %, emprendimiento, salud y acción comunitaria.",
-      },
-      { property: "og:title", content: "FUNASF — Porque la educación no tiene fronteras" },
-      {
-        property: "og:description",
-        content:
-          "Formación técnica, becas de hasta el 90 %, emprendimiento y programas sociales para las comunidades.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    createSeoMeta({
+      title: "FUNASF Colombia | Fundación Internacional Amigos Sin Fronteras — EduFUNASF",
+      description:
+        "Portal oficial de FUNASF en Colombia (EduFUNASF). Programas de formación técnica y laboral en alianza, becas de hasta el 90 %, emprendimiento y acción social en Cali y el Atlántico.",
+      canonicalPath: "/",
+      keywords:
+        "FUNASF, EduFUNASF, FUNASF Colombia, Fundación Internacional Amigos Sin Fronteras, becas FUNASF, formación técnica Colombia, becas hasta 90, FUNASF Cali, FUNASF Atlántico",
+      jsonLd: getFaqSchema(),
+    }),
   loader: async () => {
     return await getHomeData();
   },
