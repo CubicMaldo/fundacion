@@ -67,7 +67,7 @@ const DEMO_INSCRIPCIONES: InscripcionItem[] = [
     nombre_completo: "Valentina Gómez López",
     documento_tipo: "CC",
     documento_numero: "1144098231",
-    telefono: "315 889 4421",
+    telefono: "+57 315 889 4421",
     correo: "valentina.gomez@gmail.com",
     ciudad: "Cali",
     programa_nombre: "Auxiliar de Enfermería",
@@ -81,7 +81,7 @@ const DEMO_INSCRIPCIONES: InscripcionItem[] = [
     nombre_completo: "Carlos Andrés Peña",
     documento_tipo: "CC",
     documento_numero: "1005992144",
-    telefono: "318 442 1190",
+    telefono: "+57 318 442 1190",
     correo: "carlos.pena@outlook.com",
     ciudad: "Soledad",
     programa_nombre: "Seguridad y Salud en el Trabajo",
@@ -95,7 +95,7 @@ const DEMO_INSCRIPCIONES: InscripcionItem[] = [
     nombre_completo: "Daniela Martínez Ruiz",
     documento_tipo: "CC",
     documento_numero: "1118234567",
-    telefono: "320 665 9912",
+    telefono: "+57 320 665 9912",
     correo: "daniela.martinez@gmail.com",
     ciudad: "Barranquilla",
     programa_nombre: "Primera Infancia",
@@ -379,15 +379,21 @@ function AdminInscripcionesPage() {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <a
-                        href={`https://wa.me/57${item.telefono.replace(/\s+/g, "")}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-md border border-border p-1.5 text-brand-green hover:bg-brand-green/10"
-                        title="Contactar por WhatsApp"
-                      >
-                        <MessageCircle className="size-4" />
-                      </a>
+                      {(() => {
+                        const digits = item.telefono.replace(/\D/g, "");
+                        const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                        return (
+                          <a
+                            href={`https://wa.me/${waNumber}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-md border border-border p-1.5 text-brand-green hover:bg-brand-green/10"
+                            title="Contactar por WhatsApp"
+                          >
+                            <MessageCircle className="size-4" />
+                          </a>
+                        );
+                      })()}
 
                       <Button
                         variant="ghost"
@@ -486,15 +492,21 @@ function AdminInscripcionesPage() {
             </div>
 
             <DialogFooter className="mt-4 flex sm:justify-between items-center gap-2">
-              <Button asChild size="sm" variant="outline" className="text-xs">
-                <a
-                  href={`https://wa.me/57${selectedItem.telefono.replace(/\s+/g, "")}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <MessageCircle className="size-3.5 mr-1 text-emerald-600" /> WhatsApp
-                </a>
-              </Button>
+              {(() => {
+                const digits = selectedItem.telefono.replace(/\D/g, "");
+                const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                return (
+                  <Button asChild size="sm" variant="outline" className="text-xs">
+                    <a
+                      href={`https://wa.me/${waNumber}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MessageCircle className="size-3.5 mr-1 text-emerald-600" /> WhatsApp
+                    </a>
+                  </Button>
+                );
+              })()}
 
               <div className="flex gap-2">
                 <Button variant="ghost" size="sm" onClick={() => setSelectedItem(null)}>

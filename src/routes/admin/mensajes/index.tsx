@@ -60,7 +60,7 @@ const DEMO_MENSAJES: MensajeItem[] = [
     id: "msg-1",
     nombre: "Carolina Herrera",
     correo: "carolina.herrera@gmail.com",
-    telefono: "312 450 9988",
+    telefono: "+57 312 450 9988",
     asunto: "Información sobre beca para Auxiliar de Enfermería",
     mensaje:
       "Buenas tardes, quisiera consultar qué requisitos se necesitan para postular a la beca del 90% en el programa de Auxiliar de Enfermería en la ciudad de Cali. Muchas gracias.",
@@ -72,7 +72,7 @@ const DEMO_MENSAJES: MensajeItem[] = [
     id: "msg-2",
     nombre: "Javier Restrepo",
     correo: "javier.restrepo@empresa.com",
-    telefono: "318 776 2200",
+    telefono: "+57 318 776 2200",
     asunto: "Convenio institucional y prácticas laborales",
     mensaje:
       "Hola, represento a una IPS en el Valle del Cauca y nos gustaría conocer el proceso para vincular a estudiantes de sus programas técnicos en salud para prácticas asistenciales.",
@@ -408,21 +408,25 @@ function AdminMensajesPage() {
 
               {/* Botones de respuesta directa */}
               <div className="flex items-center gap-2">
-                {selectedMensaje.telefono && (
-                  <Button
-                    asChild
-                    size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
-                  >
-                    <a
-                      href={`https://wa.me/57${selectedMensaje.telefono.replace(/\s+/g, "")}`}
-                      target="_blank"
-                      rel="noreferrer"
+                {selectedMensaje.telefono && (() => {
+                  const digits = selectedMensaje.telefono.replace(/\D/g, "");
+                  const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                  return (
+                    <Button
+                      asChild
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
                     >
-                      <MessageCircle className="size-3.5 mr-1" /> WhatsApp
-                    </a>
-                  </Button>
-                )}
+                      <a
+                        href={`https://wa.me/${waNumber}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <MessageCircle className="size-3.5 mr-1" /> WhatsApp
+                      </a>
+                    </Button>
+                  );
+                })()}
                 <Button asChild size="sm" variant="outline" className="text-xs h-8">
                   <a
                     href={`mailto:${selectedMensaje.correo}?subject=Respuesta:%20${encodeURIComponent(

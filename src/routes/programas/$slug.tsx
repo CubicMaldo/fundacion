@@ -88,6 +88,8 @@ function ProgramaDetailComponent() {
     .slice(0, 3);
 
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+  const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
+  const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
 
   return (
     <div className="flex flex-col">
@@ -280,7 +282,7 @@ function ProgramaDetailComponent() {
                 </Button>
 
                 <a
-                  href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                  href={phoneHref}
                   className="flex items-center justify-center gap-2 pt-2 text-xs text-muted-foreground hover:text-brand-green-deep transition-colors"
                 >
                   <Phone className="size-3.5 text-brand-green" />

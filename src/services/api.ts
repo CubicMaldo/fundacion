@@ -385,12 +385,32 @@ export interface SiteSettings {
   org: typeof funasfData.org;
 }
 
+/**
+ * Asegura que cualquier número telefónico colombiano incluya el prefijo internacional +57
+ */
+export function formatColPhone(phone: string): string {
+  if (!phone) return "";
+  const trimmed = phone.trim();
+  if (trimmed.startsWith("+57")) {
+    return trimmed;
+  }
+  if (/^57\s*\d/.test(trimmed)) {
+    return `+${trimmed}`;
+  }
+  return `+57 ${trimmed}`;
+}
+
+export function cleanPhoneDigits(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  return digits.startsWith("57") ? digits : `57${digits}`;
+}
+
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   org: funasfData.org,
   contacto: {
-    telefonos: funasfData.org.telefonos,
-    telefonoPrincipal: funasfData.org.telefonos[0] ?? "313 577 9384",
-    whatsappLink: `https://wa.me/57${(funasfData.org.telefonos[0] ?? "313 577 9384").replace(/\s/g, "")}`,
+    telefonos: funasfData.org.telefonos.map(formatColPhone),
+    telefonoPrincipal: formatColPhone(funasfData.org.telefonos[0] ?? "+57 313 577 9384"),
+    whatsappLink: `https://wa.me/${cleanPhoneDigits(funasfData.org.telefonos[0] ?? "+57 313 577 9384")}`,
     correo: funasfData.org.correo,
     instagram: funasfData.org.instagram,
     instagramUrl: funasfData.org.instagramUrl,
@@ -433,14 +453,14 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     const rawInstitucional = configMap.get("institucional") || {};
     const rawBecas = configMap.get("becas") || {};
 
-    const telefonos =
+    const rawTelefonos =
       Array.isArray(rawContacto["telefonos"]) && rawContacto["telefonos"].length > 0
         ? (rawContacto["telefonos"] as string[])
         : DEFAULT_SITE_SETTINGS.contacto.telefonos;
 
+    const telefonos = rawTelefonos.map(formatColPhone);
     const telefonoPrincipal = telefonos[0] || DEFAULT_SITE_SETTINGS.contacto.telefonoPrincipal;
-    const whatsappClean = telefonoPrincipal.replace(/\s+/g, "").replace(/\D/g, "");
-    const whatsappLink = `https://wa.me/57${whatsappClean}`;
+    const whatsappLink = `https://wa.me/${cleanPhoneDigits(telefonoPrincipal)}`;
 
     const contacto: SiteContactoConfig = {
       telefonos,

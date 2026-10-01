@@ -38,6 +38,8 @@ function PortalEstudiantilComponent() {
   const { settings } = useSiteSettings();
   const org = settings.org;
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+  const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
+  const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
 
   return (
     <div className="flex flex-col">
@@ -262,7 +264,7 @@ function PortalEstudiantilComponent() {
 
               <div className="mt-6 flex flex-wrap gap-4 text-xs sm:text-sm">
                 <a
-                  href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                  href={phoneHref}
                   className="flex items-center gap-2 rounded-lg bg-white/10 px-3.5 py-2 text-primary-foreground hover:bg-white/20 transition-colors"
                 >
                   <Phone className="size-4 text-brand-gold" />

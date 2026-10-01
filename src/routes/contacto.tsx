@@ -25,10 +25,10 @@ export const Route = createFileRoute("/contacto")({
     createSeoMeta({
       title: "Contacto | FUNASF Colombia — Líneas de Orientación y Sede Cali",
       description:
-        "Canales oficiales de FUNASF Colombia (EduFUNASF). Comunícate por WhatsApp (313 577 9384), correo o en nuestra sede en Cali para orientación sobre programas técnicos, becas de hasta 90 % y alianzas.",
+        "Canales oficiales de FUNASF Colombia (EduFUNASF). Comunícate por WhatsApp (+57 313 577 9384), correo o en nuestra sede en Cali para orientación sobre programas técnicos, becas de hasta 90 % y alianzas.",
       canonicalPath: "/contacto",
       keywords:
-        "Contacto FUNASF, FUNASF Colombia, EduFUNASF, teléfono FUNASF 3135779384, sede FUNASF Cali, orientación becas FUNASF Colombia",
+        "Contacto FUNASF, FUNASF Colombia, EduFUNASF, teléfono FUNASF +57 313 577 9384, sede FUNASF Cali, orientación becas FUNASF Colombia",
       jsonLd: [
         getBreadcrumbSchema([
           { name: "Inicio", path: "/" },
@@ -52,6 +52,8 @@ function Contacto() {
   const org = settings.org;
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
   const whatsappLink = settings.contacto.whatsappLink;
+  const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
+  const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
 
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
@@ -121,7 +123,7 @@ function Contacto() {
               <p className="text-muted-foreground mt-2 text-sm">{org.correo}</p>
             </a>
             <a
-              href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+              href={phoneHref}
               className="card-institucional group"
             >
               <Phone aria-hidden className="text-primary size-5" />
@@ -214,7 +216,7 @@ function Contacto() {
                       type="tel"
                       value={telefono}
                       onChange={(e) => setTelefono(e.target.value)}
-                      placeholder="Ej. 315 123 4567"
+                      placeholder="Ej. +57 315 123 4567"
                     />
                   </div>
                   <div className="space-y-2">

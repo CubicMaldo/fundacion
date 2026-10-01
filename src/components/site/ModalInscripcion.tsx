@@ -171,7 +171,7 @@ export function ModalInscripcion({
                   type="tel"
                   value={telefono}
                   onChange={(e) => setTelefono(e.target.value)}
-                  placeholder="Ej. 315 889 4421"
+                  placeholder="Ej. +57 315 889 4421"
                   required
                 />
               </div>

@@ -83,7 +83,7 @@ function AdminDashboard() {
             id: "1",
             nombre_completo: "Valentina Gómez",
             programa_nombre: "Auxiliar de Enfermería",
-            telefono: "315 889 4421",
+            telefono: "+57 315 889 4421",
             estado: "nuevo",
             created_at: new Date(Date.now() - 3600000).toISOString(),
           },
@@ -91,7 +91,7 @@ function AdminDashboard() {
             id: "2",
             nombre_completo: "Carlos Andrés Peña",
             programa_nombre: "Seguridad y Salud en el Trabajo",
-            telefono: "318 442 1190",
+            telefono: "+57 318 442 1190",
             estado: "contactado",
             created_at: new Date(Date.now() - 86400000).toISOString(),
           },
@@ -402,15 +402,21 @@ function AdminDashboard() {
                       >
                         {item.estado}
                       </Badge>
-                      <a
-                        href={`https://wa.me/57${item.telefono.replace(/\s+/g, "")}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="rounded-md border border-border p-1.5 text-brand-green hover:bg-brand-green/10"
-                        title="Contactar por WhatsApp"
-                      >
-                        <MessageCircle className="size-4" />
-                      </a>
+                      {(() => {
+                        const digits = item.telefono.replace(/\D/g, "");
+                        const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                        return (
+                          <a
+                            href={`https://wa.me/${waNumber}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="rounded-md border border-border p-1.5 text-brand-green hover:bg-brand-green/10"
+                            title="Contactar por WhatsApp"
+                          >
+                            <MessageCircle className="size-4" />
+                          </a>
+                        );
+                      })()}
                     </div>
                   </div>
                 ))}

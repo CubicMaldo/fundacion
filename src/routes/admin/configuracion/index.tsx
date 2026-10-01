@@ -268,7 +268,7 @@ function AdminConfiguracionPage() {
                     <Input
                       value={tel}
                       onChange={(e) => handleUpdateTelefono(idx, e.target.value)}
-                      placeholder="Ej. 313 577 9384"
+                      placeholder="Ej. +57 313 577 9384"
                       disabled={!isAdmin}
                     />
                     <Button

@@ -89,6 +89,8 @@ export function Header() {
   const { settings } = useSiteSettings();
   const org = settings.org;
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+  const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
+  const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
 
   const [abierto, setAbierto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -171,7 +173,7 @@ export function Header() {
           <div className="text-primary-foreground/80 flex items-center gap-3.5 text-[11px]">
             <a
               className="hover:text-brand-gold inline-flex items-center gap-1.5 transition-colors"
-              href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+              href={phoneHref}
             >
               <Phone aria-hidden className="text-brand-gold/90 size-3" />
               <span className="tabular-nums font-medium">{org.telefonos[0]}</span>
@@ -366,7 +368,7 @@ export function Header() {
                 <p className="font-medium">{org.eslogan}</p>
                 <div className="text-primary-foreground/80 mt-2 flex flex-col gap-1.5 text-[11px]">
                   <a
-                    href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                    href={phoneHref}
                     className="hover:text-brand-gold flex items-center gap-1.5"
                   >
                     <Phone className="text-brand-gold size-3" /> {org.telefonos[0]}

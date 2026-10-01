@@ -21,7 +21,7 @@ export const org = {
   tipoContribuyente: "Persona jurídica",
   ciudadPrincipal: "Cali, Valle del Cauca — Colombia",
   direccionPrincipal: "CR 96 45 119, Cali",
-  telefonos: ["313 577 9384", "318 915 7015", "323 294 6184", "317 165 7124"],
+  telefonos: ["+57 313 577 9384", "+57 318 915 7015", "+57 323 294 6184", "+57 317 165 7124"],
   correo: "info@edufunasf.org",
   sitioWeb: "www.edufunasf.org",
   instagram: "@funasfinternacional",
@@ -29,8 +29,10 @@ export const org = {
   formularioInscripcion: "https://forms.gle/kYUoX2v1dewKUrMX8",
 };
 
-export const telefonoPrincipal = org.telefonos[0] ?? "";
-export const whatsappLink = `https://wa.me/57${telefonoPrincipal.replace(/\s/g, "")}`;
+export const telefonoPrincipal = org.telefonos[0] ?? "+57 313 577 9384";
+const phoneDigits = telefonoPrincipal.replace(/\D/g, "");
+const cleanWaDigits = phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`;
+export const whatsappLink = `https://wa.me/${cleanWaDigits}`;
 
 export const quienesSomos = {
   intro:

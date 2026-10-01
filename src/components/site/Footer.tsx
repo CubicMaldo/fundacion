@@ -46,6 +46,8 @@ export function Footer() {
   const { settings } = useSiteSettings();
   const org = settings.org;
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+  const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
+  const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
 
   return (
     <footer className="bg-brand-green-deep text-primary-foreground">
@@ -62,7 +64,7 @@ export function Footer() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <a
-                href={`tel:+57${telefonoPrincipal.replace(/\s/g, "")}`}
+                href={phoneHref}
                 className="border-primary-foreground/25 hover:bg-primary-foreground/10 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
               >
                 <Phone aria-hidden className="size-4" /> Llamar
@@ -111,15 +113,20 @@ export function Footer() {
                 Contacto
               </h2>
               <div className="text-primary-foreground/80 mt-4 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-4">
-                {org.telefonos.map((t) => (
-                  <a
-                    key={t}
-                    href={`tel:+57${t.replace(/\s/g, "")}`}
-                    className="hover:text-primary-foreground transition-colors"
-                  >
-                    {t}
-                  </a>
-                ))}
+                {org.telefonos.map((t) => {
+                  const digits = t.replace(/\D/g, "");
+                  const href = `tel:+${digits.startsWith("57") ? digits : `57${digits}`}`;
+                  const formattedText = t.startsWith("+57") ? t : `+57 ${t}`;
+                  return (
+                    <a
+                      key={t}
+                      href={href}
+                      className="hover:text-primary-foreground transition-colors tabular-nums"
+                    >
+                      {formattedText}
+                    </a>
+                  );
+                })}
                 <a href={`mailto:${org.correo}`} className="hover:text-primary-foreground">
                   {org.correo}
                 </a>
