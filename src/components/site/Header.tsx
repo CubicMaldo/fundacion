@@ -146,7 +146,7 @@ export function Header() {
       clearTimeout(timeoutId);
       if (observer) observer.disconnect();
     };
-  }, [pathname]);
+  }, [pathname, hash]);
 
   useEffect(() => {
     setAbierto(false);
