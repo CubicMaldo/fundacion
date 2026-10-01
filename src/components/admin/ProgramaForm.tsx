@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Plus, Trash2, Check, Sparkles } from "lucide-react";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ArrowLeft, Loader2, Plus, Trash2, Check, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import type { ProgramaAdminItem } from "@/routes/admin/programas/index";
@@ -22,6 +24,27 @@ const CATEGORIAS_PREDEFINIDAS = [
 
 const MODALIDADES_DISPONIBLES = ["Presencial", "Semipresencial", "Virtual"];
 
+const ProgramaFormSchema = z.object({
+  nombre: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  slug: z
+    .string()
+    .min(3, "El slug debe tener al menos 3 caracteres")
+    .regex(/^[a-z0-9-]+$/, "Solo letras minúsculas, números y guiones"),
+  categoriaId: z.string().min(1, "Selecciona un área de formación"),
+  categoria: z.string().min(1, "La categoría es obligatoria"),
+  descripcion: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
+  objetivo: z.string().min(10, "El objetivo debe tener al menos 10 caracteres"),
+  duracionEstimada: z.string().optional(),
+  certificacionNota: z.string().optional(),
+  orden: z.coerce.number().min(1, "El orden debe ser al menos 1"),
+  activo: z.boolean(),
+  modalidades: z.array(z.string()).min(1, "Selecciona al menos una modalidad"),
+  perfilOcupacional: z.array(z.object({ value: z.string() })),
+  requisitos: z.array(z.object({ value: z.string() })),
+});
+
+type ProgramaFormValues = z.infer<typeof ProgramaFormSchema>;
+
 interface ProgramaFormProps {
   initialData?: Partial<ProgramaAdminItem>;
   isEdit?: boolean;
@@ -33,104 +56,118 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   const [saving, setSaving] = useState(false);
   const [successNotice, setSuccessNotice] = useState(false);
 
-  const [nombre, setNombre] = useState(initialData?.nombre || "");
-  const [slug, setSlug] = useState(initialData?.slug || "");
-  const [categoriaId, setCategoriaId] = useState(initialData?.categoriaId || "salud");
-  const [categoria, setCategoria] = useState(
-    initialData?.categoria || CATEGORIAS_PREDEFINIDAS.find((c) => c.id === "salud")?.label || "",
-  );
-  const [descripcion, setDescripcion] = useState(initialData?.descripcion || "");
-  const [objetivo, setObjetivo] = useState(initialData?.objetivo || "");
-  const [duracionEstimada, setDuracionEstimada] = useState(initialData?.duracionEstimada || "");
-  const [certificacionNota, setCertificacionNota] = useState(initialData?.certificacionNota || "");
-  const [orden, setOrden] = useState(initialData?.orden ?? 1);
-  const [activo, setActivo] = useState(initialData?.activo ?? true);
+  const defaultValues: ProgramaFormValues = {
+    nombre: initialData?.nombre || "",
+    slug: initialData?.slug || "",
+    categoriaId: initialData?.categoriaId || "salud",
+    categoria:
+      initialData?.categoria ||
+      CATEGORIAS_PREDEFINIDAS.find((c) => c.id === "salud")?.label ||
+      "Área de salud",
+    descripcion: initialData?.descripcion || "",
+    objetivo: initialData?.objetivo || "",
+    duracionEstimada: initialData?.duracionEstimada || "",
+    certificacionNota: initialData?.certificacionNota || "",
+    orden: initialData?.orden ?? 1,
+    activo: initialData?.activo ?? true,
+    modalidades: initialData?.modalidades || ["Presencial", "Semipresencial"],
+    perfilOcupacional:
+      initialData?.perfilOcupacional && initialData.perfilOcupacional.length > 0
+        ? initialData.perfilOcupacional.map((v) => ({ value: v }))
+        : [{ value: "" }],
+    requisitos:
+      initialData?.requisitos && initialData.requisitos.length > 0
+        ? initialData.requisitos.map((v) => ({ value: v }))
+        : [
+            { value: "Documento de identidad vigente" },
+            { value: "Certificado de noveno grado o diploma de bachiller" },
+          ],
+  };
 
-  const [modalidades, setModalidades] = useState<string[]>(
-    initialData?.modalidades || ["Presencial", "Semipresencial"],
-  );
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<ProgramaFormValues>({
+    resolver: zodResolver(ProgramaFormSchema),
+    defaultValues,
+  });
 
-  const [perfilOcupacional, setPerfilOcupacional] = useState<string[]>(
-    initialData?.perfilOcupacional && initialData.perfilOcupacional.length > 0
-      ? initialData.perfilOcupacional
-      : [""],
-  );
+  const {
+    fields: perfilFields,
+    append: appendPerfil,
+    remove: removePerfil,
+  } = useFieldArray({
+    control,
+    name: "perfilOcupacional",
+  });
 
-  const [requisitos, setRequisitos] = useState<string[]>(
-    initialData?.requisitos && initialData.requisitos.length > 0
-      ? initialData.requisitos
-      : ["Documento de identidad vigente", "Certificado de noveno grado o diploma de bachiller"],
-  );
+  const {
+    fields: requisitosFields,
+    append: appendRequisito,
+    remove: removeRequisito,
+  } = useFieldArray({
+    control,
+    name: "requisitos",
+  });
 
-  const handleNombreChange = (val: string) => {
-    setNombre(val);
-    if (!isEdit || !slug) {
+  const currentModalidades = watch("modalidades");
+  const currentSlug = watch("slug");
+  const currentNombre = watch("nombre");
+
+  const handleNombreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setValue("nombre", val, { shouldValidate: true });
+    if (!isEdit || !currentSlug) {
       const autoSlug = val
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "");
-      setSlug(autoSlug);
+      setValue("slug", autoSlug, { shouldValidate: true });
     }
   };
 
-  const handleCategoriaSelect = (catId: string) => {
-    setCategoriaId(catId);
+  const handleCategoriaChange = (catId: string) => {
+    setValue("categoriaId", catId);
     const found = CATEGORIAS_PREDEFINIDAS.find((c) => c.id === catId);
-    if (found) setCategoria(found.label);
+    if (found) {
+      setValue("categoria", found.label);
+    }
   };
 
   const toggleModalidad = (mod: string) => {
-    setModalidades((prev) => (prev.includes(mod) ? prev.filter((m) => m !== mod) : [...prev, mod]));
+    const updated = currentModalidades.includes(mod)
+      ? currentModalidades.filter((m) => m !== mod)
+      : [...currentModalidades, mod];
+    setValue("modalidades", updated, { shouldValidate: true });
   };
 
-  // Manejo de arrays dinámicos
-  const handleArrayItemChange = (
-    list: string[],
-    setList: React.Dispatch<React.SetStateAction<string[]>>,
-    index: number,
-    val: string,
-  ) => {
-    const updated = [...list];
-    updated[index] = val;
-    setList(updated);
-  };
-
-  const addArrayItem = (setList: React.Dispatch<React.SetStateAction<string[]>>) => {
-    setList((prev) => [...prev, ""]);
-  };
-
-  const removeArrayItem = (
-    list: string[],
-    setList: React.Dispatch<React.SetStateAction<string[]>>,
-    index: number,
-  ) => {
-    if (list.length <= 1) {
-      setList([""]);
-      return;
-    }
-    setList(list.filter((_, i) => i !== index));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: ProgramaFormValues) => {
     setSaving(true);
 
     const payload = {
-      nombre,
-      slug,
-      categoria_id: categoriaId,
-      categoria,
-      descripcion,
-      objetivo,
-      duracion_estimada: duracionEstimada || null,
-      certificacion_nota: certificacionNota || null,
-      modalidades,
-      perfil_ocupacional: perfilOcupacional.filter((item) => item.trim().length > 0),
-      requisitos: requisitos.filter((item) => item.trim().length > 0),
-      orden: Number(orden),
-      activo,
+      nombre: values.nombre,
+      slug: values.slug,
+      categoria_id: values.categoriaId,
+      categoria: values.categoria,
+      descripcion: values.descripcion,
+      objetivo: values.objetivo,
+      duracion_estimada: values.duracionEstimada || null,
+      certificacion_nota: values.certificacionNota || null,
+      modalidades: values.modalidades,
+      perfil_ocupacional: values.perfilOcupacional
+        .map((p) => p.value.trim())
+        .filter((val) => val.length > 0),
+      requisitos: values.requisitos
+        .map((r) => r.value.trim())
+        .filter((val) => val.length > 0),
+      orden: values.orden,
+      activo: values.activo,
     };
 
     if (isConfigured) {
@@ -153,7 +190,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       {/* Barra de cabecera con navegación y botón guardar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-4">
         <div className="flex items-center gap-3">
@@ -164,7 +201,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
           </Button>
           <div>
             <h2 className="text-xl font-bold text-foreground">
-              {isEdit ? `Editar: ${nombre || "Programa"}` : "Nuevo Programa Académico"}
+              {isEdit ? `Editar: ${currentNombre || "Programa"}` : "Nuevo Programa Académico"}
             </h2>
             <p className="text-xs text-muted-foreground">
               Define los contenidos informativos oficiales y condiciones de postulación.
@@ -178,7 +215,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
           </Button>
           <Button
             type="submit"
-            disabled={saving || !nombre || !slug}
+            disabled={saving}
             className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground min-w-[130px]"
           >
             {saving ? (
@@ -207,12 +244,16 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
               <Label htmlFor="nombre">Nombre oficial del programa *</Label>
               <Input
                 id="nombre"
-                value={nombre}
-                onChange={(e) => handleNombreChange(e.target.value)}
+                {...register("nombre")}
+                onChange={handleNombreChange}
                 placeholder="Ej. Auxiliar de Enfermería"
-                required
                 className="h-10 text-base"
               />
+              {errors.nombre && (
+                <p className="text-xs text-destructive flex items-center gap-1">
+                  <AlertCircle className="size-3" /> {errors.nombre.message}
+                </p>
+              )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
@@ -220,20 +261,23 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 <Label htmlFor="slug">Identificador URL (Slug) *</Label>
                 <Input
                   id="slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
+                  {...register("slug")}
                   placeholder="ej. auxiliar-de-enfermeria"
-                  required
                   className="font-mono text-sm"
                 />
+                {errors.slug && (
+                  <p className="text-xs text-destructive flex items-center gap-1">
+                    <AlertCircle className="size-3" /> {errors.slug.message}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="categoriaId">Área de Formación</Label>
                 <select
                   id="categoriaId"
-                  value={categoriaId}
-                  onChange={(e) => handleCategoriaSelect(e.target.value)}
+                  {...register("categoriaId")}
+                  onChange={(e) => handleCategoriaChange(e.target.value)}
                   className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs"
                 >
                   {CATEGORIAS_PREDEFINIDAS.map((c) => (
@@ -249,24 +293,30 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
               <Label htmlFor="descripcion">Descripción institucional *</Label>
               <Textarea
                 id="descripcion"
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
+                {...register("descripcion")}
                 rows={3}
                 placeholder="Resumen del enfoque y formación que ofrece el programa..."
-                required
               />
+              {errors.descripcion && (
+                <p className="text-xs text-destructive flex items-center gap-1">
+                  <AlertCircle className="size-3" /> {errors.descripcion.message}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="objetivo">Objetivo del programa *</Label>
               <Textarea
                 id="objetivo"
-                value={objetivo}
-                onChange={(e) => setObjetivo(e.target.value)}
+                {...register("objetivo")}
                 rows={3}
                 placeholder="Competencias que adquirirá el estudiante..."
-                required
               />
+              {errors.objetivo && (
+                <p className="text-xs text-destructive flex items-center gap-1">
+                  <AlertCircle className="size-3" /> {errors.objetivo.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -283,33 +333,28 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => addArrayItem(setPerfilOcupacional)}
+                onClick={() => appendPerfil({ value: "" })}
               >
                 <Plus className="size-3.5 mr-1" /> Añadir campo
               </Button>
             </div>
 
             <div className="space-y-2.5">
-              {perfilOcupacional.map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
+              {perfilFields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
                   <span className="size-2 rounded-full bg-brand-gold shrink-0 ml-1" />
                   <Input
-                    value={item}
-                    onChange={(e) =>
-                      handleArrayItemChange(
-                        perfilOcupacional,
-                        setPerfilOcupacional,
-                        index,
-                        e.target.value,
-                      )
-                    }
+                    {...register(`perfilOcupacional.${index}.value` as const)}
                     placeholder="Ej. Clínicas, hospitales y centros de atención básica"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => removeArrayItem(perfilOcupacional, setPerfilOcupacional, index)}
+                    onClick={() => {
+                      if (perfilFields.length > 1) removePerfil(index);
+                    }}
+                    disabled={perfilFields.length <= 1}
                     className="text-muted-foreground hover:text-destructive shrink-0 size-9"
                   >
                     <Trash2 className="size-4" />
@@ -332,28 +377,28 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => addArrayItem(setRequisitos)}
+                onClick={() => appendRequisito({ value: "" })}
               >
                 <Plus className="size-3.5 mr-1" /> Añadir requisito
               </Button>
             </div>
 
             <div className="space-y-2.5">
-              {requisitos.map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
+              {requisitosFields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
                   <span className="size-2 rounded-full bg-brand-brown shrink-0 ml-1" />
                   <Input
-                    value={item}
-                    onChange={(e) =>
-                      handleArrayItemChange(requisitos, setRequisitos, index, e.target.value)
-                    }
+                    {...register(`requisitos.${index}.value` as const)}
                     placeholder="Ej. Documento de identidad vigente"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    onClick={() => removeArrayItem(requisitos, setRequisitos, index)}
+                    onClick={() => {
+                      if (requisitosFields.length > 1) removeRequisito(index);
+                    }}
+                    disabled={requisitosFields.length <= 1}
                     className="text-muted-foreground hover:text-destructive shrink-0 size-9"
                   >
                     <Trash2 className="size-4" />
@@ -379,7 +424,17 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                   Visible en el catálogo y página de inicio
                 </p>
               </div>
-              <Switch id="activo" checked={activo} onCheckedChange={setActivo} />
+              <Controller
+                control={control}
+                name="activo"
+                render={({ field }) => (
+                  <Switch
+                    id="activo"
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                )}
+              />
             </div>
 
             <div className="space-y-2 pt-2 border-t border-border">
@@ -388,8 +443,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 id="orden"
                 type="number"
                 min={1}
-                value={orden}
-                onChange={(e) => setOrden(Number(e.target.value))}
+                {...register("orden")}
                 className="h-10"
               />
               <p className="text-[11px] text-muted-foreground">
@@ -407,7 +461,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
 
             <div className="space-y-2.5">
               {MODALIDADES_DISPONIBLES.map((mod) => {
-                const checked = modalidades.includes(mod);
+                const checked = currentModalidades.includes(mod);
                 return (
                   <button
                     key={mod}
@@ -425,6 +479,11 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 );
               })}
             </div>
+            {errors.modalidades && (
+              <p className="text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="size-3" /> {errors.modalidades.message}
+              </p>
+            )}
           </div>
 
           {/* Duración y Certificación */}
@@ -435,8 +494,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
               <Label htmlFor="duracion">Duración estimada</Label>
               <Input
                 id="duracion"
-                value={duracionEstimada}
-                onChange={(e) => setDuracionEstimada(e.target.value)}
+                {...register("duracionEstimada")}
                 placeholder="Ej. Sujeta al plan de estudios..."
               />
             </div>
@@ -445,8 +503,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
               <Label htmlFor="certificacion">Nota de certificación</Label>
               <Input
                 id="certificacion"
-                value={certificacionNota}
-                onChange={(e) => setCertificacionNota(e.target.value)}
+                {...register("certificacionNota")}
                 placeholder="Ej. Certificado emitido por institución aliada..."
               />
             </div>

@@ -13,7 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { org } from "@/data/funasf";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { programasAcademicos } from "@/data/programas";
 import { getProgramaBySlug } from "@/services/api";
 import { ModalInscripcion } from "@/components/site/ModalInscripcion";
@@ -24,8 +24,8 @@ export const Route = createFileRoute("/programas/$slug")({
   loader: async ({ params }) => {
     return await getProgramaBySlug(params.slug);
   },
-  head: ({ params }) => {
-    const programa = programasAcademicos.find((p) => p.slug === params.slug);
+  head: ({ loaderData, params }) => {
+    const programa = loaderData ?? programasAcademicos.find((p) => p.slug === params.slug);
     if (!programa) {
       return createSeoMeta({
         title: "Programa no encontrado | FUNASF",
@@ -59,6 +59,7 @@ export const Route = createFileRoute("/programas/$slug")({
 function ProgramaDetailComponent() {
   const { slug } = Route.useParams();
   const loaderData = Route.useLoaderData();
+  const { settings } = useSiteSettings();
   const programa = loaderData || programasAcademicos.find((p) => p.slug === slug);
 
   if (!programa) {
@@ -86,7 +87,7 @@ function ProgramaDetailComponent() {
     .filter((p) => p.slug !== programa.slug && p.categoriaId === programa.categoriaId)
     .slice(0, 3);
 
-  const telefonoPrincipal = org.telefonos[0] ?? "313 577 9384";
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
 
   return (
     <div className="flex flex-col">

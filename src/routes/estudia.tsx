@@ -9,15 +9,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
 import {
-  categoriasProgramas,
-  formacionAcademica,
-  becas,
-  modeloAlianzas,
-  faq,
-  org,
-} from "@/data/funasf";
-import { programasAcademicos } from "@/data/programas";
+  getProgramasAcademicos,
+  getSiteSettings,
+  getCategorizedPrograms,
+} from "@/services/api";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/estudia")({
@@ -37,10 +35,28 @@ export const Route = createFileRoute("/estudia")({
         getFaqSchema(),
       ],
     }),
+  loader: async () => {
+    const [programas, settings] = await Promise.all([
+      getProgramasAcademicos(),
+      getSiteSettings(),
+    ]);
+    return {
+      programas,
+      categoriasProgramas: getCategorizedPrograms(programas),
+      becas: settings.becas,
+      org: settings.org,
+    };
+  },
   component: Estudia,
 });
 
 function Estudia() {
+  const loaderData = Route.useLoaderData();
+  const { settings } = useSiteSettings();
+  const org = settings?.org || loaderData.org;
+  const becas = settings?.becas || loaderData.becas;
+  const { programas, categoriasProgramas } = loaderData;
+
   return (
     <>
       <PageHero
@@ -76,7 +92,7 @@ function Estudia() {
                 <AccordionContent>
                   <ul className="text-muted-foreground mt-2 space-y-3 p-2 text-base">
                     {cat.programas.map((p) => {
-                      const matchProg = programasAcademicos.find(
+                      const matchProg = programas.find(
                         (pa) =>
                           pa.nombre.toLowerCase() === p.toLowerCase() ||
                           p.toLowerCase().includes(pa.nombre.toLowerCase()) ||

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { ImageUploader } from "./ImageUploader";
 import type { ArticuloAdminItem } from "@/routes/admin/blog/index";
 
 const CATEGORIAS_BLOG = [
@@ -230,24 +231,14 @@ export function ArticuloForm({ initialData, isEdit }: ArticuloFormProps) {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="art-img">URL de Imagen de Portada</Label>
-              <Input
-                id="art-img"
+            <div className="pt-2">
+              <ImageUploader
                 value={imagenPortada}
-                onChange={(e) => setImagenPortada(e.target.value)}
-                placeholder="https://images.unsplash.com/..."
+                onChange={setImagenPortada}
+                bucket="articulos"
+                label="Imagen de Portada"
+                helperText="Sube una fotografía destacada para el artículo o pega una URL directa."
               />
-              {imagenPortada && (
-                <div className="mt-2 overflow-hidden rounded-lg border border-border aspect-video">
-                  <img
-                    src={imagenPortada}
-                    alt="Vista previa"
-                    className="size-full object-cover"
-                    onError={(e) => ((e.target as HTMLElement).style.display = "none")}
-                  />
-                </div>
-              )}
             </div>
           </div>
         </div>

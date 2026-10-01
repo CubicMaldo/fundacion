@@ -352,29 +352,206 @@ export async function enviarMensajeContacto(
 }
 
 // ============================================================================
-// 5. DATOS INSTITUCIONALES (CONFIGURACIÓN)
+// 5. DATOS INSTITUCIONALES (CONFIGURACIÓN Y SETTINGS CENTRALIZADOS)
 // ============================================================================
 
-export async function getOrganizationData(): Promise<Organization> {
+export interface SiteContactoConfig {
+  telefonos: string[];
+  telefonoPrincipal: string;
+  whatsappLink: string;
+  correo: string;
+  instagram: string;
+  instagramUrl: string;
+  direccionPrincipal: string;
+  ciudadPrincipal: string;
+  formularioInscripcion: string;
+  horario: string;
+}
+
+export interface SiteInstitucionalConfig {
+  nombre: string;
+  sigla: string;
+  razonSocial: string;
+  nit: string;
+  eslogan: string;
+  esloganSecundario: string;
+  frases: string[];
+}
+
+export interface SiteSettings {
+  contacto: SiteContactoConfig;
+  institucional: SiteInstitucionalConfig;
+  becas: typeof funasfData.becas;
+  org: typeof funasfData.org;
+}
+
+export const DEFAULT_SITE_SETTINGS: SiteSettings = {
+  org: funasfData.org,
+  contacto: {
+    telefonos: funasfData.org.telefonos,
+    telefonoPrincipal: funasfData.org.telefonos[0] ?? "313 577 9384",
+    whatsappLink: `https://wa.me/57${(funasfData.org.telefonos[0] ?? "313 577 9384").replace(/\s/g, "")}`,
+    correo: funasfData.org.correo,
+    instagram: funasfData.org.instagram,
+    instagramUrl: funasfData.org.instagramUrl,
+    direccionPrincipal: funasfData.org.direccionPrincipal,
+    ciudadPrincipal: funasfData.org.ciudadPrincipal,
+    formularioInscripcion: funasfData.org.formularioInscripcion,
+    horario: "Lunes a Viernes 8:00 AM - 5:00 PM",
+  },
+  institucional: {
+    nombre: funasfData.org.nombre,
+    sigla: funasfData.org.sigla,
+    razonSocial: funasfData.org.razonSocial,
+    nit: funasfData.org.nit,
+    eslogan: funasfData.org.eslogan,
+    esloganSecundario: funasfData.org.esloganSecundario,
+    frases: funasfData.org.frases,
+  },
+  becas: funasfData.becas,
+};
+
+export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSupabaseAvailable()) {
-    return funasfData.org as Organization;
+    return DEFAULT_SITE_SETTINGS;
   }
 
   try {
-    const { data } = await supabase
-      .from("configuracion")
-      .select("valor")
-      .eq("clave", "institucional")
-      .maybeSingle();
-
-    if (data?.valor && typeof data.valor === "object") {
-      return { ...funasfData.org, ...(data.valor as Record<string, unknown>) } as Organization;
+    const { data, error } = await supabase.from("configuracion").select("clave, valor");
+    if (error || !data || data.length === 0) {
+      return DEFAULT_SITE_SETTINGS;
     }
-  } catch {
-    // fallback
-  }
 
-  return funasfData.org as Organization;
+    const configMap = new Map<string, Record<string, unknown>>();
+    data.forEach((row) => {
+      if (row.clave && row.valor && typeof row.valor === "object") {
+        configMap.set(row.clave, row.valor as Record<string, unknown>);
+      }
+    });
+
+    const rawContacto = configMap.get("contacto") || {};
+    const rawInstitucional = configMap.get("institucional") || {};
+    const rawBecas = configMap.get("becas") || {};
+
+    const telefonos =
+      Array.isArray(rawContacto["telefonos"]) && rawContacto["telefonos"].length > 0
+        ? (rawContacto["telefonos"] as string[])
+        : DEFAULT_SITE_SETTINGS.contacto.telefonos;
+
+    const telefonoPrincipal = telefonos[0] || DEFAULT_SITE_SETTINGS.contacto.telefonoPrincipal;
+    const whatsappClean = telefonoPrincipal.replace(/\s+/g, "").replace(/\D/g, "");
+    const whatsappLink = `https://wa.me/57${whatsappClean}`;
+
+    const contacto: SiteContactoConfig = {
+      telefonos,
+      telefonoPrincipal,
+      whatsappLink,
+      correo: (rawContacto["correo"] as string) || DEFAULT_SITE_SETTINGS.contacto.correo,
+      instagram: (rawContacto["instagram"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagram,
+      instagramUrl: (rawContacto["instagramUrl"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagramUrl,
+      direccionPrincipal: (rawContacto["direccionPrincipal"] as string) || DEFAULT_SITE_SETTINGS.contacto.direccionPrincipal,
+      ciudadPrincipal: (rawContacto["ciudadPrincipal"] as string) || DEFAULT_SITE_SETTINGS.contacto.ciudadPrincipal,
+      formularioInscripcion: (rawContacto["formularioInscripcion"] as string) || DEFAULT_SITE_SETTINGS.contacto.formularioInscripcion,
+      horario: (rawContacto["horario"] as string) || DEFAULT_SITE_SETTINGS.contacto.horario,
+    };
+
+    const institucional: SiteInstitucionalConfig = {
+      nombre: (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.nombre,
+      sigla: (rawInstitucional["sigla"] as string) || DEFAULT_SITE_SETTINGS.institucional.sigla,
+      razonSocial: (rawInstitucional["razonSocial"] as string) || (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.razonSocial,
+      nit: (rawInstitucional["nit"] as string) || DEFAULT_SITE_SETTINGS.institucional.nit,
+      eslogan: (rawInstitucional["eslogan"] as string) || DEFAULT_SITE_SETTINGS.institucional.eslogan,
+      esloganSecundario: (rawInstitucional["esloganSecundario"] as string) || DEFAULT_SITE_SETTINGS.institucional.esloganSecundario,
+      frases:
+        Array.isArray(rawInstitucional["frases"]) && rawInstitucional["frases"].length > 0
+          ? (rawInstitucional["frases"] as string[])
+          : DEFAULT_SITE_SETTINGS.institucional.frases,
+    };
+
+    const becas = {
+      ...DEFAULT_SITE_SETTINGS.becas,
+      ...rawBecas,
+      porcentaje: (rawBecas["porcentaje"] as string) || DEFAULT_SITE_SETTINGS.becas.porcentaje,
+      titulo: (rawBecas["titulo"] as string) || DEFAULT_SITE_SETTINGS.becas.titulo,
+      intro: (rawBecas["intro"] as string) || DEFAULT_SITE_SETTINGS.becas.intro,
+      aclaracion: (rawBecas["aclaracion"] as string) || DEFAULT_SITE_SETTINGS.becas.aclaracion,
+      beneficios:
+        Array.isArray(rawBecas["beneficios"]) && rawBecas["beneficios"].length > 0
+          ? (rawBecas["beneficios"] as string[])
+          : DEFAULT_SITE_SETTINGS.becas.beneficios,
+    };
+
+    const org = {
+      ...funasfData.org,
+      ...institucional,
+      telefonos: contacto.telefonos,
+      correo: contacto.correo,
+      instagram: contacto.instagram,
+      instagramUrl: contacto.instagramUrl,
+      direccionPrincipal: contacto.direccionPrincipal,
+      ciudadPrincipal: contacto.ciudadPrincipal,
+      formularioInscripcion: contacto.formularioInscripcion,
+      whatsapp: contacto.whatsappLink,
+    };
+
+    return {
+      contacto,
+      institucional,
+      becas,
+      org,
+    };
+  } catch (err) {
+    console.warn("[API] Error obteniendo configuración:", err);
+    return DEFAULT_SITE_SETTINGS;
+  }
+}
+
+export function getCategorizedPrograms(programas: ProgramaAcademico[]): CategoriaProgramas[] {
+  const categoryOrder = ["salud", "sst", "administracion", "educacion-social", "otras", "basica"];
+  const categoryLabels: Record<string, string> = {
+    salud: "Área de salud",
+    sst: "Seguridad y Salud en el Trabajo",
+    administracion: "Administración y empresa",
+    "educacion-social": "Educación y área social",
+    otras: "Otras áreas de formación",
+    basica: "Educación básica",
+  };
+
+  const map = new Map<string, { id: string; categoria: string; programas: string[] }>();
+
+  // Inicializar en el orden canónico
+  categoryOrder.forEach((id) => {
+    map.set(id, {
+      id,
+      categoria: categoryLabels[id] || id,
+      programas: [],
+    });
+  });
+
+  // Distribuir programas
+  programas.forEach((p) => {
+    const catId = p.categoriaId || "otras";
+    if (!map.has(catId)) {
+      map.set(catId, {
+        id: catId,
+        categoria: p.categoria || catId,
+        programas: [],
+      });
+    }
+    const catObj = map.get(catId)!;
+    if (!catObj.programas.includes(p.nombre)) {
+      catObj.programas.push(p.nombre);
+    }
+  });
+
+  // Retornar solo categorías que tengan al menos 1 programa
+  const result = Array.from(map.values()).filter((cat) => cat.programas.length > 0);
+  return result.length > 0 ? result : (funasfData.categoriasProgramas as CategoriaProgramas[]);
+}
+
+export async function getOrganizationData(): Promise<Organization> {
+  const settings = await getSiteSettings();
+  return settings.org as unknown as Organization;
 }
 
 export async function getQuienesSomos(): Promise<QuienesSomos> {
@@ -386,11 +563,13 @@ export async function getProposito(): Promise<Proposito> {
 }
 
 export async function getBecas(): Promise<Beca> {
-  return funasfData.becas as Beca;
+  const settings = await getSiteSettings();
+  return settings.becas as unknown as Beca;
 }
 
 export async function getCategoriasProgramas(): Promise<CategoriaProgramas[]> {
-  return funasfData.categoriasProgramas as CategoriaProgramas[];
+  const programas = await getProgramasAcademicos();
+  return getCategorizedPrograms(programas);
 }
 
 export async function getProgramasSociales(): Promise<ProgramaSocial[]> {
@@ -414,15 +593,17 @@ export async function getLlamadoAccion(): Promise<LlamadoAccion> {
 }
 
 export async function getHomeData() {
-  const [org, programas] = await Promise.all([getOrganizationData(), getProgramasAcademicos()]);
+  const [settings, programas] = await Promise.all([getSiteSettings(), getProgramasAcademicos()]);
+  const categoriasProgramas = getCategorizedPrograms(programas);
 
   return {
-    org,
+    settings,
+    org: settings.org,
     programas,
     quienesSomos: funasfData.quienesSomos,
     proposito: funasfData.proposito,
-    becas: funasfData.becas,
-    categoriasProgramas: funasfData.categoriasProgramas,
+    becas: settings.becas as unknown as Beca,
+    categoriasProgramas,
     programasSociales: funasfData.programasSociales,
     alcance: funasfData.alcance,
     faq: funasfData.faq,

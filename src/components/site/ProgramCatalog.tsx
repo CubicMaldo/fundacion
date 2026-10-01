@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { categoriasProgramas } from "@/data/funasf";
+import { getCategorizedPrograms } from "@/services/api";
 import { programasAcademicos, type ProgramaAcademico } from "@/data/programas";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +14,10 @@ export function ProgramCatalog({
 } = {}) {
   const [busqueda, setBusqueda] = useState("");
   const [categoria, setCategoria] = useState("todas");
+
+  const categoriasDinamicas = useMemo(() => {
+    return getCategorizedPrograms(programas);
+  }, [programas]);
 
   const resultados = useMemo(() => {
     const termino = busqueda.trim().toLocaleLowerCase("es");
@@ -54,7 +58,7 @@ export function ProgramCatalog({
           >
             Todas
           </Button>
-          {categoriasProgramas.map((item) => (
+          {categoriasDinamicas.map((item) => (
             <Button
               key={item.id}
               type="button"

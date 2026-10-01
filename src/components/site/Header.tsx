@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { navegacion } from "./nav";
-import { org, telefonoPrincipal } from "@/data/funasf";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { cn } from "@/lib/utils";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
@@ -86,6 +86,10 @@ function isRouteActive(
 }
 
 export function Header() {
+  const { settings } = useSiteSettings();
+  const org = settings.org;
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+
   const [abierto, setAbierto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });

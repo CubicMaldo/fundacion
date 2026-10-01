@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { org, telefonoPrincipal, whatsappLink } from "@/data/funasf";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { enviarMensajeContacto } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
 
@@ -48,6 +48,11 @@ export const Route = createFileRoute("/contacto")({
 });
 
 function Contacto() {
+  const { settings } = useSiteSettings();
+  const org = settings.org;
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+  const whatsappLink = settings.contacto.whatsappLink;
+
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");

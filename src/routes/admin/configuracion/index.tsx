@@ -23,6 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { useSiteSettings } from "@/lib/site-settings-context";
+import { toast } from "sonner";
 import { org, becas, sedes } from "@/data/funasf";
 
 export const Route = createFileRoute("/admin/configuracion/")({
@@ -34,6 +36,7 @@ export const Route = createFileRoute("/admin/configuracion/")({
 
 function AdminConfiguracionPage() {
   const { isConfigured, isAdmin } = useAuth();
+  const { refreshSettings } = useSiteSettings();
   const [activeTab, setActiveTab] = useState("contacto");
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -173,9 +176,14 @@ function AdminConfiguracionPage() {
             .upsert({ clave: "institucional", valor: configInstitucional }),
           supabase.from("configuracion").upsert({ clave: "becas", valor: configBecas }),
         ]);
+        await refreshSettings();
+        toast.success("¡Configuración guardada y sincronizada en toda la web!");
       } catch (err) {
         console.error("Error guardando configuración:", err);
+        toast.error("Ocurrió un error al guardar la configuración.");
       }
+    } else {
+      toast.success("¡Configuración guardada localmente!");
     }
 
     setSaving(false);

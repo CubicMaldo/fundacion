@@ -14,7 +14,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { org } from "@/data/funasf";
+import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/portal-estudiantil")({
@@ -35,7 +35,9 @@ export const Route = createFileRoute("/portal-estudiantil")({
 });
 
 function PortalEstudiantilComponent() {
-  const telefonoPrincipal = org.telefonos[0] ?? "313 577 9384";
+  const { settings } = useSiteSettings();
+  const org = settings.org;
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
 
   return (
     <div className="flex flex-col">

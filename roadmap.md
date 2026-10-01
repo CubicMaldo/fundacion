@@ -22,3 +22,6 @@
 - [x] Activar el Blog y Galería en la web pública con sus gestores en el panel administrativo.
 - [x] Implementar control de acceso RBAC para Administradores y Editores con gestión de roles.
 - [x] Verificar 0 errores en TypeScript (`tsc --noEmit`) y build completo de producción.
+- [x] Sincronizar en tiempo real configuración institucional, canales de contacto y becas con `useSiteSettings`.
+- [x] Conectar catálogo dinámico en `/estudia`, inicio y `ProgramCatalog` con SEO dinámico en fichas técnicas.
+- [x] Refactorizar formularios administrativos con React Hook Form, esquemas Zod y componente `ImageUploader` para Supabase Storage.

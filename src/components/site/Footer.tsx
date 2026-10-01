@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, Phone } from "lucide-react";
-import { org, telefonoPrincipal } from "@/data/funasf";
+import { useSiteSettings } from "@/lib/site-settings-context";
 
 const columnas = [
   {
@@ -43,6 +43,10 @@ const columnas = [
 ] as const;
 
 export function Footer() {
+  const { settings } = useSiteSettings();
+  const org = settings.org;
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
+
   return (
     <footer className="bg-brand-green-deep text-primary-foreground">
       <div className="container-page py-16">

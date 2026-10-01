@@ -15,6 +15,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { AuthProvider } from "@/lib/auth-context";
+import { SiteSettingsProvider } from "@/lib/site-settings-context";
+import { Toaster } from "@/components/ui/sonner";
 import { getOrganizationSchema, DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 function NotFoundComponent() {
@@ -202,17 +204,20 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <ScrollToTop />
-        {isAdminRoute ? (
-          <Outlet />
-        ) : (
-          <SiteLayout>
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <SiteSettingsProvider>
+        <AuthProvider>
+          <ScrollToTop />
+          <Toaster position="top-right" richColors />
+          {isAdminRoute ? (
             <Outlet />
-          </SiteLayout>
-        )}
-      </AuthProvider>
+          ) : (
+            <SiteLayout>
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+            </SiteLayout>
+          )}
+        </AuthProvider>
+      </SiteSettingsProvider>
     </QueryClientProvider>
   );
 }

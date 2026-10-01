@@ -13,6 +13,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -427,26 +428,14 @@ function AdminGaleriaPage() {
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="foto-url">URL de la imagen *</Label>
-                <Input
-                  id="foto-url"
-                  value={imagenUrl}
-                  onChange={(e) => setImagenUrl(e.target.value)}
-                  placeholder="https://images.unsplash.com/..."
-                  required
-                />
-                {imagenUrl && (
-                  <div className="mt-2 aspect-video overflow-hidden rounded-md border border-border">
-                    <img
-                      src={imagenUrl}
-                      alt="Vista previa"
-                      className="size-full object-cover"
-                      onError={(e) => ((e.target as HTMLElement).style.display = "none")}
-                    />
-                  </div>
-                )}
-              </div>
+              <ImageUploader
+                value={imagenUrl}
+                onChange={setImagenUrl}
+                bucket="galeria"
+                label="Fotografía del evento *"
+                helperText="Sube una foto desde tu dispositivo o ingresa un enlace directo."
+                aspectRatio="video"
+              />
 
               <div className="space-y-2">
                 <Label htmlFor="foto-desc">Descripción (opcional)</Label>

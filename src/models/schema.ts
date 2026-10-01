@@ -11,6 +11,13 @@ export const OrganizationSchema = z.object({
   formularioInscripcion: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().optional(),
+  correo: z.string().optional(),
+  telefonos: z.array(z.string()).optional(),
+  instagram: z.string().optional(),
+  instagramUrl: z.string().optional(),
+  direccionPrincipal: z.string().optional(),
+  ciudadPrincipal: z.string().optional(),
+  horario: z.string().optional(),
 });
 
 export const QuienesSomosSchema = z.object({
@@ -53,6 +60,7 @@ export const BecaSchema = z.object({
   titulo: z.string(),
   intro: z.string(),
   proposito: z.string(),
+  porcentaje: z.string().optional(),
   beneficios: z.array(z.string()),
   aclaracion: z.string(),
   destacado: z.string(),
