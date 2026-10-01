@@ -106,7 +106,7 @@ function AdminLogin() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@funasf.org"
+                    placeholder="admin@edufunasf.org"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required

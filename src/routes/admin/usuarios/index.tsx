@@ -36,21 +36,21 @@ export const Route = createFileRoute("/admin/usuarios/")({
 const DEMO_USUARIOS: UserProfile[] = [
   {
     id: "user-1",
-    email: "admin@funasf.org",
+    email: "admin@edufunasf.org",
     nombre_completo: "Dirección Ejecutiva",
     rol: "admin",
     avatar_url: null,
   },
   {
     id: "user-2",
-    email: "comunicaciones@funasf.org",
+    email: "comunicaciones@edufunasf.org",
     nombre_completo: "Equipo de Comunicaciones",
     rol: "editor",
     avatar_url: null,
   },
   {
     id: "user-3",
-    email: "admisiones@funasf.org",
+    email: "admisiones@edufunasf.org",
     nombre_completo: "Coordinación Académica",
     rol: "editor",
     avatar_url: null,
