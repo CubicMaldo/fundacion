@@ -22,6 +22,7 @@ import { BecasSection } from "@/components/site/home/BecasSection";
 import { ProgramasSocialesSection } from "@/components/site/home/ProgramasSocialesSection";
 import { AlcanceSection } from "@/components/site/home/AlcanceSection";
 import { ValoresSection } from "@/components/site/home/ValoresSection";
+import { BlogSection } from "@/components/site/home/BlogSection";
 import { FaqSection } from "@/components/site/home/FaqSection";
 import { CtaSection } from "@/components/site/home/CtaSection";
 
@@ -69,6 +70,7 @@ function Inicio() {
     faq,
     llamadoAccion,
     valores,
+    articulos,
   } = Route.useLoaderData();
 
   return (
@@ -81,6 +83,7 @@ function Inicio() {
       <ProgramasSocialesSection programasSociales={programasSociales} iconos={iconos} />
       <AlcanceSection alcance={alcance} />
       <ValoresSection valores={valores} />
+      <BlogSection articulos={articulos} />
       <FaqSection faq={faq} />
       <CtaSection llamadoAccion={llamadoAccion} org={org} />
     </>

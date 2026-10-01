@@ -613,13 +613,18 @@ export async function getLlamadoAccion(): Promise<LlamadoAccion> {
 }
 
 export async function getHomeData() {
-  const [settings, programas] = await Promise.all([getSiteSettings(), getProgramasAcademicos()]);
+  const [settings, programas, articulos] = await Promise.all([
+    getSiteSettings(),
+    getProgramasAcademicos(),
+    getArticulosPublicados(),
+  ]);
   const categoriasProgramas = getCategorizedPrograms(programas);
 
   return {
     settings,
     org: settings.org,
     programas,
+    articulos,
     quienesSomos: funasfData.quienesSomos,
     proposito: funasfData.proposito,
     becas: settings.becas as unknown as Beca,
