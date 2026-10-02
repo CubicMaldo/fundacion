@@ -53,12 +53,19 @@ export function BlogSection({ articulos }: BlogSectionProps) {
             {/* Imagen de Portada */}
             <div className="relative aspect-16/10 overflow-hidden bg-muted">
               {articulo.imagenPortada ? (
-                <img
-                  src={articulo.imagenPortada}
-                  alt={articulo.titulo}
-                  className="size-full object-cover"
-                  loading="lazy"
-                />
+                <picture>
+                  <source
+                    srcSet={articulo.imagenPortada.replace(/\.jpeg$/i, ".webp")}
+                    type="image/webp"
+                  />
+                  <img
+                    src={articulo.imagenPortada}
+                    alt={articulo.titulo}
+                    className="size-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </picture>
               ) : (
                 <div className="flex size-full items-center justify-center bg-brand-green/10 text-brand-green">
                   <Newspaper className="size-10 opacity-70" />

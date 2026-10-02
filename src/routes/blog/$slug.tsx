@@ -126,11 +126,19 @@ function ArticuloDetailPage() {
       {articulo.imagenPortada && (
         <div className="container-page max-w-4xl -mt-6 sm:-mt-10">
           <div className="overflow-hidden rounded-2xl border border-border shadow-lg aspect-21/9 bg-muted">
-            <img
-              src={articulo.imagenPortada}
-              alt={articulo.titulo}
-              className="size-full object-cover"
-            />
+            <picture>
+              <source
+                srcSet={articulo.imagenPortada.replace(/\.jpeg$/i, ".webp")}
+                type="image/webp"
+              />
+              <img
+                src={articulo.imagenPortada}
+                alt={articulo.titulo}
+                className="size-full object-cover"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </picture>
           </div>
         </div>
       )}
