@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { ArrowLeft, Loader2, Lock, Mail, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Loader2, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Logo } from "@/components/site/Logo";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
@@ -71,12 +72,9 @@ function AdminLogin() {
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
           {/* Encabezado */}
           <div className="border-b border-border bg-brand-green p-8 text-center text-primary-foreground">
-            <div className="mx-auto flex size-14 items-center justify-center rounded-2xl bg-white/10 text-white backdrop-blur-xs shadow-inner">
-              <ShieldCheck className="size-8" />
-            </div>
-            <h1 className="mt-4 font-display text-2xl font-bold tracking-tight">FUNASF Panel</h1>
-            <p className="mt-1 text-xs text-primary-foreground/80">
-              Administración de contenidos y postulaciones
+            <Logo variant="vertical" invert size="lg" showSubtitle className="mx-auto" />
+            <p className="mt-3 text-xs text-primary-foreground/85 font-medium tracking-wide">
+              Panel Administrativo Central
             </p>
           </div>
 

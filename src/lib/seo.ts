@@ -95,7 +95,7 @@ export function getOrganizationSchema() {
     alternateName: ["FUNASF", "EduFUNASF", "FUNASF Colombia", "Fundación Amigos Sin Fronteras"],
     legalName: org.razonSocial,
     url: SITE_URL,
-    logo: DEFAULT_OG_IMAGE,
+    logo: `${SITE_URL}/images/logo.svg`,
     image: DEFAULT_OG_IMAGE,
     slogan: org.eslogan,
     description:

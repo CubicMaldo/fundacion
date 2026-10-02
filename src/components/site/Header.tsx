@@ -17,55 +17,11 @@ import {
 } from "@/components/ui/accordion";
 import { navegacion } from "./nav";
 import { useSiteSettings } from "@/lib/site-settings-context";
+import { Logo } from "@/components/site/Logo";
 import { cn } from "@/lib/utils";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
-  return (
-    <span className="flex items-center gap-3">
-      <span
-        aria-hidden="true"
-        className={cn(
-          "flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl font-display text-sm font-bold tracking-tight shadow-xs transition-all",
-          invert
-            ? "border border-primary-foreground/30 bg-primary-foreground/15 text-primary-foreground"
-            : "border border-brand-green/20 bg-brand-green/10 text-brand-green shadow-inner",
-        )}
-      >
-        <svg
-          className="size-5 sm:size-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-          <path d="M6 6h10" />
-          <path d="M6 10h10" />
-          <path d="m14 14 2 2 4-4" />
-        </svg>
-      </span>
-      <span className="flex flex-col justify-center leading-none">
-        <span
-          className={cn(
-            "font-display text-lg sm:text-xl font-bold tracking-tight",
-            invert ? "text-primary-foreground" : "text-primary",
-          )}
-        >
-          FUNASF
-        </span>
-        <span
-          className={cn(
-            "mt-1 text-[10px] font-semibold tracking-[0.14em] uppercase",
-            invert ? "text-primary-foreground/80" : "text-brand-brown",
-          )}
-        >
-          Amigos Sin Fronteras
-        </span>
-      </span>
-    </span>
-  );
+  return <Logo variant="horizontal" size="md" invert={invert} showSubtitle={true} />;
 }
 
 function isRouteActive(
@@ -94,9 +50,14 @@ export function Header() {
 
   const [abierto, setAbierto] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const hash = useRouterState({ select: (s) => s.location.hash });
   const [activeHash, setActiveHash] = useState(hash);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -257,12 +218,16 @@ export function Header() {
                       {item.children.map((child) => {
                         const currentHash = activeHash || "";
                         const targetHash = child.hash || "";
-                        const isChildActive = child.to === pathname && currentHash === targetHash;
+                        const isChildActive =
+                          mounted &&
+                          child.to === pathname &&
+                          (child.hash ? currentHash === targetHash : !currentHash);
 
                         return (
                           <Link
                             key={child.label}
                             to={child.to}
+                            activeOptions={{ exact: true, includeHash: false }}
                             {...(child.hash ? { hash: child.hash } : {})}
                             className={cn(
                               "flex flex-col items-start px-2.5 py-2 cursor-pointer rounded-lg transition-colors",

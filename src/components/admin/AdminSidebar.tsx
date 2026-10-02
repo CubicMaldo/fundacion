@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { EmblemSvg } from "@/components/site/Logo";
 
 interface NavItem {
   label: string;
@@ -53,8 +54,8 @@ export function AdminSidebar({ onCloseMobile }: AdminSidebarProps) {
       {/* Cabecera Sidebar */}
       <div className="flex h-16 items-center justify-between border-b border-border px-4">
         <Link to="/admin" className="flex items-center gap-2.5">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-brand-green text-primary-foreground font-bold font-display text-lg">
-            F
+          <div className="flex size-9 items-center justify-center rounded-lg bg-white border border-border/80 p-1 shadow-xs shrink-0">
+            <EmblemSvg />
           </div>
           <div>
             <span className="block text-sm font-semibold tracking-tight text-foreground">

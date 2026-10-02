@@ -36,7 +36,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { getArticulosPublicados, type ArticuloBlog } from "@/services/api";
+import {
+  getArticulosPublicados,
+  parseContactoDeContenido,
+  type ArticuloBlog,
+  type InfoContactoPost,
+} from "@/services/api";
 
 export const Route = createFileRoute("/admin/blog/")({
   head: () => ({
@@ -77,18 +82,25 @@ function AdminBlogIndexPage() {
           setArticulos(fallback.map((a) => ({ ...a, estado: "publicado" })));
         } else {
           setArticulos(
-            data.map((row) => ({
-              id: row.id,
-              slug: row.slug,
-              titulo: row.titulo,
-              resumen: row.resumen,
-              contenido: row.contenido,
-              autorNombre: row.autor_nombre,
-              categoria: row.categoria,
-              imagenPortada: row.imagen_portada,
-              estado: (row.estado as "borrador" | "publicado") || "borrador",
-              fechaPublicacion: row.fecha_publicacion || row.created_at,
-            })),
+            data.map((row) => {
+              const { contenidoLimpio, contacto } = parseContactoDeContenido(row.contenido);
+              return {
+                id: row.id,
+                slug: row.slug,
+                titulo: row.titulo,
+                resumen: row.resumen,
+                contenido: contenidoLimpio,
+                autorNombre: row.autor_nombre,
+                categoria: row.categoria,
+                imagenPortada: row.imagen_portada,
+                estado: (row.estado as "borrador" | "publicado") || "borrador",
+                fechaPublicacion: row.fecha_publicacion || row.created_at,
+                contactoDirecto:
+                  ("contacto_directo" in row ? (row.contacto_directo as InfoContactoPost) : null) ||
+                  contacto ||
+                  null,
+              };
+            }),
           );
         }
       } catch (err) {

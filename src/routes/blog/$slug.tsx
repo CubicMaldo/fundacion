@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Calendar, Share2, User } from "lucide-react";
+import { ArrowLeft, Calendar, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getArticuloBySlug, type ArticuloBlog } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema, getArticleSchema, DEFAULT_OG_IMAGE } from "@/lib/seo";
+import { BlogContactoDirecto } from "@/components/site/BlogContactoDirecto";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
@@ -39,6 +40,93 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   component: ArticuloDetailPage,
 });
+
+function renderInlineMarkdown(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>");
+}
+
+function renderContenido(contenido: string) {
+  const bloques = contenido.split(/\n\s*\n/);
+  return bloques.map((bloque, idx) => {
+    const trimmed = bloque.trim();
+    if (!trimmed) return null;
+
+    if (trimmed.startsWith("### ")) {
+      return (
+        <h3
+          key={idx}
+          className="font-display text-xl sm:text-2xl font-bold text-foreground mt-8 mb-4"
+        >
+          {trimmed.replace(/^###\s+/, "")}
+        </h3>
+      );
+    }
+
+    if (trimmed.startsWith("## ")) {
+      return (
+        <h2
+          key={idx}
+          className="font-display text-2xl sm:text-3xl font-bold text-foreground mt-10 mb-4"
+        >
+          {trimmed.replace(/^##\s+/, "")}
+        </h2>
+      );
+    }
+
+    const lines = trimmed.split("\n");
+    if (
+      lines.length > 0 &&
+      lines.every((line) => line.trim().startsWith("- ") || line.trim().startsWith("* "))
+    ) {
+      return (
+        <ul
+          key={idx}
+          className="my-4 ml-6 list-disc space-y-2 text-foreground/90 text-base sm:text-lg"
+        >
+          {lines.map((line, i) => (
+            <li
+              key={i}
+              dangerouslySetInnerHTML={{
+                __html: renderInlineMarkdown(line.replace(/^[-*]\s+/, "").trim()),
+              }}
+            />
+          ))}
+        </ul>
+      );
+    }
+
+    if (lines.length > 0 && lines.every((line) => /^\d+\.\s+/.test(line.trim()))) {
+      return (
+        <ol
+          key={idx}
+          className="my-4 ml-6 list-decimal space-y-2 text-foreground/90 text-base sm:text-lg"
+        >
+          {lines.map((line, i) => (
+            <li
+              key={i}
+              dangerouslySetInnerHTML={{
+                __html: renderInlineMarkdown(line.replace(/^\d+\.\s+/, "").trim()),
+              }}
+            />
+          ))}
+        </ol>
+      );
+    }
+
+    return (
+      <p
+        key={idx}
+        className="text-foreground/90 text-base sm:text-lg leading-relaxed mb-6"
+        dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(trimmed) }}
+      />
+    );
+  });
+}
 
 function ArticuloDetailPage() {
   const articulo = Route.useLoaderData() as ArticuloBlog | null;
@@ -146,12 +234,15 @@ function ArticuloDetailPage() {
       {/* Cuerpo del Artículo */}
       <div className="container-page max-w-3xl mt-12">
         <div className="prose prose-neutral dark:prose-invert max-w-none">
-          {articulo.contenido.split("\n\n").map((parrafo, idx) => (
-            <p key={idx} className="text-foreground/90 text-base sm:text-lg leading-relaxed mb-6">
-              {parrafo}
-            </p>
-          ))}
+          {renderContenido(articulo.contenido)}
         </div>
+
+        {/* Bloque de Contacto Directo */}
+        <BlogContactoDirecto
+          contacto={articulo.contactoDirecto}
+          postTitulo={articulo.titulo}
+          categoria={articulo.categoria}
+        />
 
         {/* Botones inferiores */}
         <div className="mt-12 pt-8 border-t border-border flex flex-wrap items-center justify-between gap-4">

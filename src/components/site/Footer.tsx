@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, Phone } from "lucide-react";
 import { useSiteSettings } from "@/lib/site-settings-context";
+import { Logo } from "@/components/site/Logo";
 
 const columnas = [
   {
@@ -55,8 +56,14 @@ export function Footer() {
       <div className="container-page py-16">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           <div>
-            <p className="font-display text-2xl">Fundación Internacional Amigos Sin Fronteras</p>
-            <p className="text-brand-gold mt-2 text-sm font-semibold tracking-wide">
+            <Logo
+              variant="vertical"
+              invert
+              size="lg"
+              showSubtitle
+              className="items-start text-left mb-4"
+            />
+            <p className="text-brand-gold mt-1 text-sm font-semibold tracking-wide">
               {org.eslogan}
             </p>
             <p className="text-primary-foreground/75 mt-5 max-w-sm text-sm leading-relaxed italic">
