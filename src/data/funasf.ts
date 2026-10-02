@@ -504,3 +504,84 @@ export const motivosContacto = [
   "Quiero llevar programas a mi comunidad",
   "Otro",
 ];
+
+/**
+ * Programas destacados de las convocatorias vigentes.
+ * Fuente: piezas promocionales oficiales de FUNASF (PDF de convocatorias).
+ */
+export const programasDestacados = [
+  {
+    nombre: "Auxiliar de Enfermería",
+    area: "Salud",
+    detalles: ["Formación teórico-práctica", "Horarios flexibles", "Certificación por competencias"],
+  },
+  {
+    nombre: "Administración en Salud",
+    area: "Salud",
+    detalles: ["Gran demanda laboral", "Gestión de servicios de salud", "Horarios flexibles"],
+  },
+  {
+    nombre: "Seguridad y Salud en el Trabajo",
+    area: "SST",
+    detalles: [
+      "Modalidad virtual",
+      "Diplomados: extintores, primeros auxilios y trabajo en alturas",
+      "Clases dinámicas en vivo",
+    ],
+  },
+  {
+    nombre: "Mercadeo y Ventas",
+    area: "Administración y empresa",
+    detalles: ["Formación práctica", "Alta demanda laboral", "Desarrollo de talento comercial"],
+  },
+  {
+    nombre: "Secretariado Ejecutivo",
+    area: "Administración y empresa",
+    detalles: ["Habilidades administrativas", "Formación práctica", "Certificación técnico laboral"],
+  },
+  {
+    nombre: "Primera Infancia",
+    area: "Educación y área social",
+    detalles: ["Diplomado en niños con TEA y TDAH", "Horarios flexibles", "Formación de calidad"],
+  },
+  {
+    nombre: "Auxiliar de Construcción de Edificaciones",
+    area: "Otras áreas",
+    detalles: ["Interpretación de planos", "Estructuras y acabados", "Seguridad en obra"],
+  },
+  {
+    nombre: "Curso de Vigilancia",
+    area: "Otras áreas",
+    detalles: ["Duración: 4 meses", "Prácticas de tiro", "Horario flexible"],
+  },
+  {
+    nombre: "Belleza Integral",
+    area: "Otras áreas",
+    detalles: ["Uñas y maquillaje profesional", "Cabello", "Masajes estéticos"],
+  },
+  {
+    nombre: "Inglés Avanzado",
+    area: "Otras áreas",
+    detalles: ["Inglés conversatorio", "Curso con práctica", "Trabajo de campo"],
+  },
+  {
+    nombre: "Auxiliar en Electricidad",
+    area: "Otras áreas",
+    detalles: ["Clases prácticas", "Sedes: Ponedera y Santo Tomás", "Mejores oportunidades laborales"],
+  },
+] as const;
+
+export const convocatoria = {
+  beneficio: "Beca de hasta el 90 %",
+  sinCostos: "Sin pagar matrícula ni inscripción",
+  nota: "Sujeto a disponibilidad, requisitos y condiciones de cada convocatoria.",
+};
+
+export const sedesActivas = [
+  { nombre: "Santo Tomás", departamento: "Atlántico", estado: "Activa" },
+  { nombre: "Ponedera", departamento: "Atlántico", estado: "Activa" },
+  { nombre: "Sabanalarga", departamento: "Atlántico", estado: "Activa" },
+  { nombre: "Soledad", departamento: "Atlántico", estado: "Activa" },
+  { nombre: "Valledupar", departamento: "Cesar", estado: "Próximamente" },
+] as const;
+

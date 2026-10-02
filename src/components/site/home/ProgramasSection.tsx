@@ -8,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { flyers } from "@/data/flyers";
 import type { CategoriaProgramas } from "@/models/schema";
 
 interface ProgramasSectionProps {
@@ -46,13 +47,48 @@ export function ProgramasSection({ categoriasProgramas }: ProgramasSectionProps)
           ))}
         </Accordion>
       </div>
+
       <div className="mt-10 flex justify-center">
         <Button asChild variant="outline">
           <Link to="/estudia" hash="programas">
-            Ver toda la oferta <ArrowRight aria-hidden className="size-4" />
+            Ver toda la oferta académica <ArrowRight aria-hidden className="size-4 ml-1" />
           </Link>
         </Button>
+      </div>
+
+      {/* Galería rápida de afiches de convocatoria */}
+      <div className="mt-16 pt-10 border-t border-border/80">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <span className="eyebrow">Convocatorias vigentes</span>
+            <h3 className="text-2xl font-bold font-display text-foreground mt-1">
+              Afiches oficiales de programas con beca
+            </h3>
+          </div>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/galeria">
+              Ver todos en la galería <ArrowRight className="size-3.5 ml-1" />
+            </Link>
+          </Button>
+        </div>
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-4">
+          {flyers.slice(0, 8).map((f) => (
+            <Link
+              key={f.src}
+              to="/galeria"
+              className="card-institucional overflow-hidden group shadow-xs hover:shadow-md transition-all hover:-translate-y-0.5"
+            >
+              <img
+                src={f.src}
+                alt={f.alt}
+                loading="lazy"
+                className="aspect-square w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+              />
+            </Link>
+          ))}
+        </div>
       </div>
     </Section>
   );
 }
+

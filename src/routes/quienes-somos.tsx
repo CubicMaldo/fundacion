@@ -1,8 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MapPin, Phone } from "lucide-react";
+import {
+  BookOpen,
+  GraduationCap,
+  HandHeart,
+  HeartPulse,
+  MapPin,
+  Phone,
+  Sprout,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { MediaPlaceholder } from "@/components/site/MediaPlaceholder";
+
+const iconos: Record<string, LucideIcon> = {
+  GraduationCap,
+  HeartPulse,
+  Users,
+  Sprout,
+  HandHeart,
+  BookOpen,
+};
 import {
   quienesSomos,
   mision,
@@ -144,12 +163,16 @@ function QuienesSomos() {
           description={proposito.intro}
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {proposito.ejes.map((e) => (
-            <article key={e.nombre} className="card-institucional">
-              <h3 className="text-brand-green-deep text-lg">{e.nombre}</h3>
-              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{e.texto}</p>
-            </article>
-          ))}
+          {proposito.ejes.map((e) => {
+            const Icono = iconos[e.icono] ?? GraduationCap;
+            return (
+              <article key={e.nombre} className="card-institucional p-6">
+                <Icono aria-hidden className="text-primary size-7" />
+                <h3 className="text-brand-green-deep mt-3 text-lg font-semibold">{e.nombre}</h3>
+                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{e.texto}</p>
+              </article>
+            );
+          })}
         </div>
       </Section>
 
@@ -172,11 +195,14 @@ function QuienesSomos() {
           description={alcance.intro}
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          <div className="card-institucional">
-            <h3 className="text-brand-green-deep text-base">Presencia actual</h3>
-            <ul className="text-muted-foreground mt-3 space-y-2 text-sm">
+          <div className="card-institucional p-6">
+            <h3 className="text-brand-green-deep text-base font-semibold">Presencia actual</h3>
+            <ul className="text-muted-foreground mt-3 space-y-2.5 text-sm">
               {alcance.presencia.map((m) => (
-                <li key={m}>{m}</li>
+                <li key={m} className="flex items-center gap-2">
+                  <MapPin aria-hidden className="text-primary size-4 shrink-0" />
+                  <span>{m}</span>
+                </li>
               ))}
             </ul>
           </div>

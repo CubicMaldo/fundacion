@@ -18,34 +18,22 @@ import {
 import { navegacion } from "./nav";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { cn } from "@/lib/utils";
+import logoAsset from "@/assets/funasf-logo.jpg.asset.json";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
   return (
     <span className="flex items-center gap-3">
-      <span
+      <img
+        src={logoAsset.url}
+        alt="FUNASF Logo"
         aria-hidden="true"
         className={cn(
-          "flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl font-display text-sm font-bold tracking-tight shadow-xs transition-all",
+          "h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-white object-contain p-0.5 shadow-xs transition-all",
           invert
-            ? "border border-primary-foreground/30 bg-primary-foreground/15 text-primary-foreground"
-            : "border border-brand-green/20 bg-brand-green/10 text-brand-green shadow-inner",
+            ? "border border-primary-foreground/30 bg-white"
+            : "border border-border/80 shadow-xs",
         )}
-      >
-        <svg
-          className="size-5 sm:size-6"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
-          <path d="M6 6h10" />
-          <path d="M6 10h10" />
-          <path d="m14 14 2 2 4-4" />
-        </svg>
-      </span>
+      />
       <span className="flex flex-col justify-center leading-none">
         <span
           className={cn(

@@ -2,10 +2,11 @@ import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Image as ImageIcon, Maximize2, X } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
-import { Section } from "@/components/site/Section";
+import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { flyers } from "@/data/flyers";
 import { getGaleriaActiva, type ItemGaleria } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
@@ -55,10 +56,62 @@ function GaleriaPage() {
         description="Registros fotográficos de nuestras jornadas educativas, programas técnicos, brigadas de salud y encuentros comunitarios."
       />
 
+      {/* Piezas oficiales y convocatorias */}
+      <Section tone="soft">
+        <SectionHeading
+          eyebrow="Convocatorias vigentes"
+          title="Piezas informativas de nuestros programas"
+          description="Explora los afiches y piezas publicitarias oficiales de nuestras convocatorias con becas de hasta el 90 % en cada una de nuestras sedes. Haz clic en cualquiera para ampliar:"
+        />
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          {flyers.map((f) => (
+            <div
+              key={f.src}
+              onClick={() =>
+                setSelectedItem({
+                  id: f.src,
+                  titulo: f.alt,
+                  categoria: "Convocatoria Oficial",
+                  imagenUrl: f.src,
+                  altText: f.alt,
+                  orden: 0,
+                })
+              }
+              className="card-institucional group cursor-pointer overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="relative aspect-square w-full overflow-hidden bg-muted">
+                <img
+                  src={f.src}
+                  alt={f.alt}
+                  loading="lazy"
+                  className="size-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex flex-col justify-end p-3 text-white">
+                  <div className="flex items-center gap-1 text-[11px] text-white/90 font-medium">
+                    <Maximize2 className="size-3" /> Ampliar afiche
+                  </div>
+                </div>
+              </div>
+              <div className="p-3">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-green">
+                  Convocatoria FUNASF
+                </span>
+                <p className="mt-0.5 line-clamp-2 text-xs font-semibold text-foreground">{f.alt}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <Section>
+        <SectionHeading
+          eyebrow="Actividades y Comunidad"
+          title="Registro de jornadas y eventos"
+          description="Imágenes de nuestras actividades presenciales, talleres y encuentros comunitarios."
+        />
         {/* Filtros de Categoría */}
         <div
-          className="flex flex-wrap items-center justify-center gap-2 mb-10"
+          className="flex flex-wrap items-center justify-center gap-2 mt-8 mb-10"
           aria-label="Filtrar por categoría"
         >
           <Button

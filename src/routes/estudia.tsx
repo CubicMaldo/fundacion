@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,14 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
+import {
+  formacionAcademica,
+  modeloAlianzas,
+  faq,
+  programasDestacados,
+  convocatoria,
+  whatsappLink,
+} from "@/data/funasf";
 import {
   getProgramasAcademicos,
   getSiteSettings,
@@ -75,6 +82,49 @@ function Estudia() {
           </Button>
         </div>
       </PageHero>
+
+      {/* Programas destacados de la convocatoria vigente */}
+      <Section id="convocatorias-abiertas" tone="soft">
+        <SectionHeading
+          eyebrow="Convocatorias abiertas"
+          title="Programas destacados con beca"
+          description={`${convocatoria.beneficio} · ${convocatoria.sinCostos}. ${convocatoria.nota}`}
+        />
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {programasDestacados.map((p) => (
+            <article
+              key={p.nombre}
+              className="card-institucional flex flex-col p-6 shadow-xs hover:shadow-md transition-shadow"
+            >
+              <span className="eyebrow">{p.area}</span>
+              <h3 className="mt-2 text-xl font-bold text-foreground">{p.nombre}</h3>
+              <ul className="text-muted-foreground mt-4 flex-1 space-y-2 text-sm">
+                {p.detalles.map((d) => (
+                  <li key={d} className="flex items-start gap-2">
+                    <CheckCircle2 aria-hidden className="text-primary mt-0.5 size-4 shrink-0" />
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+                <a
+                  href={`${whatsappLink}?text=${encodeURIComponent(
+                    `Hola FUNASF: Me interesa postularme a la beca del programa ${p.nombre}`,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary text-sm font-semibold hover:underline inline-flex items-center gap-1"
+                >
+                  Pide tu beca →
+                </a>
+                <span className="text-xs bg-brand-gold/20 text-brand-green-deep font-bold px-2.5 py-0.5 rounded-full">
+                  Beca hasta 90%
+                </span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </Section>
 
       <Section id="programas">
         <SectionHeading
