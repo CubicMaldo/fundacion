@@ -18,7 +18,6 @@ import { AuthProvider } from "@/lib/auth-context";
 import { SiteSettingsProvider } from "@/lib/site-settings-context";
 import { Toaster } from "@/components/ui/sonner";
 import { getOrganizationSchema, DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
-import { DevPaletteStudio } from "@/components/dev/DevPaletteStudio";
 
 function NotFoundComponent() {
   return (
@@ -202,9 +201,6 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith("/admin");
-  const isDev =
-    import.meta.env.DEV ||
-    (typeof window !== "undefined" && window.location.search.includes("dev_palette"));
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -220,7 +216,6 @@ function RootComponent() {
               <Outlet />
             </SiteLayout>
           )}
-          {isDev && <DevPaletteStudio />}
         </AuthProvider>
       </SiteSettingsProvider>
     </QueryClientProvider>
