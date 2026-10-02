@@ -65,11 +65,12 @@ function PortalInformativo() {
           </div>
           <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
             <img
-              src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=800&q=80"
+              src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80"
               alt="Talleres prácticos y formación técnica FUNASF"
               className="size-full object-cover transition-transform duration-500 hover:scale-105"
               loading="lazy"
               decoding="async"
+              referrerPolicy="no-referrer"
               width={800}
               height={600}
             />

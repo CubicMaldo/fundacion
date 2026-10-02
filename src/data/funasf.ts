@@ -164,9 +164,8 @@ export const sedes = [
     whatsapp: org.telefonos[0],
     horario: "Lunes a Viernes: 8:00 a.m. – 5:00 p.m.",
     modalidad: "Atención presencial y orientación virtual",
-    imagenUrl:
-      "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=800&q=80",
-    imagenPendiente: "[FOTOGRAFÍA SEDE CALI PENDIENTE]",
+    imagenUrl: "/images/sedes/sede-cali.jpg",
+    imagenPendiente: "[FOTOGRAFÍA SEDE CALI]",
   },
   {
     ciudad: "Costa Atlántica",
@@ -178,9 +177,8 @@ export const sedes = [
     whatsapp: org.telefonos[1],
     horario: "Jornadas académicas y de matrícula según convocatoria",
     modalidad: "Sedes en convenio con instituciones educativas aliadas",
-    imagenUrl:
-      "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80",
-    imagenPendiente: "[FOTOGRAFÍA COSTA ATLÁNTICA PENDIENTE]",
+    imagenUrl: "/images/sedes/sede-atlantico.jpg",
+    imagenPendiente: "[FOTOGRAFÍA COSTA ATLÁNTICA]",
   },
   {
     ciudad: "Panamá",
@@ -192,9 +190,8 @@ export const sedes = [
     whatsapp: org.telefonos[0],
     horario: "Lunes a Viernes: 9:00 a.m. – 5:00 p.m. (GMT-5)",
     modalidad: "Coordinación y gestión de cooperación solidaria",
-    imagenUrl:
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
-    imagenPendiente: "[FOTOGRAFÍA PANAMÁ PENDIENTE]",
+    imagenUrl: "/images/sedes/sede-panama.jpg",
+    imagenPendiente: "[FOTOGRAFÍA PANAMÁ]",
   },
 ];
 

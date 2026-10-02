@@ -167,7 +167,7 @@ export const programasAcademicos: ProgramaAcademico[] = [
     categoria: "Administración y empresa",
     categoriaId: "administracion",
     imagenUrl:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Técnicas de negociación, servicio al cliente, canales de comercialización digital, fidelización de clientes e investigación básica de mercados.",
     objetivo:
@@ -235,7 +235,7 @@ export const programasAcademicos: ProgramaAcademico[] = [
     categoria: "Educación y área social",
     categoriaId: "educacion-social",
     imagenUrl:
-      "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Pedagogía infantil, desarrollo integral en los primeros años de vida, nutrición, lúdica, estimulación temprana y cuidado socioafectivo.",
     objetivo:
@@ -375,7 +375,7 @@ export const programasAcademicos: ProgramaAcademico[] = [
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
     imagenUrl:
-      "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=640&q=80",
+      "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Diagnóstico, reparación y sincronización de motores de dos y cuatro tiempos, sistemas de frenos, suspensión, transmisión y circuitos eléctricos.",
     objetivo:

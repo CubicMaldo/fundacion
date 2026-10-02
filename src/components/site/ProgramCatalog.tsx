@@ -35,7 +35,7 @@ function resolveProgramImageUrl(programa: ProgramaAcademico): string {
     case "administracion":
       return "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=640&q=80";
     case "educacion-social":
-      return "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=640&q=80";
+      return "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=640&q=80";
     case "basica":
       return "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=640&q=80";
     default:

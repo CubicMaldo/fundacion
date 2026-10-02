@@ -1,0 +1,373 @@
+import { cn } from "@/lib/utils";
+
+export interface LogoProps {
+  /**
+   * Layout variant:
+   * - "horizontal": Emblem on the left, typography on the right (ideal for header/nav).
+   * - "vertical": Emblem on top, typography centered below (ideal for footer/hero/splash).
+   * - "emblem": Just the colorful tree & open book emblem.
+   * - "full": Complete standalone SVG illustration.
+   */
+  variant?: "horizontal" | "vertical" | "emblem" | "full";
+  /** Invert colors for dark backgrounds (e.g. deep green footer) */
+  invert?: boolean;
+  /** Size modifier for horizontal / emblem layouts */
+  size?: "sm" | "md" | "lg" | "xl";
+  className?: string;
+  showSubtitle?: boolean;
+}
+
+/**
+ * Official Emblem of FUNASF
+ * Represents the Tree of Life / Knowledge with colorful leaves,
+ * joyful children silhouettes, and the open book as its foundation.
+ */
+export function EmblemSvg({ className, ...props }: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 500 500"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={cn("size-full shrink-0 select-none", className)}
+      aria-hidden="true"
+      {...props}
+    >
+      <defs>
+        <radialGradient id="funasf-glow" cx="50%" cy="45%" r="50%">
+          <stop offset="0%" stopColor="#FFF9EE" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#FFF9EE" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      {/* Halo de luz suave */}
+      <circle cx="250" cy="240" r="230" fill="url(#funasf-glow)" />
+
+      {/* COPA DEL ÁRBOL - Hojas multicolores en arco armónico */}
+      <g id="canopy" stroke="none">
+        {/* Amarillos & Naranjas */}
+        <path d="M250,95 C255,80 265,75 270,90 C272,105 260,115 250,95 Z" fill="#F9B218" />
+        <path d="M230,105 C220,95 222,82 235,88 C248,94 245,108 230,105 Z" fill="#F7931E" />
+        <path d="M260,118 C270,110 282,112 280,125 C278,138 265,135 260,118 Z" fill="#FFC20E" />
+        <path d="M295,105 C308,98 318,105 312,118 C306,131 292,125 295,105 Z" fill="#F37023" />
+        <path d="M205,115 C195,105 192,92 205,95 C218,98 218,112 205,115 Z" fill="#EE4036" />
+        <path d="M175,130 C162,122 165,110 178,115 C191,120 188,135 175,130 Z" fill="#FDB813" />
+        <path d="M325,120 C338,115 348,125 342,138 C336,151 322,142 325,120 Z" fill="#F58220" />
+
+        {/* Verdes de esperanza & vida */}
+        <path d="M245,70 C250,55 260,52 265,65 C270,78 258,85 245,70 Z" fill="#79C142" />
+        <path d="M280,78 C292,70 302,78 298,90 C294,102 282,98 280,78 Z" fill="#39B54A" />
+        <path d="M210,80 C200,70 205,58 218,62 C231,66 228,80 210,80 Z" fill="#8DC63F" />
+        <path d="M188,100 C175,92 178,80 192,85 C206,90 202,105 188,100 Z" fill="#009444" />
+        <path d="M315,92 C328,85 338,92 335,105 C332,118 318,115 315,92 Z" fill="#39B54A" />
+        <path d="M225,135 C215,125 218,112 230,118 C242,124 240,138 225,135 Z" fill="#79C142" />
+        <path d="M275,142 C285,135 298,138 295,150 C292,162 280,158 275,142 Z" fill="#00A651" />
+
+        {/* Azules & Turquesas */}
+        <path d="M150,155 C138,148 142,135 155,140 C168,145 165,160 150,155 Z" fill="#00AEEF" />
+        <path d="M165,180 C152,175 155,160 168,165 C181,170 178,185 165,180 Z" fill="#0072BC" />
+        <path d="M135,185 C122,180 125,165 138,170 C151,175 148,190 135,185 Z" fill="#00AEEF" />
+        <path d="M350,145 C362,138 372,148 368,160 C364,172 350,168 350,145 Z" fill="#0072BC" />
+        <path d="M365,175 C378,170 385,182 378,195 C371,208 358,198 365,175 Z" fill="#00AEEF" />
+        <path d="M338,170 C348,162 360,168 355,180 C350,192 338,188 338,170 Z" fill="#2E3192" />
+
+        {/* Corona perimetral redondeada */}
+        <path d="M160,105 C148,98 152,85 165,90 C178,95 175,110 160,105 Z" fill="#F37023" />
+        <path d="M140,128 C128,122 130,110 142,115 C155,120 152,135 140,128 Z" fill="#79C142" />
+        <path d="M345,100 C358,95 368,105 362,118 C356,131 342,122 345,100 Z" fill="#8DC63F" />
+        <path d="M370,125 C382,120 390,132 385,145 C380,158 365,150 370,125 Z" fill="#FFC20E" />
+        <path d="M385,155 C398,150 405,162 398,175 C391,188 378,180 385,155 Z" fill="#ED1C24" />
+        <path d="M118,155 C108,150 110,138 122,142 C135,146 132,160 118,155 Z" fill="#ED1C24" />
+        <path d="M122,210 C110,205 112,190 125,195 C138,200 135,215 122,210 Z" fill="#F7931E" />
+        <path d="M375,205 C388,200 395,212 388,225 C381,238 368,230 375,205 Z" fill="#8DC63F" />
+        <path d="M138,235 C125,230 128,215 140,220 C152,225 150,240 138,235 Z" fill="#79C142" />
+        <path d="M360,230 C372,225 380,235 375,248 C370,260 355,255 360,230 Z" fill="#F37023" />
+
+        {/* Densidad interior y transiciones */}
+        <path d="M200,145 C190,135 192,122 205,128 C218,134 215,148 200,145 Z" fill="#00AEEF" />
+        <path d="M218,165 C208,155 210,142 222,148 C235,154 232,168 218,165 Z" fill="#ED1C24" />
+        <path d="M245,155 C240,140 250,135 255,148 C260,160 250,170 245,155 Z" fill="#FDB813" />
+        <path d="M260,170 C270,160 282,165 278,178 C274,190 262,185 260,170 Z" fill="#79C142" />
+        <path d="M295,160 C305,150 318,155 315,168 C312,180 300,175 295,160 Z" fill="#F7931E" />
+        <path d="M315,185 C325,178 338,182 332,195 C326,208 315,200 315,185 Z" fill="#009444" />
+        <path d="M180,165 C170,158 172,145 185,150 C198,155 195,170 180,165 Z" fill="#8DC63F" />
+        <path d="M175,200 C162,195 165,180 178,185 C191,190 188,205 175,200 Z" fill="#FFC20E" />
+        <path d="M330,210 C342,205 350,215 345,228 C340,240 328,235 330,210 Z" fill="#0072BC" />
+        <path d="M290,190 C300,182 312,188 308,200 C304,212 292,205 290,190 Z" fill="#ED1C24" />
+        <path d="M205,195 C195,188 198,175 210,180 C222,185 220,200 205,195 Z" fill="#39B54A" />
+      </g>
+
+      {/* TRONCO Y RAMAS ORGÁNICAS (Madera noble en marrón caoba) */}
+      <g id="tree-trunk" fill="#623E23">
+        <path
+          d="M250,285 
+             C242,275 238,255 235,235
+             C232,215 220,195 200,180
+             C185,168 170,165 155,160
+             C158,168 170,178 182,185
+             C195,192 205,208 212,225
+             C218,240 220,255 215,275
+             C205,282 185,288 165,292
+             C185,294 210,292 225,288
+             C235,290 245,292 250,294
+             C255,292 265,290 275,288
+             C290,292 315,294 335,292
+             C315,288 295,282 285,275
+             C280,255 282,240 288,225
+             C295,208 305,192 318,185
+             C330,178 342,168 345,160
+             C330,165 315,168 300,180
+             C280,195 268,215 265,235
+             C262,255 258,275 250,285 Z"
+        />
+        <path d="M235,230 C230,205 225,180 230,150 C233,148 238,155 238,175 C238,195 242,215 245,230 Z" />
+        <path d="M265,230 C270,205 275,180 270,150 C267,148 262,155 262,175 C262,195 258,215 255,230 Z" />
+        <path d="M250,220 C246,195 248,170 250,145 C252,145 254,170 254,195 C254,208 252,216 250,220 Z" />
+      </g>
+
+      {/* MARIPOSAS ALREDEDOR */}
+      <g id="butterflies">
+        <path
+          d="M140,265 C138,260 144,258 146,262 C148,258 154,260 152,265 C150,268 142,268 140,265 Z"
+          fill="#F37023"
+        />
+        <path
+          d="M182,242 C180,238 185,236 187,239 C189,236 194,238 192,242 C190,244 184,244 182,242 Z"
+          fill="#00AEEF"
+        />
+        <path
+          d="M205,235 C204,232 208,230 209,233 C211,230 215,232 213,235 Z"
+          fill="#ED1C24"
+        />
+        <path
+          d="M330,250 C328,246 334,244 336,248 C338,244 344,246 342,250 Z"
+          fill="#79C142"
+        />
+        <path
+          d="M370,270 C368,266 374,264 376,268 C378,264 384,266 382,270 Z"
+          fill="#F9B218"
+        />
+      </g>
+
+      {/* SILUETAS DE NIÑOS (Dorado ocre cálido de la Fundación) */}
+      <g id="children" fill="#C68C2C">
+        {/* Niño 1: Brazos arriba celebrando la educación */}
+        <circle cx="169" cy="253" r="4.5" />
+        <path d="M162,259 C164,258 174,258 176,259 C178,264 175,274 174,282 L177,288 L173,289 L171,283 L167,289 L163,288 L166,281 C164,272 161,265 162,259 Z" />
+        <path d="M163,262 C158,255 154,250 152,248 L154,246 C157,249 162,255 165,261 Z" />
+        <path d="M174,262 C178,256 182,252 185,250 L187,252 C183,255 178,260 173,263 Z" />
+
+        {/* Niño 2: Estudiante en pie con postura de liderazgo */}
+        <circle cx="215" cy="242" r="5" />
+        <path d="M208,249 C211,248 219,248 222,249 L220,268 L223,283 L219,284 L216,270 L213,284 L209,283 L212,267 Z" />
+        <path d="M208,251 C202,255 198,260 196,265 L198,267 C200,262 204,257 209,253 Z" />
+
+        {/* Niño 3: Deporte y juego saludable (jugando con balón) */}
+        <circle cx="300" cy="247" r="5" />
+        <path d="M292,254 C296,253 304,254 306,256 C304,264 301,272 298,280 L301,286 L297,287 L294,279 C298,274 305,270 312,268 L314,271 C308,273 302,277 297,281 Z" />
+        <circle cx="320" cy="260" r="5.5" />
+
+        {/* Niña 4: Corriendo y bailando con alegría */}
+        <circle cx="350" cy="257" r="5" />
+        <path d="M343,264 C347,263 355,264 358,267 L352,278 L358,285 L354,287 L347,279 L341,286 L338,284 L345,276 Z" />
+        <path d="M354,266 C358,270 364,272 368,274 L366,276 C362,274 357,271 352,268 Z" />
+      </g>
+
+      {/* LIBRO ABIERTO COMO BASE (Cimiento del conocimiento y el porvenir) */}
+      <g id="book">
+        {/* Lomo y pasta inferior */}
+        <path
+          d="M130,314 C180,310 220,312 250,320 C280,312 320,310 370,314 L375,320 C320,317 280,319 250,328 C220,319 180,317 125,320 Z"
+          fill="#3D5928"
+        />
+
+        {/* Páginas abiertas lado izquierdo */}
+        <path
+          d="M248,317 C215,302 175,300 128,304 C126,306 126,312 128,314 C175,310 215,311 248,324 Z"
+          fill="#5A7E39"
+        />
+        <path
+          d="M248,313 C215,297 175,295 132,298 C130,300 130,303 132,305 C175,302 215,303 248,317 Z"
+          fill="#6D9546"
+        />
+
+        {/* Páginas abiertas lado derecho */}
+        <path
+          d="M252,317 C285,302 325,300 372,304 C374,306 374,312 372,314 C325,310 285,311 252,324 Z"
+          fill="#5A7E39"
+        />
+        <path
+          d="M252,313 C285,297 325,295 368,298 C370,300 370,303 368,305 C325,302 285,303 252,317 Z"
+          fill="#6D9546"
+        />
+      </g>
+    </svg>
+  );
+}
+
+export function Logo({
+  variant = "horizontal",
+  invert = false,
+  size = "md",
+  className,
+  showSubtitle = true,
+}: LogoProps) {
+  const sizeMap = {
+    sm: {
+      emblem: "size-8 sm:size-9",
+      brandText: "text-base sm:text-lg",
+      sub1: "text-[7.5px] tracking-[0.16em]",
+      sub2: "text-[8px] tracking-[0.20em]",
+      gap: "gap-2.5",
+    },
+    md: {
+      emblem: "size-10 sm:size-11",
+      brandText: "text-lg sm:text-xl",
+      sub1: "text-[8.5px] tracking-[0.16em]",
+      sub2: "text-[9px] tracking-[0.22em]",
+      gap: "gap-3",
+    },
+    lg: {
+      emblem: "size-14 sm:size-16",
+      brandText: "text-2xl sm:text-3xl",
+      sub1: "text-[10px] tracking-[0.18em]",
+      sub2: "text-[11px] tracking-[0.24em]",
+      gap: "gap-3.5",
+    },
+    xl: {
+      emblem: "size-20 sm:size-24",
+      brandText: "text-3xl sm:text-4xl",
+      sub1: "text-[12px] tracking-[0.20em]",
+      sub2: "text-[13px] tracking-[0.26em]",
+      gap: "gap-4",
+    },
+  }[size];
+
+  if (variant === "emblem") {
+    return (
+      <div className={cn("relative flex items-center justify-center", sizeMap.emblem, className)}>
+        <EmblemSvg />
+      </div>
+    );
+  }
+
+  if (variant === "full") {
+    return (
+      <div className={cn("flex flex-col items-center text-center", className)}>
+        <div className="size-48 max-w-full">
+          <EmblemSvg />
+        </div>
+        <div className="mt-2 flex flex-col items-center">
+          <span
+            className={cn(
+              "font-display text-4xl font-extrabold tracking-widest leading-none",
+              invert ? "text-primary-foreground" : "text-[#4D6E34]",
+            )}
+          >
+            FUNASF
+          </span>
+          <span
+            className={cn(
+              "mt-1.5 text-[11px] font-bold tracking-[0.24em] uppercase leading-tight",
+              invert ? "text-brand-gold" : "text-[#C28E2A]",
+            )}
+          >
+            Fundación Internacional
+          </span>
+          <span
+            className={cn(
+              "text-[11.5px] font-bold tracking-[0.28em] uppercase leading-tight",
+              invert ? "text-brand-gold" : "text-[#C28E2A]",
+            )}
+          >
+            Amigos Sin Fronteras
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === "vertical") {
+    return (
+      <div className={cn("flex flex-col items-center text-center", className)}>
+        <div className={cn(sizeMap.emblem, "mb-2")}>
+          <EmblemSvg />
+        </div>
+        <div className="flex flex-col items-center leading-none">
+          <span
+            className={cn(
+              "font-display font-extrabold tracking-widest",
+              sizeMap.brandText,
+              invert ? "text-primary-foreground" : "text-[#4D6E34]",
+            )}
+          >
+            FUNASF
+          </span>
+          {showSubtitle && (
+            <div className="mt-1 flex flex-col items-center">
+              <span
+                className={cn(
+                  "font-bold uppercase leading-tight",
+                  sizeMap.sub1,
+                  invert ? "text-brand-gold" : "text-[#C28E2A]",
+                )}
+              >
+                Fundación Internacional
+              </span>
+              <span
+                className={cn(
+                  "font-bold uppercase leading-tight",
+                  sizeMap.sub2,
+                  invert ? "text-brand-gold" : "text-[#C28E2A]",
+                )}
+              >
+                Amigos Sin Fronteras
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Horizontal variant (default for Header, Navbar)
+  return (
+    <div className={cn("flex items-center", sizeMap.gap, className)}>
+      <div className={cn("relative shrink-0", sizeMap.emblem)}>
+        <EmblemSvg />
+      </div>
+      <div className="flex flex-col justify-center leading-none select-none">
+        <span
+          className={cn(
+            "font-display font-extrabold tracking-wider",
+            sizeMap.brandText,
+            invert ? "text-primary-foreground" : "text-[#4D6E34]",
+          )}
+        >
+          FUNASF
+        </span>
+        {showSubtitle && (
+          <div className="mt-0.5 flex flex-col">
+            <span
+              className={cn(
+                "font-bold uppercase leading-tight",
+                sizeMap.sub1,
+                invert ? "text-brand-gold" : "text-[#C28E2A]",
+              )}
+            >
+              Fundación Internacional
+            </span>
+            <span
+              className={cn(
+                "font-bold uppercase leading-tight",
+                sizeMap.sub2,
+                invert ? "text-brand-gold" : "text-[#C28E2A]",
+              )}
+            >
+              Amigos Sin Fronteras
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
