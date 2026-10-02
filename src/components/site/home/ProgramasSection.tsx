@@ -12,9 +12,10 @@ import type { CategoriaProgramas } from "@/models/schema";
 
 interface ProgramasSectionProps {
   categoriasProgramas: CategoriaProgramas[];
+  programas: { nombre: string; slug: string }[];
 }
 
-export function ProgramasSection({ categoriasProgramas }: ProgramasSectionProps) {
+export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSectionProps) {
   return (
     <Section id="programas">
       <SectionHeading
@@ -31,15 +32,38 @@ export function ProgramasSection({ categoriasProgramas }: ProgramasSectionProps)
               </AccordionTrigger>
               <AccordionContent>
                 <ul className="text-muted-foreground mt-2 space-y-3 p-2 text-base">
-                  {cat.programas.map((p) => (
-                    <li key={p} className="flex items-start gap-3">
-                      <span
-                        aria-hidden
-                        className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
-                      />
-                      <span>{p}</span>
-                    </li>
-                  ))}
+                  {cat.programas.map((p) => {
+                    const lp = p.toLowerCase();
+                    const matchProg = programas.find(
+                      (pa) =>
+                        pa.nombre.toLowerCase() === lp ||
+                        lp.includes(pa.nombre.toLowerCase()) ||
+                        (lp.includes("bachillerato") && pa.slug === "validacion-del-bachillerato"),
+                    );
+                    return (
+                      <li key={p} className="flex items-start gap-3">
+                        <span
+                          aria-hidden
+                          className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
+                        />
+                        {matchProg ? (
+                          <Link
+                            to="/programas/$slug"
+                            params={{ slug: matchProg.slug }}
+                            className="font-medium text-foreground hover:text-brand-green transition-colors inline-flex items-center gap-1.5 group"
+                          >
+                            <span>{p}</span>
+                            <ArrowRight
+                              aria-hidden
+                              className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-brand-green shrink-0"
+                            />
+                          </Link>
+                        ) : (
+                          <span>{p}</span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </AccordionContent>
             </AccordionItem>

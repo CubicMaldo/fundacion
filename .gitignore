@@ -29,6 +29,4 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-.env
-.lovable/
-_downlove_errors.txt
+*.sw?

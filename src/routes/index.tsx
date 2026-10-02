@@ -65,6 +65,7 @@ function Inicio() {
     proposito,
     becas,
     categoriasProgramas,
+    programas,
     programasSociales,
     alcance,
     faq,
@@ -76,12 +77,12 @@ function Inicio() {
   return (
     <>
       <HeroSection org={org} quienesSomos={quienesSomos} />
+      <ProgramasSection categoriasProgramas={categoriasProgramas} programas={programas} />
+      <BecasSection becas={becas} />
+      <AlcanceSection alcance={alcance} />
       <QuienesSomosSection quienesSomos={quienesSomos} />
       <PropositoSection proposito={proposito} iconos={iconos} />
-      <ProgramasSection categoriasProgramas={categoriasProgramas} />
-      <BecasSection becas={becas} />
       <ProgramasSocialesSection programasSociales={programasSociales} iconos={iconos} />
-      <AlcanceSection alcance={alcance} />
       <ValoresSection valores={valores} />
       <BlogSection articulos={articulos} />
       <FaqSection faq={faq} />

@@ -1,5 +1,4 @@
 <!-- LOVABLE:BEGIN -->
-
 > [!IMPORTANT]
 > This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
 > published git history — force pushing, or rebasing/amending/squashing commits
@@ -8,7 +7,6 @@
 >
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
-
 <!-- LOVABLE:END -->
 
-- Preserve the imported FUNASF public route structure and concentrate future visual changes in shared semantic tokens, because the client requested the current direction remain intact.
+- Preserve the imported FUNASF route structure, shared site shell, local fallback data, and centralized SEO helpers so public URLs and search metadata remain stable.
