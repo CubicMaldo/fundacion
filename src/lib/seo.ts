@@ -123,7 +123,7 @@ export function getOrganizationSchema() {
     parentOrganization: {
       "@type": "NGO",
       name: "Fundación Internacional Amigos Sin Fronteras (Panamá)",
-      url: "https://www.funasf.org",
+      url: "https://www.edufunasf.org",
     },
     sameAs: [org.instagramUrl, "https://www.edufunasf.org"],
   };

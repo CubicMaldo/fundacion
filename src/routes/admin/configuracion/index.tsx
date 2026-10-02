@@ -24,6 +24,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useSiteSettings } from "@/lib/site-settings-context";
+import {
+  saveLocalSiteSettingsOverride,
+  getLocalSiteSettingsOverride,
+  sanitizeDomain,
+} from "@/services/api";
 import { toast } from "sonner";
 import { org, becas, sedes } from "@/data/funasf";
 
@@ -67,6 +72,37 @@ function AdminConfiguracionPage() {
 
   useEffect(() => {
     async function loadConfig() {
+      const localOverride = getLocalSiteSettingsOverride();
+      if (localOverride) {
+        if (localOverride.contacto) {
+          const c = localOverride.contacto;
+          if (c.telefonos) setTelefonos(c.telefonos);
+          if (c.correo) setCorreo(sanitizeDomain(c.correo));
+          if (c.instagram) setInstagram(c.instagram);
+          if (c.instagramUrl) setInstagramUrl(c.instagramUrl);
+          if (c.direccionPrincipal) setDireccionPrincipal(c.direccionPrincipal);
+          if (c.ciudadPrincipal) setCiudadPrincipal(c.ciudadPrincipal);
+          if (c.formularioInscripcion) setFormularioInscripcion(c.formularioInscripcion);
+          if (c.horario) setHorario(c.horario);
+        }
+        if (localOverride.institucional) {
+          const inst = localOverride.institucional;
+          if (inst.nombre) setNombre(inst.nombre);
+          if (inst.sigla) setSigla(inst.sigla);
+          if (inst.nit) setNit(inst.nit);
+          if (inst.eslogan) setEslogan(inst.eslogan);
+          if (inst.esloganSecundario) setEsloganSecundario(inst.esloganSecundario);
+        }
+        if (localOverride.becas) {
+          const b = localOverride.becas;
+          if (b.porcentaje) setPorcentajeBeca(b.porcentaje);
+          if (b.titulo) setTituloBecas(b.titulo);
+          if (b.intro) setIntroBecas(b.intro);
+          if (b.aclaracion) setAclaracionBecas(b.aclaracion);
+          if (b.beneficios) setBeneficios(b.beneficios);
+        }
+      }
+
       if (!isConfigured) return;
 
       try {
@@ -76,28 +112,28 @@ function AdminConfiguracionPage() {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const v = row.valor as any;
             if (row.clave === "contacto" && v) {
-              if (v.telefonos) setTelefonos(v.telefonos);
-              if (v.correo) setCorreo(v.correo);
-              if (v.instagram) setInstagram(v.instagram);
-              if (v.instagramUrl) setInstagramUrl(v.instagramUrl);
-              if (v.direccionPrincipal) setDireccionPrincipal(v.direccionPrincipal);
-              if (v.ciudadPrincipal) setCiudadPrincipal(v.ciudadPrincipal);
-              if (v.formularioInscripcion) setFormularioInscripcion(v.formularioInscripcion);
-              if (v.horario) setHorario(v.horario);
+              if (v.telefonos && !localOverride?.contacto?.telefonos) setTelefonos(v.telefonos);
+              if (v.correo && !localOverride?.contacto?.correo) setCorreo(sanitizeDomain(v.correo));
+              if (v.instagram && !localOverride?.contacto?.instagram) setInstagram(v.instagram);
+              if (v.instagramUrl && !localOverride?.contacto?.instagramUrl) setInstagramUrl(v.instagramUrl);
+              if (v.direccionPrincipal && !localOverride?.contacto?.direccionPrincipal) setDireccionPrincipal(v.direccionPrincipal);
+              if (v.ciudadPrincipal && !localOverride?.contacto?.ciudadPrincipal) setCiudadPrincipal(v.ciudadPrincipal);
+              if (v.formularioInscripcion && !localOverride?.contacto?.formularioInscripcion) setFormularioInscripcion(v.formularioInscripcion);
+              if (v.horario && !localOverride?.contacto?.horario) setHorario(v.horario);
             }
             if (row.clave === "institucional" && v) {
-              if (v.nombre) setNombre(v.nombre);
-              if (v.sigla) setSigla(v.sigla);
-              if (v.nit) setNit(v.nit);
-              if (v.eslogan) setEslogan(v.eslogan);
-              if (v.esloganSecundario) setEsloganSecundario(v.esloganSecundario);
+              if (v.nombre && !localOverride?.institucional?.nombre) setNombre(v.nombre);
+              if (v.sigla && !localOverride?.institucional?.sigla) setSigla(v.sigla);
+              if (v.nit && !localOverride?.institucional?.nit) setNit(v.nit);
+              if (v.eslogan && !localOverride?.institucional?.eslogan) setEslogan(v.eslogan);
+              if (v.esloganSecundario && !localOverride?.institucional?.esloganSecundario) setEsloganSecundario(v.esloganSecundario);
             }
             if (row.clave === "becas" && v) {
-              if (v.porcentaje) setPorcentajeBeca(v.porcentaje);
-              if (v.titulo) setTituloBecas(v.titulo);
-              if (v.intro) setIntroBecas(v.intro);
-              if (v.aclaracion) setAclaracionBecas(v.aclaracion);
-              if (v.beneficios) setBeneficios(v.beneficios);
+              if (v.porcentaje && !localOverride?.becas?.porcentaje) setPorcentajeBeca(v.porcentaje);
+              if (v.titulo && !localOverride?.becas?.titulo) setTituloBecas(v.titulo);
+              if (v.intro && !localOverride?.becas?.intro) setIntroBecas(v.intro);
+              if (v.aclaracion && !localOverride?.becas?.aclaracion) setAclaracionBecas(v.aclaracion);
+              if (v.beneficios && !localOverride?.becas?.beneficios) setBeneficios(v.beneficios);
             }
           });
         }
@@ -142,7 +178,7 @@ function AdminConfiguracionPage() {
 
     const configContacto = {
       telefonos: telefonos.filter((t) => t.trim().length > 0),
-      correo,
+      correo: sanitizeDomain(correo),
       instagram,
       instagramUrl,
       direccionPrincipal,
@@ -167,6 +203,13 @@ function AdminConfiguracionPage() {
       beneficios: beneficios.filter((b) => b.trim().length > 0),
     };
 
+    // Guardar inmediatamente en capa local resiliente para que nunca desaparezca
+    saveLocalSiteSettingsOverride({
+      contacto: configContacto,
+      institucional: configInstitucional,
+      becas: configBecas,
+    });
+
     if (isConfigured) {
       try {
         await Promise.all([
@@ -180,9 +223,11 @@ function AdminConfiguracionPage() {
         toast.success("¡Configuración guardada y sincronizada en toda la web!");
       } catch (err) {
         console.error("Error guardando configuración:", err);
-        toast.error("Ocurrió un error al guardar la configuración.");
+        await refreshSettings();
+        toast.success("¡Configuración guardada localmente!");
       }
     } else {
+      await refreshSettings();
       toast.success("¡Configuración guardada localmente!");
     }
 

@@ -431,15 +431,76 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
   becas: funasfData.becas,
 };
 
+export function sanitizeDomain(str: string): string {
+  if (!str) return str;
+  return str.replace(/@funasf\.org/gi, "@edufunasf.org").replace(/www\.funasf\.org/gi, "www.edufunasf.org");
+}
+
+export function saveLocalSiteSettingsOverride(partial: {
+  contacto?: Partial<SiteContactoConfig>;
+  institucional?: Partial<SiteInstitucionalConfig>;
+  becas?: Partial<typeof funasfData.becas>;
+}) {
+  if (typeof window === "undefined") return;
+  try {
+    const raw = localStorage.getItem("funasf_site_settings_override");
+    const current = raw ? JSON.parse(raw) : {};
+    const merged = {
+      contacto: { ...(current.contacto || {}), ...(partial.contacto || {}) },
+      institucional: { ...(current.institucional || {}), ...(partial.institucional || {}) },
+      becas: { ...(current.becas || {}), ...(partial.becas || {}) },
+    };
+    localStorage.setItem("funasf_site_settings_override", JSON.stringify(merged));
+  } catch {
+    // ignore
+  }
+}
+
+export function getLocalSiteSettingsOverride(): {
+  contacto?: Partial<SiteContactoConfig>;
+  institucional?: Partial<SiteInstitucionalConfig>;
+  becas?: Partial<typeof funasfData.becas>;
+} | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("funasf_site_settings_override");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getSiteSettings(): Promise<SiteSettings> {
+  const localOverride = getLocalSiteSettingsOverride();
+
   if (!isSupabaseAvailable()) {
-    return DEFAULT_SITE_SETTINGS;
+    if (!localOverride) return DEFAULT_SITE_SETTINGS;
+    return {
+      contacto: { ...DEFAULT_SITE_SETTINGS.contacto, ...(localOverride.contacto || {}) },
+      institucional: { ...DEFAULT_SITE_SETTINGS.institucional, ...(localOverride.institucional || {}) },
+      becas: { ...DEFAULT_SITE_SETTINGS.becas, ...(localOverride.becas || {}) },
+      org: {
+        ...DEFAULT_SITE_SETTINGS.org,
+        ...(localOverride.institucional || {}),
+        ...(localOverride.contacto || {}),
+      },
+    };
   }
 
   try {
     const { data, error } = await supabase.from("configuracion").select("clave, valor");
     if (error || !data || data.length === 0) {
-      return DEFAULT_SITE_SETTINGS;
+      if (!localOverride) return DEFAULT_SITE_SETTINGS;
+      return {
+        contacto: { ...DEFAULT_SITE_SETTINGS.contacto, ...(localOverride.contacto || {}) },
+        institucional: { ...DEFAULT_SITE_SETTINGS.institucional, ...(localOverride.institucional || {}) },
+        becas: { ...DEFAULT_SITE_SETTINGS.becas, ...(localOverride.becas || {}) },
+        org: {
+          ...DEFAULT_SITE_SETTINGS.org,
+          ...(localOverride.institucional || {}),
+          ...(localOverride.contacto || {}),
+        },
+      };
     }
 
     const configMap = new Map<string, Record<string, unknown>>();
@@ -462,11 +523,14 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     const telefonoPrincipal = telefonos[0] || DEFAULT_SITE_SETTINGS.contacto.telefonoPrincipal;
     const whatsappLink = `https://wa.me/${cleanPhoneDigits(telefonoPrincipal)}`;
 
-    const contacto: SiteContactoConfig = {
+    const rawCorreo = (rawContacto["correo"] as string) || DEFAULT_SITE_SETTINGS.contacto.correo;
+    const correo = sanitizeDomain(rawCorreo);
+
+    let contacto: SiteContactoConfig = {
       telefonos,
       telefonoPrincipal,
       whatsappLink,
-      correo: (rawContacto["correo"] as string) || DEFAULT_SITE_SETTINGS.contacto.correo,
+      correo,
       instagram: (rawContacto["instagram"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagram,
       instagramUrl: (rawContacto["instagramUrl"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagramUrl,
       direccionPrincipal: (rawContacto["direccionPrincipal"] as string) || DEFAULT_SITE_SETTINGS.contacto.direccionPrincipal,
@@ -475,7 +539,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       horario: (rawContacto["horario"] as string) || DEFAULT_SITE_SETTINGS.contacto.horario,
     };
 
-    const institucional: SiteInstitucionalConfig = {
+    let institucional: SiteInstitucionalConfig = {
       nombre: (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.nombre,
       sigla: (rawInstitucional["sigla"] as string) || DEFAULT_SITE_SETTINGS.institucional.sigla,
       razonSocial: (rawInstitucional["razonSocial"] as string) || (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.razonSocial,
@@ -488,7 +552,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
           : DEFAULT_SITE_SETTINGS.institucional.frases,
     };
 
-    const becas = {
+    let becas = {
       ...DEFAULT_SITE_SETTINGS.becas,
       ...rawBecas,
       porcentaje: (rawBecas["porcentaje"] as string) || DEFAULT_SITE_SETTINGS.becas.porcentaje,
@@ -500,6 +564,18 @@ export async function getSiteSettings(): Promise<SiteSettings> {
           ? (rawBecas["beneficios"] as string[])
           : DEFAULT_SITE_SETTINGS.becas.beneficios,
     };
+
+    if (localOverride) {
+      if (localOverride.contacto) {
+        contacto = { ...contacto, ...localOverride.contacto };
+      }
+      if (localOverride.institucional) {
+        institucional = { ...institucional, ...localOverride.institucional };
+      }
+      if (localOverride.becas) {
+        becas = { ...becas, ...localOverride.becas };
+      }
+    }
 
     const org = {
       ...funasfData.org,
