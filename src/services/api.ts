@@ -403,11 +403,11 @@ export async function getArticulosPublicados(): Promise<ArticuloBlog[]> {
       .eq("estado", "publicado")
       .order("fecha_publicacion", { ascending: false });
 
-    if (error || !data) {
+    if (error || !data || data.length === 0) {
       return ARTICULOS_DEFAULT;
     }
 
-    const remoteArticulos: ArticuloBlog[] = data.map((row) => ({
+    return data.map((row) => ({
       id: row.id,
       slug: row.slug,
       titulo: row.titulo,
@@ -418,18 +418,6 @@ export async function getArticulosPublicados(): Promise<ArticuloBlog[]> {
       imagenPortada: row.imagen_portada,
       fechaPublicacion: row.fecha_publicacion || row.created_at,
     }));
-
-    const remoteSlugs = new Set(remoteArticulos.map((a) => a.slug));
-    const combined = [...remoteArticulos];
-    for (const local of ARTICULOS_DEFAULT) {
-      if (!remoteSlugs.has(local.slug)) {
-        combined.push(local);
-      }
-    }
-
-    return combined.sort(
-      (a, b) => new Date(b.fechaPublicacion).getTime() - new Date(a.fechaPublicacion).getTime(),
-    );
   } catch (err) {
     console.warn("[API] Error consultando artículos:", err);
     return ARTICULOS_DEFAULT;
@@ -437,8 +425,37 @@ export async function getArticulosPublicados(): Promise<ArticuloBlog[]> {
 }
 
 export async function getArticuloBySlug(slug: string): Promise<ArticuloBlog | null> {
-  const articulos = await getArticulosPublicados();
-  return articulos.find((a) => a.slug === slug) ?? null;
+  if (!isSupabaseAvailable()) {
+    return ARTICULOS_DEFAULT.find((a) => a.slug === slug) ?? null;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("articulos")
+      .select("*")
+      .eq("slug", slug)
+      .eq("estado", "publicado")
+      .maybeSingle();
+
+    if (error || !data) {
+      return ARTICULOS_DEFAULT.find((a) => a.slug === slug) ?? null;
+    }
+
+    return {
+      id: data.id,
+      slug: data.slug,
+      titulo: data.titulo,
+      resumen: data.resumen,
+      contenido: data.contenido,
+      autorNombre: data.autor_nombre,
+      categoria: data.categoria,
+      imagenPortada: data.imagen_portada,
+      fechaPublicacion: data.fecha_publicacion || data.created_at,
+    };
+  } catch (err) {
+    console.warn(`[API] Error consultando artículo "${slug}":`, err);
+    return ARTICULOS_DEFAULT.find((a) => a.slug === slug) ?? null;
+  }
 }
 
 // ============================================================================
