@@ -36,16 +36,17 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
           </div>
         </div>
 
-        <div className="fade-up aspect-[4/3] w-full overflow-hidden rounded-2xl border border-primary-foreground/20 shadow-xl bg-primary-foreground/5">
+        <div className="fade-up relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-primary-foreground/20 shadow-2xl bg-primary-foreground/5 group">
           <img
-            src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1000&q=80"
-            alt="Estudiantes en aula de formación técnica y académica FUNASF"
-            className="size-full object-cover transition-transform duration-500 hover:scale-105"
+            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80"
+            alt="Estudiantes y becarios de formación técnica de la Fundación Internacional Amigos Sin Fronteras"
+            className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            width={1000}
-            height={750}
+            referrerPolicy="no-referrer"
+            width={1200}
+            height={900}
           />
         </div>
       </div>

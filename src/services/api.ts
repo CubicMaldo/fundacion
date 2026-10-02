@@ -126,6 +126,64 @@ export async function getProgramaBySlug(slug: string): Promise<ProgramaAcademico
 // 2. BLOG Y NOTICIAS
 // ============================================================================
 
+export interface InfoContactoPost {
+  activo?: boolean;
+  titulo?: string;
+  descripcion?: string;
+  whatsapp?: string;
+  mensajeWhatsapp?: string;
+  telefono?: string;
+  correo?: string;
+  enlacePostulacion?: string;
+}
+
+export function parseContactoDeContenido(contenido: string | null | undefined): {
+  contenidoLimpio: string;
+  contacto: InfoContactoPost | null;
+} {
+  if (!contenido) {
+    return { contenidoLimpio: "", contacto: null };
+  }
+
+  const regex = /<!--\s*FUNASF_CONTACT:\s*(\{[\s\S]*?\})\s*-->/;
+  const match = contenido.match(regex);
+
+  if (!match) {
+    return { contenidoLimpio: contenido, contacto: null };
+  }
+
+  try {
+    const rawParsed = JSON.parse(match[1]);
+    const contenidoLimpio = contenido.replace(regex, "").trim();
+    return {
+      contenidoLimpio,
+      contacto: rawParsed as InfoContactoPost,
+    };
+  } catch (err) {
+    console.warn("[API] Error parseando bloque de contacto en contenido:", err);
+    return { contenidoLimpio: contenido, contacto: null };
+  }
+}
+
+export function serializeContactoEnContenido(
+  contenido: string,
+  contacto?: InfoContactoPost | null,
+): string {
+  const { contenidoLimpio } = parseContactoDeContenido(contenido);
+
+  if (!contacto) {
+    return contenidoLimpio;
+  }
+
+  if (contacto.activo === false) {
+    const tag = `\n\n<!-- FUNASF_CONTACT: ${JSON.stringify({ activo: false })} -->`;
+    return contenidoLimpio + tag;
+  }
+
+  const tag = `\n\n<!-- FUNASF_CONTACT: ${JSON.stringify(contacto)} -->`;
+  return contenidoLimpio + tag;
+}
+
 export interface ArticuloBlog {
   id: string;
   slug: string;
@@ -136,6 +194,7 @@ export interface ArticuloBlog {
   categoria: string;
   imagenPortada?: string | null | undefined;
   fechaPublicacion: string;
+  contactoDirecto?: InfoContactoPost | null | undefined;
 }
 
 export const ARTICULOS_DEFAULT: ArticuloBlog[] = [
@@ -151,6 +210,18 @@ export const ARTICULOS_DEFAULT: ArticuloBlog[] = [
     categoria: "Convocatorias",
     imagenPortada: "/blog/sst-beca-90-diplomados.jpeg",
     fechaPublicacion: "2026-10-02T07:30:00.000Z",
+    contactoDirecto: {
+      activo: true,
+      titulo: "¿Deseas postularte a la Beca del 90% en SST?",
+      descripcion:
+        "Contáctanos de inmediato por WhatsApp para asegurar tu cupo becado con diplomados incluidos.",
+      whatsapp: "3232946184",
+      mensajeWhatsapp:
+        "Hola FUNASF, me interesa postularme a la Beca del 90% en Seguridad y Salud en el Trabajo con diplomados incluidos.",
+      telefono: "3232946184",
+      correo: "contacto@edufunasf.org",
+      enlacePostulacion: "https://forms.gle/kYUoX2v1dewKUrMX8",
+    },
   },
   {
     id: "post-sst-virtual",
@@ -164,6 +235,18 @@ export const ARTICULOS_DEFAULT: ArticuloBlog[] = [
     categoria: "Educación",
     imagenPortada: "/blog/sst-modalidad-virtual.jpeg",
     fechaPublicacion: "2026-10-01T15:00:00.000Z",
+    contactoDirecto: {
+      activo: true,
+      titulo: "Inscríbete a la modalidad 100% Virtual",
+      descripcion:
+        "Habla con un asesor académico por WhatsApp y conoce el acceso al aula virtual y facilidades de pago.",
+      whatsapp: "3135779384",
+      mensajeWhatsapp:
+        "Hola FUNASF, deseo recibir información sobre la modalidad virtual de Seguridad y Salud en el Trabajo.",
+      telefono: "3135779384",
+      correo: "contacto@edufunasf.org",
+      enlacePostulacion: "https://forms.gle/kYUoX2v1dewKUrMX8",
+    },
   },
   {
     id: "post-mercadeo-ventas",
@@ -407,17 +490,26 @@ export async function getArticulosPublicados(): Promise<ArticuloBlog[]> {
       return ARTICULOS_DEFAULT;
     }
 
-    return data.map((row) => ({
-      id: row.id,
-      slug: row.slug,
-      titulo: row.titulo,
-      resumen: row.resumen,
-      contenido: row.contenido,
-      autorNombre: row.autor_nombre,
-      categoria: row.categoria,
-      imagenPortada: row.imagen_portada,
-      fechaPublicacion: row.fecha_publicacion || row.created_at,
-    }));
+    return data.map((row) => {
+      const { contenidoLimpio, contacto } = parseContactoDeContenido(row.contenido);
+      const rowContacto =
+        "contacto_directo" in row && row.contacto_directo
+          ? (row.contacto_directo as InfoContactoPost)
+          : null;
+
+      return {
+        id: row.id,
+        slug: row.slug,
+        titulo: row.titulo,
+        resumen: row.resumen,
+        contenido: contenidoLimpio,
+        autorNombre: row.autor_nombre,
+        categoria: row.categoria,
+        imagenPortada: row.imagen_portada,
+        fechaPublicacion: row.fecha_publicacion || row.created_at,
+        contactoDirecto: rowContacto || contacto || null,
+      };
+    });
   } catch (err) {
     console.warn("[API] Error consultando artículos:", err);
     return ARTICULOS_DEFAULT;
@@ -441,16 +533,23 @@ export async function getArticuloBySlug(slug: string): Promise<ArticuloBlog | nu
       return ARTICULOS_DEFAULT.find((a) => a.slug === slug) ?? null;
     }
 
+    const { contenidoLimpio, contacto } = parseContactoDeContenido(data.contenido);
+    const rowContacto =
+      "contacto_directo" in data && data.contacto_directo
+        ? (data.contacto_directo as InfoContactoPost)
+        : null;
+
     return {
       id: data.id,
       slug: data.slug,
       titulo: data.titulo,
       resumen: data.resumen,
-      contenido: data.contenido,
+      contenido: contenidoLimpio,
       autorNombre: data.autor_nombre,
       categoria: data.categoria,
       imagenPortada: data.imagen_portada,
       fechaPublicacion: data.fecha_publicacion || data.created_at,
+      contactoDirecto: rowContacto || contacto || null,
     };
   } catch (err) {
     console.warn(`[API] Error consultando artículo "${slug}":`, err);

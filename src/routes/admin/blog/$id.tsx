@@ -6,7 +6,7 @@ import { ArticuloForm } from "@/components/admin/ArticuloForm";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth-context";
-import { getArticuloBySlug } from "@/services/api";
+import { getArticuloBySlug, parseContactoDeContenido, type InfoContactoPost } from "@/services/api";
 import type { ArticuloAdminItem } from "./index";
 
 export const Route = createFileRoute("/admin/blog/$id")({
@@ -49,17 +49,22 @@ function EditarArticuloPage() {
             setArticulo({ ...fallback, estado: "publicado" });
           }
         } else {
+          const { contenidoLimpio, contacto } = parseContactoDeContenido(data.contenido);
           setArticulo({
             id: data.id,
             slug: data.slug,
             titulo: data.titulo,
             resumen: data.resumen,
-            contenido: data.contenido,
+            contenido: contenidoLimpio,
             autorNombre: data.autor_nombre,
             categoria: data.categoria,
             imagenPortada: data.imagen_portada,
             estado: (data.estado as "borrador" | "publicado") || "borrador",
             fechaPublicacion: data.fecha_publicacion || data.created_at,
+            contactoDirecto:
+              ("contacto_directo" in data ? (data.contacto_directo as InfoContactoPost) : null) ||
+              contacto ||
+              null,
           });
         }
       } catch (err) {

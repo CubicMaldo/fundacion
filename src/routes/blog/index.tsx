@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { getArticulosPublicados, type ArticuloBlog } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/blog/")({
   head: () =>
     createSeoMeta({
       title: "Blog Institucional y Comunitario | FUNASF",
