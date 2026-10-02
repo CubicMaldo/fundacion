@@ -251,7 +251,7 @@ export function Logo({
           <span
             className={cn(
               "font-display text-4xl font-extrabold tracking-widest leading-none",
-              invert ? "text-primary-foreground" : "text-[#4D6E34]",
+              invert ? "text-primary-foreground" : "text-brand-green",
             )}
           >
             FUNASF
@@ -259,7 +259,7 @@ export function Logo({
           <span
             className={cn(
               "mt-1.5 text-[11px] font-bold tracking-[0.24em] uppercase leading-tight",
-              invert ? "text-brand-gold" : "text-[#C28E2A]",
+              invert ? "text-brand-gold" : "text-brand-gold",
             )}
           >
             Fundación Internacional
@@ -267,7 +267,7 @@ export function Logo({
           <span
             className={cn(
               "text-[11.5px] font-bold tracking-[0.28em] uppercase leading-tight",
-              invert ? "text-brand-gold" : "text-[#C28E2A]",
+              invert ? "text-brand-gold" : "text-brand-gold",
             )}
           >
             Amigos Sin Fronteras
@@ -288,7 +288,7 @@ export function Logo({
             className={cn(
               "font-display font-extrabold tracking-widest",
               sizeMap.brandText,
-              invert ? "text-primary-foreground" : "text-[#4D6E34]",
+              invert ? "text-primary-foreground" : "text-brand-green",
             )}
           >
             FUNASF
@@ -299,7 +299,7 @@ export function Logo({
                 className={cn(
                   "font-bold uppercase leading-tight",
                   sizeMap.sub1,
-                  invert ? "text-brand-gold" : "text-[#C28E2A]",
+                  invert ? "text-brand-gold" : "text-brand-gold",
                 )}
               >
                 Fundación Internacional
@@ -308,7 +308,7 @@ export function Logo({
                 className={cn(
                   "font-bold uppercase leading-tight",
                   sizeMap.sub2,
-                  invert ? "text-brand-gold" : "text-[#C28E2A]",
+                  invert ? "text-brand-gold" : "text-brand-gold",
                 )}
               >
                 Amigos Sin Fronteras
@@ -331,7 +331,7 @@ export function Logo({
           className={cn(
             "font-display font-extrabold tracking-wider",
             sizeMap.brandText,
-            invert ? "text-primary-foreground" : "text-[#4D6E34]",
+            invert ? "text-primary-foreground" : "text-brand-green",
           )}
         >
           FUNASF
@@ -342,7 +342,7 @@ export function Logo({
               className={cn(
                 "font-bold uppercase leading-tight",
                 sizeMap.sub1,
-                invert ? "text-brand-gold" : "text-[#C28E2A]",
+                invert ? "text-brand-gold" : "text-brand-gold",
               )}
             >
               Fundación Internacional
@@ -351,7 +351,7 @@ export function Logo({
               className={cn(
                 "font-bold uppercase leading-tight",
                 sizeMap.sub2,
-                invert ? "text-brand-gold" : "text-[#C28E2A]",
+                invert ? "text-brand-gold" : "text-brand-gold",
               )}
             >
               Amigos Sin Fronteras
