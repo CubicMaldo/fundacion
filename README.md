@@ -1,8 +1,8 @@
 # Foundation Refreshed
 
-haz un clone a este proyecto : 
+haz un clone a este proyecto :
 
-https://github.com/CubicMaldo/fundacion 
+https://github.com/CubicMaldo/fundacion
 
 Y reorganiza la pagina de inicio, sin cambiar tokens, ni elementos del espacio, si no reorganiza, cambia o elimina secciones. Procura mantener de buena manera el trabajo de posicionamiento SEO de la app tambien
 
