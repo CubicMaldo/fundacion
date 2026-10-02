@@ -49,9 +49,9 @@ interface SavedPaletteState {
 export function DevPaletteStudio() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"morph" | "presets" | "custom" | "export">("morph");
-  const [activePresetId, setActivePresetId] = useState<string>("solicitada");
-  const [morphPercent, setMorphPercent] = useState<number>(100);
-  const [coreColors, setCoreColors] = useState<CorePaletteColors>(PALETA_SOLICITADA.colors);
+  const [activePresetId, setActivePresetId] = useState<string>("actual");
+  const [morphPercent, setMorphPercent] = useState<number>(0);
+  const [coreColors, setCoreColors] = useState<CorePaletteColors>(PALETA_ACTUAL.colors);
   const [isCustomized, setIsCustomized] = useState(false);
   const [isComparingOriginal, setIsComparingOriginal] = useState(false);
   const [copiedCss, setCopiedCss] = useState(false);
@@ -82,8 +82,8 @@ export function DevPaletteStudio() {
         const parsed: SavedPaletteState = JSON.parse(raw);
         if (parsed.coreColors) {
           setCoreColors(parsed.coreColors);
-          setActivePresetId(parsed.activePresetId || "solicitada");
-          setMorphPercent(typeof parsed.morphPercent === "number" ? parsed.morphPercent : 100);
+          setActivePresetId(parsed.activePresetId || "actual");
+          setMorphPercent(typeof parsed.morphPercent === "number" ? parsed.morphPercent : 0);
           setIsCustomized(Boolean(parsed.isCustomized));
           setIsOpen(Boolean(parsed.isOpen));
           applyPaletteToCss(deriveExtendedPalette(parsed.coreColors));
@@ -94,8 +94,8 @@ export function DevPaletteStudio() {
       console.warn("No se pudo cargar la paleta guardada de dev:", e);
     }
 
-    // Por defecto en la primera carga en dev: aplicamos la paleta solicitada para que el usuario la vea de inmediato
-    applyPaletteToCss(deriveExtendedPalette(PALETA_SOLICITADA.colors));
+    // Por defecto en la primera carga en dev: aplicamos la paleta elegida
+    applyPaletteToCss(deriveExtendedPalette(PALETA_ACTUAL.colors));
   }, []);
 
   // Guardar en localStorage al cambiar estado
