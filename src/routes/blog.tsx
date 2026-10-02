@@ -124,7 +124,7 @@ function BlogPage() {
             {filtrados.map((articulo) => (
               <article
                 key={articulo.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all hover:border-brand-green/40 hover:shadow-md"
+                className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
               >
                 {/* Imagen de Portada */}
                 <div className="relative aspect-16/10 overflow-hidden bg-muted">
@@ -132,29 +132,31 @@ function BlogPage() {
                     <img
                       src={articulo.imagenPortada}
                       alt={articulo.titulo}
-                      className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="size-full object-cover"
                       loading="lazy"
                     />
                   ) : (
                     <div className="flex size-full items-center justify-center bg-brand-green/10 text-brand-green">
-                      <Newspaper className="size-10" />
+                      <Newspaper className="size-10 opacity-70" />
                     </div>
                   )}
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-background/90 text-foreground backdrop-blur-xs font-medium text-xs">
-                      {articulo.categoria}
-                    </Badge>
-                  </div>
                 </div>
 
                 {/* Contenido de la Tarjeta */}
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2.5">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="size-3 text-brand-gold" />
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2.5">
+                      {articulo.categoria && (
+                        <>
+                          <span className="font-semibold text-brand-brown text-[11px] uppercase tracking-wider">
+                            {articulo.categoria}
+                          </span>
+                          <span aria-hidden="true">·</span>
+                        </>
+                      )}
+                      <time dateTime={articulo.fechaPublicacion}>
                         {formatDate(articulo.fechaPublicacion)}
-                      </span>
+                      </time>
                     </div>
 
                     <h2 className="font-display text-xl font-bold text-foreground leading-snug group-hover:text-brand-green transition-colors">
@@ -177,7 +179,7 @@ function BlogPage() {
                       asChild
                       variant="link"
                       size="sm"
-                      className="p-0 text-brand-green group-hover:translate-x-1 transition-transform"
+                      className="p-0 h-auto text-xs font-semibold text-brand-green"
                     >
                       <Link to="/blog/$slug" params={{ slug: articulo.slug }}>
                         Leer artículo <ArrowRight className="size-3.5 ml-1" />

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
@@ -9,19 +9,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  formacionAcademica,
-  modeloAlianzas,
-  faq,
-  programasDestacados,
-  convocatoria,
-  whatsappLink,
-} from "@/data/funasf";
-import {
-  getProgramasAcademicos,
-  getSiteSettings,
-  getCategorizedPrograms,
-} from "@/services/api";
+import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
+import { getProgramasAcademicos, getSiteSettings, getCategorizedPrograms } from "@/services/api";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
 
@@ -43,10 +32,7 @@ export const Route = createFileRoute("/estudia")({
       ],
     }),
   loader: async () => {
-    const [programas, settings] = await Promise.all([
-      getProgramasAcademicos(),
-      getSiteSettings(),
-    ]);
+    const [programas, settings] = await Promise.all([getProgramasAcademicos(), getSiteSettings()]);
     return {
       programas,
       categoriasProgramas: getCategorizedPrograms(programas),
@@ -82,49 +68,6 @@ function Estudia() {
           </Button>
         </div>
       </PageHero>
-
-      {/* Programas destacados de la convocatoria vigente */}
-      <Section id="convocatorias-abiertas" tone="soft">
-        <SectionHeading
-          eyebrow="Convocatorias abiertas"
-          title="Programas destacados con beca"
-          description={`${convocatoria.beneficio} · ${convocatoria.sinCostos}. ${convocatoria.nota}`}
-        />
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {programasDestacados.map((p) => (
-            <article
-              key={p.nombre}
-              className="card-institucional flex flex-col p-6 shadow-xs hover:shadow-md transition-shadow"
-            >
-              <span className="eyebrow">{p.area}</span>
-              <h3 className="mt-2 text-xl font-bold text-foreground">{p.nombre}</h3>
-              <ul className="text-muted-foreground mt-4 flex-1 space-y-2 text-sm">
-                {p.detalles.map((d) => (
-                  <li key={d} className="flex items-start gap-2">
-                    <CheckCircle2 aria-hidden className="text-primary mt-0.5 size-4 shrink-0" />
-                    <span>{d}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                <a
-                  href={`${whatsappLink}?text=${encodeURIComponent(
-                    `Hola FUNASF: Me interesa postularme a la beca del programa ${p.nombre}`,
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary text-sm font-semibold hover:underline inline-flex items-center gap-1"
-                >
-                  Pide tu beca →
-                </a>
-                <span className="text-xs bg-brand-gold/20 text-brand-green-deep font-bold px-2.5 py-0.5 rounded-full">
-                  Beca hasta 90%
-                </span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </Section>
 
       <Section id="programas">
         <SectionHeading
@@ -206,7 +149,7 @@ function Estudia() {
             {becas.beneficios.map((b) => (
               <li
                 key={b}
-                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm transition-all hover:bg-primary-foreground/10 hover:-translate-y-0.5"
+                className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-lg border p-4 text-sm transition-colors hover:bg-primary-foreground/10"
               >
                 {b}
               </li>
@@ -258,11 +201,10 @@ function Estudia() {
         <p className="border-brand-green text-foreground mt-10 border-l-4 pl-5 text-lg font-medium italic">
           {modeloAlianzas.responsabilidades.destacado}
         </p>
-        <p className="text-muted-foreground mt-6 text-sm">
-          El listado de instituciones aliadas será publicado cuando FUNASF lo suministre.{" "}
-          <span className="text-brand-brown font-semibold">
-            [LISTADO DE INSTITUCIONES ALIADAS PENDIENTE]
-          </span>
+        <p className="text-muted-foreground mt-6 text-sm leading-relaxed max-w-3xl">
+          Las instituciones educativas aliadas y los convenios específicos correspondientes a cada
+          área se informan a cada estudiante durante el proceso de orientación y formalización de
+          matrícula según el municipio y modalidad seleccionada.
         </p>
       </Section>
 

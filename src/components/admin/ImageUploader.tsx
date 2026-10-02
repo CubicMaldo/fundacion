@@ -62,12 +62,10 @@ export function ImageUploader({
         .substring(0, 30);
       const filePath = `${cleanFileName}-${Date.now()}.${fileExt}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+      const { error: uploadError } = await supabase.storage.from(bucket).upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
 
       if (uploadError) {
         throw uploadError;
@@ -156,7 +154,9 @@ export function ImageUploader({
         </div>
       ) : value ? (
         <div className="relative group overflow-hidden rounded-xl border border-border bg-muted/40">
-          <div className={`${aspectClass} w-full overflow-hidden flex items-center justify-center bg-black/5`}>
+          <div
+            className={`${aspectClass} w-full overflow-hidden flex items-center justify-center bg-black/5`}
+          >
             <img
               src={value}
               alt="Vista previa"
@@ -216,7 +216,9 @@ export function ImageUploader({
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">
-                {uploading ? "Subiendo imagen a Supabase..." : "Haz clic para subir o arrastra una imagen aquí"}
+                {uploading
+                  ? "Subiendo imagen a Supabase..."
+                  : "Haz clic para subir o arrastra una imagen aquí"}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">{helperText}</p>
             </div>
@@ -224,9 +226,7 @@ export function ImageUploader({
         </div>
       )}
 
-      {errorMsg && (
-        <p className="text-xs text-destructive mt-1 font-medium">{errorMsg}</p>
-      )}
+      {errorMsg && <p className="text-xs text-destructive mt-1 font-medium">{errorMsg}</p>}
     </div>
   );
 }

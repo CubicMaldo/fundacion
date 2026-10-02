@@ -87,6 +87,13 @@ function ProgramaDetailComponent() {
     .filter((p) => p.slug !== programa.slug && p.categoriaId === programa.categoriaId)
     .slice(0, 3);
 
+  const fallbackProg = programasAcademicos.find(
+    (p) =>
+      p.slug === programa.slug ||
+      p.nombre.toLowerCase().trim() === programa.nombre.toLowerCase().trim(),
+  );
+  const imagenUrl = programa.imagenUrl || fallbackProg?.imagenUrl;
+
   const telefonoPrincipal = settings.contacto.telefonoPrincipal;
   const phoneDigits = (telefonoPrincipal || "").replace(/\D/g, "");
   const phoneHref = `tel:+${phoneDigits.startsWith("57") ? phoneDigits : `57${phoneDigits}`}`;
@@ -95,10 +102,6 @@ function ProgramaDetailComponent() {
     <div className="flex flex-col">
       {/* Encabezado del programa */}
       <header className="surface-hero relative overflow-hidden py-12 md:py-16">
-        <div
-          aria-hidden
-          className="bg-brand-gold/15 pointer-events-none absolute -top-24 -right-24 size-80 rounded-full blur-3xl"
-        />
         <div className="container-page relative">
           {/* Miga de pan */}
           <nav
@@ -119,13 +122,12 @@ function ProgramaDetailComponent() {
           </nav>
 
           <div className="max-w-3xl">
-            <div className="flex flex-wrap items-center gap-2 mb-4">
-              <span className="rounded-full bg-brand-gold/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-gold">
-                {programa.categoria}
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-gold mb-3">
+              <span>{programa.categoria}</span>
+              <span aria-hidden="true" className="text-primary-foreground/40">
+                ·
               </span>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-primary-foreground/90">
-                Beca de hasta 90 %
-              </span>
+              <span className="text-primary-foreground/90">Beca de hasta 90 %</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground leading-tight">
@@ -144,6 +146,22 @@ function ProgramaDetailComponent() {
         <div className="grid gap-10 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
           {/* Columna de contenido */}
           <div className="space-y-10">
+            {/* Imagen del programa */}
+            {imagenUrl && (
+              <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
+                <img
+                  src={imagenUrl}
+                  alt={programa.nombre}
+                  className="size-full object-cover"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  width={1000}
+                  height={562}
+                />
+              </div>
+            )}
+
             {/* Objetivo del programa */}
             <section className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
               <div className="flex items-center gap-3">
@@ -311,27 +329,51 @@ function ProgramaDetailComponent() {
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
-              {relacionados.map((rel) => (
-                <article
-                  key={rel.slug}
-                  className="rounded-xl border border-border bg-card p-5 shadow-xs transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
-                >
-                  <span className="text-xs font-bold text-brand-brown uppercase">
-                    {rel.categoria}
-                  </span>
-                  <h4 className="text-lg font-bold text-foreground mt-1.5">{rel.nombre}</h4>
-                  <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
-                    {rel.descripcion}
-                  </p>
-                  <Link
-                    to="/programas/$slug"
-                    params={{ slug: rel.slug }}
-                    className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-brand-green-deep"
+              {relacionados.map((rel) => {
+                const relImg =
+                  rel.imagenUrl ||
+                  programasAcademicos.find(
+                    (p) =>
+                      p.slug === rel.slug ||
+                      p.nombre.toLowerCase().trim() === rel.nombre.toLowerCase().trim(),
+                  )?.imagenUrl;
+                return (
+                  <article
+                    key={rel.slug}
+                    className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
                   >
-                    Ver programa <ArrowRight className="size-3.5" />
-                  </Link>
-                </article>
-              ))}
+                    {relImg && (
+                      <div className="aspect-[16/10] w-full overflow-hidden border-b border-border bg-brand-sand/40">
+                        <img
+                          src={relImg}
+                          alt={rel.nombre}
+                          className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          loading="lazy"
+                          decoding="async"
+                          width={400}
+                          height={250}
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-1 flex-col p-5">
+                      <span className="text-xs font-bold text-brand-brown uppercase">
+                        {rel.categoria}
+                      </span>
+                      <h4 className="text-lg font-bold text-foreground mt-1.5">{rel.nombre}</h4>
+                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                        {rel.descripcion}
+                      </p>
+                      <Link
+                        to="/programas/$slug"
+                        params={{ slug: rel.slug }}
+                        className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-brand-green-deep"
+                      >
+                        Ver programa <ArrowRight className="size-3.5" />
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         )}

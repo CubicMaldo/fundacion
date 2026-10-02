@@ -1,27 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  BookOpen,
-  GraduationCap,
-  HandHeart,
-  HeartPulse,
-  MapPin,
-  Phone,
-  Sprout,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { MediaPlaceholder } from "@/components/site/MediaPlaceholder";
-
-const iconos: Record<string, LucideIcon> = {
-  GraduationCap,
-  HeartPulse,
-  Users,
-  Sprout,
-  HandHeart,
-  BookOpen,
-};
 import {
   quienesSomos,
   mision,
@@ -32,7 +13,6 @@ import {
   alcance,
   sedes,
   transparencia,
-  PENDIENTE,
 } from "@/data/funasf";
 import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
 
@@ -64,13 +44,10 @@ export const Route = createFileRoute("/quienes-somos")({
 });
 
 function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
-  const pendiente = valor === PENDIENTE;
   return (
     <p className="text-sm">
       <span className="text-muted-foreground">{etiqueta}: </span>
-      <span className={pendiente ? "text-brand-brown font-semibold" : "text-foreground"}>
-        {pendiente ? "[DATO PENDIENTE]" : valor}
-      </span>
+      <span className="text-foreground font-medium">{valor}</span>
     </p>
   );
 }
@@ -90,14 +67,24 @@ function QuienesSomos() {
             {quienesSomos.parrafos.map((p) => (
               <p key={p}>{p}</p>
             ))}
-            <h2 className="text-foreground pt-4 text-2xl">Nuestro compromiso</h2>
+            <h2 className="text-foreground pt-4 text-2xl font-bold font-display">
+              Nuestro compromiso
+            </h2>
             <p>{quienesSomos.compromiso}</p>
             <p className="border-brand-green text-foreground mt-6 border-l-4 pl-5 text-lg font-medium italic">
               {quienesSomos.destacado}
             </p>
           </div>
-          <div className="aspect-[4/3] w-full">
-            <MediaPlaceholder label="[FOTOGRAFÍA INSTITUCIONAL PENDIENTE]" />
+          <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
+              alt="Compromiso social y formación para el futuro FUNASF"
+              className="size-full object-cover transition-transform duration-500 hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              width={800}
+              height={600}
+            />
           </div>
         </div>
       </Section>
@@ -150,8 +137,16 @@ function QuienesSomos() {
               ))}
             </div>
           </div>
-          <div className="aspect-[3/4] w-full">
-            <MediaPlaceholder label="[FOTOGRAFÍA HISTÓRICA PENDIENTE]" />
+          <div className="aspect-[3/4] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
+            <img
+              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80"
+              alt="Historia y proyección internacional FUNASF Panamá y Colombia"
+              className="size-full object-cover transition-transform duration-500 hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              width={800}
+              height={1067}
+            />
           </div>
         </div>
       </Section>
@@ -163,16 +158,12 @@ function QuienesSomos() {
           description={proposito.intro}
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {proposito.ejes.map((e) => {
-            const Icono = iconos[e.icono] ?? GraduationCap;
-            return (
-              <article key={e.nombre} className="card-institucional p-6">
-                <Icono aria-hidden className="text-primary size-7" />
-                <h3 className="text-brand-green-deep mt-3 text-lg font-semibold">{e.nombre}</h3>
-                <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{e.texto}</p>
-              </article>
-            );
-          })}
+          {proposito.ejes.map((e) => (
+            <article key={e.nombre} className="card-institucional">
+              <h3 className="text-brand-green-deep text-lg">{e.nombre}</h3>
+              <p className="text-muted-foreground mt-3 text-sm leading-relaxed">{e.texto}</p>
+            </article>
+          ))}
         </div>
       </Section>
 
@@ -195,14 +186,11 @@ function QuienesSomos() {
           description={alcance.intro}
         />
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          <div className="card-institucional p-6">
-            <h3 className="text-brand-green-deep text-base font-semibold">Presencia actual</h3>
-            <ul className="text-muted-foreground mt-3 space-y-2.5 text-sm">
+          <div className="card-institucional">
+            <h3 className="text-brand-green-deep text-base">Presencia actual</h3>
+            <ul className="text-muted-foreground mt-3 space-y-2 text-sm">
               {alcance.presencia.map((m) => (
-                <li key={m} className="flex items-center gap-2">
-                  <MapPin aria-hidden className="text-primary size-4 shrink-0" />
-                  <span>{m}</span>
-                </li>
+                <li key={m}>{m}</li>
               ))}
             </ul>
           </div>
@@ -223,26 +211,40 @@ function QuienesSomos() {
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {sedes.map((s) => (
             <article key={s.ciudad} className="card-institucional">
-              <div className="aspect-[4/3] w-full">
-                <MediaPlaceholder label={s.imagenPendiente} />
+              <div className="aspect-[4/3] w-full overflow-hidden rounded-xl border border-border bg-muted">
+                {"imagenUrl" in s && s.imagenUrl ? (
+                  <img
+                    src={s.imagenUrl as string}
+                    alt={`Sede ${s.ciudad}, ${s.pais}`}
+                    className="size-full object-cover transition-transform duration-300 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={600}
+                  />
+                ) : (
+                  <MediaPlaceholder label={s.imagenPendiente} />
+                )}
               </div>
-              <h3 className="text-brand-green-deep mt-5 flex items-center gap-2 text-lg">
-                <MapPin aria-hidden className="size-4" /> {s.ciudad}, {s.pais}
+              <h3 className="text-brand-green-deep mt-5 flex items-center gap-2 text-lg font-bold">
+                <MapPin aria-hidden className="size-4 text-brand-green" /> {s.ciudad}, {s.pais}
               </h3>
               <p className="text-muted-foreground mt-2 text-sm leading-relaxed">{s.descripcion}</p>
-              <div className="mt-4 space-y-1.5">
-                <Dato etiqueta="Dirección" valor={s.direccion} />
-                <Dato etiqueta="Teléfono" valor={s.telefono ?? PENDIENTE} />
-                <Dato etiqueta="WhatsApp" valor={s.whatsapp ?? PENDIENTE} />
+              <div className="mt-4 space-y-2 border-t border-border pt-4">
+                <Dato etiqueta="Ubicación" valor={s.direccion} />
+                <Dato etiqueta="Línea de contacto" valor={s.telefono} />
                 <Dato etiqueta="Horario" valor={s.horario} />
-                <Dato etiqueta="Mapa" valor={s.mapa} />
+                {"modalidad" in s && s.modalidad ? (
+                  <Dato etiqueta="Modalidad" valor={s.modalidad as string} />
+                ) : null}
               </div>
             </article>
           ))}
         </div>
-        <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
-          <Phone aria-hidden className="size-4" />
-          Los datos marcados como pendientes serán publicados cuando FUNASF los suministre.
+        <p className="text-muted-foreground mt-8 flex items-center gap-2 text-xs">
+          <Phone aria-hidden className="size-4 text-brand-green shrink-0" />
+          Para concertar citas institucionales o recibir asesoría presencial en sede, comunícate a
+          nuestras líneas telefónicas oficiales.
         </p>
       </Section>
 

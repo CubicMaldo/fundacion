@@ -10,6 +10,7 @@ export interface ProgramaAcademico {
   requisitos: string[];
   certificacionNota?: string | undefined;
   duracionEstimada?: string | undefined;
+  imagenUrl?: string | undefined;
 }
 
 export const programasAcademicos: ProgramaAcademico[] = [
@@ -19,6 +20,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Auxiliar de Enfermería",
     categoria: "Área de salud",
     categoriaId: "salud",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Formación orientada al cuidado integral del paciente, asistencia en procedimientos médicos, administración responsable de medicamentos y apoyo hospitalario y comunitario.",
     objetivo:
@@ -43,6 +46,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Servicios Farmacéuticos",
     categoria: "Área de salud",
     categoriaId: "salud",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Capacitación en dispensación ética de medicamentos, control de inventarios farmacéuticos, almacenamiento y servicio al usuario en droguerías y farmacias hospitalarias.",
     objetivo:
@@ -65,6 +70,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Administración en Salud",
     categoria: "Área de salud",
     categoriaId: "salud",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Gestión de admisión de usuarios, facturación de servicios médicos, archivo clínico y atención al usuario en el sistema de salud.",
     objetivo:
@@ -89,6 +96,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Seguridad y Salud en el Trabajo",
     categoria: "Seguridad y Salud en el Trabajo",
     categoriaId: "sst",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Capacitación en identificación de peligros, prevención de riesgos laborales, protocolos de emergencia e implementación del SG-SST en todo tipo de empresas.",
     objetivo:
@@ -113,6 +122,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Administración",
     categoria: "Administración y empresa",
     categoriaId: "administracion",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Fundamentos en planificación estratégica, organización de recursos, liderazgo de equipos y optimización de procesos productivos y de servicio.",
     objetivo:
@@ -131,6 +142,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Auxiliar Administrativo y Contable",
     categoria: "Administración y empresa",
     categoriaId: "administracion",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Registro de operaciones contables, conciliaciones bancarias, nómina, archivo documental y atención corporativa.",
     objetivo:
@@ -153,6 +166,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Mercadeo y Ventas",
     categoria: "Administración y empresa",
     categoriaId: "administracion",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Técnicas de negociación, servicio al cliente, canales de comercialización digital, fidelización de clientes e investigación básica de mercados.",
     objetivo:
@@ -174,6 +189,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Logística",
     categoria: "Administración y empresa",
     categoriaId: "administracion",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Gestión de cadenas de suministro, recepción, almacenamiento, despacho de mercancías, control de inventarios y distribución eficiente.",
     objetivo:
@@ -195,6 +212,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Secretariado Ejecutivo",
     categoria: "Administración y empresa",
     categoriaId: "administracion",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Redacción corporativa, etiqueta empresarial, gestión de agenda, organización de eventos y manejo confidencial de correspondencia ejecutiva.",
     objetivo:
@@ -215,6 +234,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Primera Infancia",
     categoria: "Educación y área social",
     categoriaId: "educacion-social",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Pedagogía infantil, desarrollo integral en los primeros años de vida, nutrición, lúdica, estimulación temprana y cuidado socioafectivo.",
     objetivo:
@@ -239,6 +260,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Belleza Integral",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Cuidado capilar, cosmetología básica, maquillaje social, manicure, pedicure y técnicas modernas de estética y bienestar personal.",
     objetivo:
@@ -257,6 +280,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Inglés",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Desarrollo de habilidades comunicativas (escucha, habla, lectura y escritura) con énfasis en conversación práctica y contextos laborales.",
     objetivo:
@@ -278,6 +303,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Vigilancia y Seguridad Privada",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Procedimientos de seguridad física, control de accesos, manejo de centrales de monitoreo, protocolos de prevención y primeros auxilios.",
     objetivo:
@@ -300,6 +327,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Hotelería y Turismo",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Atención al huésped, operaciones de recepción hotelera, servicios de alimentos y bebidas, y promoción del patrimonio cultural y ecoturístico.",
     objetivo:
@@ -321,6 +350,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Electricidad",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Instalaciones eléctricas residenciales y comerciales, interpretación de planos, normas de seguridad RETIE y mantenimiento de circuitos.",
     objetivo:
@@ -343,6 +374,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Mecánica de Motos",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Diagnóstico, reparación y sincronización de motores de dos y cuatro tiempos, sistemas de frenos, suspensión, transmisión y circuitos eléctricos.",
     objetivo:
@@ -361,6 +394,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Construcción",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Lectura de planos arquitectónicos, mezclas, mampostería, pañetes, enchapes, acabados y normas de seguridad en obra.",
     objetivo:
@@ -379,6 +414,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Música",
     categoria: "Otras áreas de formación",
     categoriaId: "otras",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Iniciación e interpretación instrumental, técnica vocal, teoría musical, ensamble y expresión artística comunitaria.",
     objetivo:
@@ -399,6 +436,8 @@ export const programasAcademicos: ProgramaAcademico[] = [
     nombre: "Validación del Bachillerato",
     categoria: "Educación básica",
     categoriaId: "basica",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=640&q=80",
     descripcion:
       "Nivelación académica integral por ciclos para jóvenes y adultos que desean culminar sus estudios de básica y media y obtener su título de bachiller.",
     objetivo:

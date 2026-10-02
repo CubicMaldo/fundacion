@@ -18,22 +18,34 @@ import {
 import { navegacion } from "./nav";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/funasf-logo.jpg.asset.json";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
   return (
     <span className="flex items-center gap-3">
-      <img
-        src={logoAsset.url}
-        alt="FUNASF Logo"
+      <span
         aria-hidden="true"
         className={cn(
-          "h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-white object-contain p-0.5 shadow-xs transition-all",
+          "flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl font-display text-sm font-bold tracking-tight shadow-xs transition-all",
           invert
-            ? "border border-primary-foreground/30 bg-white"
-            : "border border-border/80 shadow-xs",
+            ? "border border-primary-foreground/30 bg-primary-foreground/15 text-primary-foreground"
+            : "border border-brand-green/20 bg-brand-green/10 text-brand-green shadow-inner",
         )}
-      />
+      >
+        <svg
+          className="size-5 sm:size-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" />
+          <path d="M6 6h10" />
+          <path d="M6 10h10" />
+          <path d="m14 14 2 2 4-4" />
+        </svg>
+      </span>
       <span className="flex flex-col justify-center leading-none">
         <span
           className={cn(
@@ -143,10 +155,8 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b transition-colors duration-300",
-        scrolled
-          ? "border-border bg-background/95 shadow-[0_1px_0_0_var(--color-border)] backdrop-blur"
-          : "border-transparent bg-background",
+        "sticky top-0 z-50 w-full border-b bg-background transition-shadow duration-200",
+        scrolled ? "border-border shadow-xs" : "border-border/60",
       )}
     >
       {/* Barra superior institucional informativa */}
@@ -233,7 +243,7 @@ export function Header() {
                   />
                 </Link>
                 <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  <div className="border-border/80 bg-popover/95 w-72 rounded-xl border p-1.5 shadow-xl backdrop-blur-md">
+                  <div className="border-border bg-popover w-72 rounded-xl border p-1.5 shadow-lg">
                     <div className="border-border/60 mb-1 border-b px-2.5 py-1.5">
                       <Link
                         to={item.to}
@@ -355,10 +365,7 @@ export function Header() {
               <div className="bg-brand-green-deep text-primary-foreground/90 px-5 py-3 text-xs">
                 <p className="font-medium">{org.eslogan}</p>
                 <div className="text-primary-foreground/80 mt-2 flex flex-col gap-1.5 text-[11px]">
-                  <a
-                    href={phoneHref}
-                    className="hover:text-brand-gold flex items-center gap-1.5"
-                  >
+                  <a href={phoneHref} className="hover:text-brand-gold flex items-center gap-1.5">
                     <Phone className="text-brand-gold size-3" /> {org.telefonos[0]}
                   </a>
                   <a

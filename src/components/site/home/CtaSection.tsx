@@ -22,7 +22,7 @@ export function CtaSection({ llamadoAccion, org }: CtaSectionProps) {
         {llamadoAccion.bloques.map((b) => (
           <div
             key={b.titulo}
-            className="border-primary-foreground/20 bg-primary-foreground/5 rounded-xl border p-5 transition-all hover:bg-primary-foreground/10 hover:border-brand-gold/30 hover:-translate-y-1 shadow-sm"
+            className="border-primary-foreground/20 bg-primary-foreground/5 rounded-lg border p-5 transition-colors hover:bg-primary-foreground/10 hover:border-brand-gold/40 shadow-xs"
           >
             <h3 className="text-brand-gold text-base font-medium">{b.titulo}</h3>
             <p className="text-primary-foreground/80 mt-3 text-sm leading-relaxed">{b.texto}</p>

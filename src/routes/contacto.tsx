@@ -18,7 +18,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { enviarMensajeContacto } from "@/services/api";
-import { motivosContacto } from "@/data/funasf";
 import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/contacto")({
@@ -123,10 +122,7 @@ function Contacto() {
               <h2 className="text-foreground mt-4 text-xl">Correo</h2>
               <p className="text-muted-foreground mt-2 text-sm">{org.correo}</p>
             </a>
-            <a
-              href={phoneHref}
-              className="card-institucional group"
-            >
+            <a href={phoneHref} className="card-institucional group">
               <Phone aria-hidden className="text-primary size-5" />
               <h2 className="text-foreground mt-4 text-xl">Líneas de atención</h2>
               <ul className="text-muted-foreground mt-2 text-sm space-y-1">
@@ -145,32 +141,6 @@ function Contacto() {
               <h2 className="text-foreground mt-4 text-xl">Instagram</h2>
               <p className="text-muted-foreground mt-2 text-sm">{org.instagram}</p>
             </a>
-          </div>
-        </div>
-      </Section>
-
-      {/* Motivos directos de atención vía WhatsApp */}
-      <Section tone="surface">
-        <div className="max-w-4xl mx-auto">
-          <SectionHeading
-            align="center"
-            eyebrow="Atención rápida"
-            title="Escríbenos directamente por WhatsApp"
-            description="Selecciona el motivo de tu consulta y te abriremos el chat con la solicitud lista para responderte con prioridad:"
-          />
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
-            {motivosContacto.map((m) => (
-              <a
-                key={m}
-                href={`${whatsappLink}?text=${encodeURIComponent(`Hola FUNASF: ${m}`)}`}
-                target="_blank"
-                rel="noreferrer"
-                className="card-institucional p-4 text-center hover:border-primary hover:text-primary transition-all group flex flex-col items-center justify-center gap-1.5 hover:-translate-y-0.5"
-              >
-                <span className="text-sm font-semibold">{m}</span>
-                <span className="text-xs text-brand-green group-hover:underline font-medium">Chatear ahora →</span>
-              </a>
-            ))}
           </div>
         </div>
       </Section>

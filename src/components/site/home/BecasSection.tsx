@@ -26,7 +26,7 @@ export function BecasSection({ becas }: BecasSectionProps) {
           {becas.beneficios.map((b) => (
             <li
               key={b}
-              className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-xl border p-4 text-sm transition-all hover:bg-primary-foreground/10 hover:-translate-y-0.5"
+              className="border-primary-foreground/20 bg-primary-foreground/5 text-primary-foreground/90 rounded-lg border p-4 text-sm transition-colors hover:bg-primary-foreground/10"
             >
               {b}
             </li>

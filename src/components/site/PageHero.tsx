@@ -13,11 +13,7 @@ export function PageHero({
 }) {
   return (
     <header className="surface-hero relative overflow-hidden">
-      <div
-        aria-hidden
-        className="bg-brand-gold/15 pointer-events-none absolute -top-24 -right-24 size-80 rounded-full blur-3xl"
-      />
-      <div className="container-page relative py-16 md:py-24">
+      <div className="container-page relative py-14 md:py-20">
         <div className="fade-up max-w-3xl">
           {eyebrow ? (
             <span className="text-brand-gold text-xs font-bold tracking-[0.16em] uppercase">

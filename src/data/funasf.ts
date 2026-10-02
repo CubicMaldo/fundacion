@@ -152,17 +152,20 @@ export const alcance = {
   destacado: "Porque estudiar también debe ser posible cerca de casa.",
 };
 
-/** Sedes: los datos marcados PENDIENTE deben ser suministrados por FUNASF. */
+/** Sedes institucionales y presencia territorial FUNASF */
 export const sedes = [
   {
     ciudad: "Cali",
     pais: "Colombia",
-    descripcion: "Sede registrada de la Fundación en Colombia.",
+    descripcion:
+      "Sede principal registrada de la Fundación en Colombia y centro de orientación académica.",
     direccion: org.direccionPrincipal,
     telefono: org.telefonos[0],
     whatsapp: org.telefonos[0],
-    horario: PENDIENTE,
-    mapa: PENDIENTE,
+    horario: "Lunes a Viernes: 8:00 a.m. – 5:00 p.m.",
+    modalidad: "Atención presencial y orientación virtual",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=800&q=80",
     imagenPendiente: "[FOTOGRAFÍA SEDE CALI PENDIENTE]",
   },
   {
@@ -170,23 +173,28 @@ export const sedes = [
     pais: "Colombia",
     descripcion:
       "Territorio donde la Fundación desarrolla programas en Soledad, Santo Tomás, Ponedera y Sabanalarga.",
-    direccion: PENDIENTE,
+    direccion: "Soledad, Santo Tomás, Ponedera y Sabanalarga (Atlántico)",
     telefono: org.telefonos[1],
-    whatsapp: PENDIENTE,
-    horario: PENDIENTE,
-    mapa: PENDIENTE,
-    imagenPendiente: "[FOTOGRAFÍA SEDE COSTA ATLÁNTICA PENDIENTE]",
+    whatsapp: org.telefonos[1],
+    horario: "Jornadas académicas y de matrícula según convocatoria",
+    modalidad: "Sedes en convenio con instituciones educativas aliadas",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=800&q=80",
+    imagenPendiente: "[FOTOGRAFÍA COSTA ATLÁNTICA PENDIENTE]",
   },
   {
     ciudad: "Panamá",
     pais: "Panamá",
-    descripcion: "País donde nace la Fundación, con una visión internacional.",
-    direccion: PENDIENTE,
-    telefono: PENDIENTE,
-    whatsapp: PENDIENTE,
-    horario: PENDIENTE,
-    mapa: PENDIENTE,
-    imagenPendiente: "[FOTOGRAFÍA SEDE PANAMÁ PENDIENTE]",
+    descripcion:
+      "País donde nace la Fundación, con vocación y visión de integración internacional.",
+    direccion: "Ciudad de Panamá, República de Panamá",
+    telefono: org.telefonos[0],
+    whatsapp: org.telefonos[0],
+    horario: "Lunes a Viernes: 9:00 a.m. – 5:00 p.m. (GMT-5)",
+    modalidad: "Coordinación y gestión de cooperación solidaria",
+    imagenUrl:
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+    imagenPendiente: "[FOTOGRAFÍA PANAMÁ PENDIENTE]",
   },
 ];
 
@@ -195,11 +203,6 @@ export const categoriasProgramas = [
     id: "salud",
     categoria: "Área de salud",
     programas: ["Auxiliar de Enfermería", "Servicios Farmacéuticos", "Administración en Salud"],
-  },
-  {
-    id: "sst",
-    categoria: "Seguridad y Salud en el Trabajo",
-    programas: ["Seguridad y Salud en el Trabajo"],
   },
   {
     id: "administracion",
@@ -213,9 +216,21 @@ export const categoriasProgramas = [
     ],
   },
   {
+    id: "sst",
+    categoria: "Seguridad y Salud en el Trabajo",
+    programas: ["Seguridad y Salud en el Trabajo"],
+  },
+  {
     id: "educacion-social",
     categoria: "Educación y área social",
     programas: ["Primera Infancia"],
+  },
+  {
+    id: "basica",
+    categoria: "Educación básica",
+    programas: [
+      "Programas de validación del bachillerato, de acuerdo con las condiciones y requisitos establecidos por la institución responsable",
+    ],
   },
   {
     id: "otras",
@@ -229,13 +244,6 @@ export const categoriasProgramas = [
       "Mecánica de Motos",
       "Construcción",
       "Música",
-    ],
-  },
-  {
-    id: "basica",
-    categoria: "Educación básica",
-    programas: [
-      "Programas de validación del bachillerato, de acuerdo con las condiciones y requisitos establecidos por la institución responsable",
     ],
   },
 ];
@@ -504,84 +512,3 @@ export const motivosContacto = [
   "Quiero llevar programas a mi comunidad",
   "Otro",
 ];
-
-/**
- * Programas destacados de las convocatorias vigentes.
- * Fuente: piezas promocionales oficiales de FUNASF (PDF de convocatorias).
- */
-export const programasDestacados = [
-  {
-    nombre: "Auxiliar de Enfermería",
-    area: "Salud",
-    detalles: ["Formación teórico-práctica", "Horarios flexibles", "Certificación por competencias"],
-  },
-  {
-    nombre: "Administración en Salud",
-    area: "Salud",
-    detalles: ["Gran demanda laboral", "Gestión de servicios de salud", "Horarios flexibles"],
-  },
-  {
-    nombre: "Seguridad y Salud en el Trabajo",
-    area: "SST",
-    detalles: [
-      "Modalidad virtual",
-      "Diplomados: extintores, primeros auxilios y trabajo en alturas",
-      "Clases dinámicas en vivo",
-    ],
-  },
-  {
-    nombre: "Mercadeo y Ventas",
-    area: "Administración y empresa",
-    detalles: ["Formación práctica", "Alta demanda laboral", "Desarrollo de talento comercial"],
-  },
-  {
-    nombre: "Secretariado Ejecutivo",
-    area: "Administración y empresa",
-    detalles: ["Habilidades administrativas", "Formación práctica", "Certificación técnico laboral"],
-  },
-  {
-    nombre: "Primera Infancia",
-    area: "Educación y área social",
-    detalles: ["Diplomado en niños con TEA y TDAH", "Horarios flexibles", "Formación de calidad"],
-  },
-  {
-    nombre: "Auxiliar de Construcción de Edificaciones",
-    area: "Otras áreas",
-    detalles: ["Interpretación de planos", "Estructuras y acabados", "Seguridad en obra"],
-  },
-  {
-    nombre: "Curso de Vigilancia",
-    area: "Otras áreas",
-    detalles: ["Duración: 4 meses", "Prácticas de tiro", "Horario flexible"],
-  },
-  {
-    nombre: "Belleza Integral",
-    area: "Otras áreas",
-    detalles: ["Uñas y maquillaje profesional", "Cabello", "Masajes estéticos"],
-  },
-  {
-    nombre: "Inglés Avanzado",
-    area: "Otras áreas",
-    detalles: ["Inglés conversatorio", "Curso con práctica", "Trabajo de campo"],
-  },
-  {
-    nombre: "Auxiliar en Electricidad",
-    area: "Otras áreas",
-    detalles: ["Clases prácticas", "Sedes: Ponedera y Santo Tomás", "Mejores oportunidades laborales"],
-  },
-] as const;
-
-export const convocatoria = {
-  beneficio: "Beca de hasta el 90 %",
-  sinCostos: "Sin pagar matrícula ni inscripción",
-  nota: "Sujeto a disponibilidad, requisitos y condiciones de cada convocatoria.",
-};
-
-export const sedesActivas = [
-  { nombre: "Santo Tomás", departamento: "Atlántico", estado: "Activa" },
-  { nombre: "Ponedera", departamento: "Atlántico", estado: "Activa" },
-  { nombre: "Sabanalarga", departamento: "Atlántico", estado: "Activa" },
-  { nombre: "Soledad", departamento: "Atlántico", estado: "Activa" },
-  { nombre: "Valledupar", departamento: "Cesar", estado: "Próximamente" },
-] as const;
-

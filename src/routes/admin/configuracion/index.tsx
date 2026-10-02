@@ -115,10 +115,14 @@ function AdminConfiguracionPage() {
               if (v.telefonos && !localOverride?.contacto?.telefonos) setTelefonos(v.telefonos);
               if (v.correo && !localOverride?.contacto?.correo) setCorreo(sanitizeDomain(v.correo));
               if (v.instagram && !localOverride?.contacto?.instagram) setInstagram(v.instagram);
-              if (v.instagramUrl && !localOverride?.contacto?.instagramUrl) setInstagramUrl(v.instagramUrl);
-              if (v.direccionPrincipal && !localOverride?.contacto?.direccionPrincipal) setDireccionPrincipal(v.direccionPrincipal);
-              if (v.ciudadPrincipal && !localOverride?.contacto?.ciudadPrincipal) setCiudadPrincipal(v.ciudadPrincipal);
-              if (v.formularioInscripcion && !localOverride?.contacto?.formularioInscripcion) setFormularioInscripcion(v.formularioInscripcion);
+              if (v.instagramUrl && !localOverride?.contacto?.instagramUrl)
+                setInstagramUrl(v.instagramUrl);
+              if (v.direccionPrincipal && !localOverride?.contacto?.direccionPrincipal)
+                setDireccionPrincipal(v.direccionPrincipal);
+              if (v.ciudadPrincipal && !localOverride?.contacto?.ciudadPrincipal)
+                setCiudadPrincipal(v.ciudadPrincipal);
+              if (v.formularioInscripcion && !localOverride?.contacto?.formularioInscripcion)
+                setFormularioInscripcion(v.formularioInscripcion);
               if (v.horario && !localOverride?.contacto?.horario) setHorario(v.horario);
             }
             if (row.clave === "institucional" && v) {
@@ -126,13 +130,16 @@ function AdminConfiguracionPage() {
               if (v.sigla && !localOverride?.institucional?.sigla) setSigla(v.sigla);
               if (v.nit && !localOverride?.institucional?.nit) setNit(v.nit);
               if (v.eslogan && !localOverride?.institucional?.eslogan) setEslogan(v.eslogan);
-              if (v.esloganSecundario && !localOverride?.institucional?.esloganSecundario) setEsloganSecundario(v.esloganSecundario);
+              if (v.esloganSecundario && !localOverride?.institucional?.esloganSecundario)
+                setEsloganSecundario(v.esloganSecundario);
             }
             if (row.clave === "becas" && v) {
-              if (v.porcentaje && !localOverride?.becas?.porcentaje) setPorcentajeBeca(v.porcentaje);
+              if (v.porcentaje && !localOverride?.becas?.porcentaje)
+                setPorcentajeBeca(v.porcentaje);
               if (v.titulo && !localOverride?.becas?.titulo) setTituloBecas(v.titulo);
               if (v.intro && !localOverride?.becas?.intro) setIntroBecas(v.intro);
-              if (v.aclaracion && !localOverride?.becas?.aclaracion) setAclaracionBecas(v.aclaracion);
+              if (v.aclaracion && !localOverride?.becas?.aclaracion)
+                setAclaracionBecas(v.aclaracion);
               if (v.beneficios && !localOverride?.becas?.beneficios) setBeneficios(v.beneficios);
             }
           });

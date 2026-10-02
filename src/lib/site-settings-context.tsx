@@ -1,9 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
-import {
-  getSiteSettings,
-  DEFAULT_SITE_SETTINGS,
-  type SiteSettings,
-} from "@/services/api";
+import { getSiteSettings, DEFAULT_SITE_SETTINGS, type SiteSettings } from "@/services/api";
 
 interface SiteSettingsContextType {
   settings: SiteSettings;
@@ -22,13 +18,8 @@ interface SiteSettingsProviderProps {
   initialSettings?: SiteSettings;
 }
 
-export function SiteSettingsProvider({
-  children,
-  initialSettings,
-}: SiteSettingsProviderProps) {
-  const [settings, setSettings] = useState<SiteSettings>(
-    initialSettings || DEFAULT_SITE_SETTINGS,
-  );
+export function SiteSettingsProvider({ children, initialSettings }: SiteSettingsProviderProps) {
+  const [settings, setSettings] = useState<SiteSettings>(initialSettings || DEFAULT_SITE_SETTINGS);
   const [isLoading, setIsLoading] = useState(false);
 
   const refreshSettings = useCallback(async () => {

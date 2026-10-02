@@ -277,7 +277,7 @@ function AdminDashboard() {
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Artículos & Noticias
             </CardTitle>
-            <div className="rounded-lg bg-purple-500/10 p-2 text-purple-600">
+            <div className="rounded-lg bg-brand-brown-soft p-2 text-brand-brown">
               <Newspaper className="size-4" />
             </div>
           </CardHeader>
@@ -289,7 +289,7 @@ function AdminDashboard() {
                 asChild
                 variant="link"
                 size="sm"
-                className="p-0 h-auto text-purple-600 text-xs"
+                className="p-0 h-auto text-brand-brown text-xs font-semibold"
               >
                 <Link to="/admin/blog">Redactar artículo &rarr;</Link>
               </Button>
@@ -319,10 +319,10 @@ function AdminDashboard() {
           <Button
             asChild
             variant="outline"
-            className="h-auto p-4 justify-start border-dashed hover:border-purple-600 hover:bg-purple-500/5"
+            className="h-auto p-4 justify-start border-dashed hover:border-brand-brown hover:bg-brand-brown/5"
           >
             <Link to="/admin/blog/nuevo">
-              <PlusCircle className="size-5 text-purple-600 mr-3 shrink-0" />
+              <PlusCircle className="size-5 text-brand-brown mr-3 shrink-0" />
               <div className="text-left">
                 <div className="font-medium text-sm">Nuevo Artículo</div>
                 <div className="text-xs text-muted-foreground">Publicar en el blog</div>

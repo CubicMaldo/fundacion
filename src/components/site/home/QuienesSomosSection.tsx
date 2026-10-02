@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MediaPlaceholder } from "@/components/site/MediaPlaceholder";
 import { Section, SectionHeading } from "@/components/site/Section";
 import type { QuienesSomos } from "@/models/schema";
 
@@ -30,8 +29,16 @@ export function QuienesSomosSection({ quienesSomos }: QuienesSomosSectionProps) 
             </Link>
           </Button>
         </div>
-        <div className="aspect-[4/5] w-full">
-          <MediaPlaceholder label="[FOTOGRAFÍA COMUNIDAD PENDIENTE]" />
+        <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
+          <img
+            src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=800&q=80"
+            alt="Acción comunitaria y trabajo solidario en FUNASF"
+            className="size-full object-cover transition-transform duration-500 hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            width={800}
+            height={1000}
+          />
         </div>
       </div>
     </Section>

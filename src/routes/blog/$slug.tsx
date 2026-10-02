@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar, Share2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 import { getArticuloBySlug, type ArticuloBlog } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema, getArticleSchema, DEFAULT_OG_IMAGE } from "@/lib/seo";
 
@@ -92,11 +92,12 @@ function ArticuloDetailPage() {
           </nav>
 
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className="bg-brand-gold text-brand-green-deep font-bold text-xs uppercase tracking-wider">
-                {articulo.categoria}
-              </Badge>
-              <span className="text-xs text-primary-foreground/80 flex items-center gap-1">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-gold">
+              <span>{articulo.categoria}</span>
+              <span aria-hidden="true" className="text-primary-foreground/40">
+                ·
+              </span>
+              <span className="text-primary-foreground/85 flex items-center gap-1 font-normal normal-case">
                 <Calendar className="size-3" /> {formatDate(articulo.fechaPublicacion)}
               </span>
             </div>
@@ -164,7 +165,7 @@ function ArticuloDetailPage() {
                 });
               } else {
                 navigator.clipboard.writeText(window.location.href);
-                alert("Enlace copiado al portapapeles");
+                toast.success("Enlace copiado al portapapeles");
               }
             }}
             className="text-muted-foreground hover:text-foreground"

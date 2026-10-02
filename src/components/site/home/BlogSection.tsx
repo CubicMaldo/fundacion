@@ -48,7 +48,7 @@ export function BlogSection({ articulos }: BlogSectionProps) {
         {postsToShow.map((articulo) => (
           <article
             key={articulo.id}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all duration-300 hover:border-brand-green/40 hover:shadow-md hover:-translate-y-1"
+            className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
           >
             {/* Imagen de Portada */}
             <div className="relative aspect-16/10 overflow-hidden bg-muted">
@@ -56,19 +56,12 @@ export function BlogSection({ articulos }: BlogSectionProps) {
                 <img
                   src={articulo.imagenPortada}
                   alt={articulo.titulo}
-                  className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="size-full object-cover"
                   loading="lazy"
                 />
               ) : (
                 <div className="flex size-full items-center justify-center bg-brand-green/10 text-brand-green">
                   <Newspaper className="size-10 opacity-70" />
-                </div>
-              )}
-              {articulo.categoria && (
-                <div className="absolute top-3 left-3">
-                  <Badge className="bg-background/90 text-foreground backdrop-blur-xs font-medium text-xs shadow-xs">
-                    {articulo.categoria}
-                  </Badge>
                 </div>
               )}
             </div>
@@ -77,7 +70,14 @@ export function BlogSection({ articulos }: BlogSectionProps) {
             <div className="flex flex-1 flex-col justify-between p-6">
               <div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-                  <Calendar className="size-3.5 text-brand-gold shrink-0" />
+                  {articulo.categoria && (
+                    <>
+                      <span className="font-semibold text-brand-brown text-[11px] uppercase tracking-wider">
+                        {articulo.categoria}
+                      </span>
+                      <span aria-hidden="true">·</span>
+                    </>
+                  )}
                   <time dateTime={articulo.fechaPublicacion}>
                     {formatDate(articulo.fechaPublicacion)}
                   </time>
@@ -103,7 +103,7 @@ export function BlogSection({ articulos }: BlogSectionProps) {
                   asChild
                   variant="link"
                   size="sm"
-                  className="p-0 h-auto text-xs font-semibold text-brand-green group-hover:translate-x-1 transition-transform"
+                  className="p-0 h-auto text-xs font-semibold text-brand-green"
                 >
                   <Link to="/blog/$slug" params={{ slug: articulo.slug }}>
                     Leer más <ArrowRight className="size-3 ml-1" />

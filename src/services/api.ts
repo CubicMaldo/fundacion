@@ -51,19 +51,29 @@ export async function getProgramasAcademicos(): Promise<ProgramaAcademico[]> {
       return programasAcademicos;
     }
 
-    return data.map((row) => ({
-      slug: row.slug,
-      nombre: row.nombre,
-      categoria: row.categoria,
-      categoriaId: row.categoria_id,
-      descripcion: row.descripcion,
-      objetivo: row.objetivo,
-      modalidades: row.modalidades || [],
-      perfilOcupacional: row.perfil_ocupacional || [],
-      requisitos: row.requisitos || [],
-      certificacionNota: row.certificacion_nota ?? undefined,
-      duracionEstimada: row.duracion_estimada ?? undefined,
-    }));
+    return data.map((row) => {
+      const fallbackProg = programasAcademicos.find(
+        (p) =>
+          p.slug === row.slug || p.nombre.toLowerCase().trim() === row.nombre?.toLowerCase().trim(),
+      );
+      return {
+        slug: row.slug,
+        nombre: row.nombre,
+        categoria: row.categoria,
+        categoriaId: row.categoria_id,
+        descripcion: row.descripcion,
+        objetivo: row.objetivo,
+        modalidades: row.modalidades || [],
+        perfilOcupacional: row.perfil_ocupacional || [],
+        requisitos: row.requisitos || [],
+        certificacionNota: row.certificacion_nota ?? undefined,
+        duracionEstimada: row.duracion_estimada ?? undefined,
+        imagenUrl:
+          (row as { imagen_url?: string | null }).imagen_url ||
+          fallbackProg?.imagenUrl ||
+          undefined,
+      };
+    });
   } catch (err) {
     console.warn("[API] Error al consultar programas en Supabase, usando respaldo local:", err);
     return programasAcademicos;
@@ -86,6 +96,11 @@ export async function getProgramaBySlug(slug: string): Promise<ProgramaAcademico
       return programasAcademicos.find((p) => p.slug === slug) ?? null;
     }
 
+    const fallbackProg = programasAcademicos.find(
+      (p) =>
+        p.slug === data.slug || p.nombre.toLowerCase().trim() === data.nombre?.toLowerCase().trim(),
+    );
+
     return {
       slug: data.slug,
       nombre: data.nombre,
@@ -98,6 +113,8 @@ export async function getProgramaBySlug(slug: string): Promise<ProgramaAcademico
       requisitos: data.requisitos || [],
       certificacionNota: data.certificacion_nota ?? undefined,
       duracionEstimada: data.duracion_estimada ?? undefined,
+      imagenUrl:
+        (data as { imagen_url?: string | null }).imagen_url || fallbackProg?.imagenUrl || undefined,
     };
   } catch (err) {
     console.warn(`[API] Error consultando programa "${slug}", usando respaldo local:`, err);
@@ -433,7 +450,9 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
 
 export function sanitizeDomain(str: string): string {
   if (!str) return str;
-  return str.replace(/@funasf\.org/gi, "@edufunasf.org").replace(/www\.funasf\.org/gi, "www.edufunasf.org");
+  return str
+    .replace(/@funasf\.org/gi, "@edufunasf.org")
+    .replace(/www\.funasf\.org/gi, "www.edufunasf.org");
 }
 
 export function saveLocalSiteSettingsOverride(partial: {
@@ -477,7 +496,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     if (!localOverride) return DEFAULT_SITE_SETTINGS;
     return {
       contacto: { ...DEFAULT_SITE_SETTINGS.contacto, ...(localOverride.contacto || {}) },
-      institucional: { ...DEFAULT_SITE_SETTINGS.institucional, ...(localOverride.institucional || {}) },
+      institucional: {
+        ...DEFAULT_SITE_SETTINGS.institucional,
+        ...(localOverride.institucional || {}),
+      },
       becas: { ...DEFAULT_SITE_SETTINGS.becas, ...(localOverride.becas || {}) },
       org: {
         ...DEFAULT_SITE_SETTINGS.org,
@@ -493,7 +515,10 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       if (!localOverride) return DEFAULT_SITE_SETTINGS;
       return {
         contacto: { ...DEFAULT_SITE_SETTINGS.contacto, ...(localOverride.contacto || {}) },
-        institucional: { ...DEFAULT_SITE_SETTINGS.institucional, ...(localOverride.institucional || {}) },
+        institucional: {
+          ...DEFAULT_SITE_SETTINGS.institucional,
+          ...(localOverride.institucional || {}),
+        },
         becas: { ...DEFAULT_SITE_SETTINGS.becas, ...(localOverride.becas || {}) },
         org: {
           ...DEFAULT_SITE_SETTINGS.org,
@@ -532,20 +557,33 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       whatsappLink,
       correo,
       instagram: (rawContacto["instagram"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagram,
-      instagramUrl: (rawContacto["instagramUrl"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagramUrl,
-      direccionPrincipal: (rawContacto["direccionPrincipal"] as string) || DEFAULT_SITE_SETTINGS.contacto.direccionPrincipal,
-      ciudadPrincipal: (rawContacto["ciudadPrincipal"] as string) || DEFAULT_SITE_SETTINGS.contacto.ciudadPrincipal,
-      formularioInscripcion: (rawContacto["formularioInscripcion"] as string) || DEFAULT_SITE_SETTINGS.contacto.formularioInscripcion,
+      instagramUrl:
+        (rawContacto["instagramUrl"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagramUrl,
+      direccionPrincipal:
+        (rawContacto["direccionPrincipal"] as string) ||
+        DEFAULT_SITE_SETTINGS.contacto.direccionPrincipal,
+      ciudadPrincipal:
+        (rawContacto["ciudadPrincipal"] as string) ||
+        DEFAULT_SITE_SETTINGS.contacto.ciudadPrincipal,
+      formularioInscripcion:
+        (rawContacto["formularioInscripcion"] as string) ||
+        DEFAULT_SITE_SETTINGS.contacto.formularioInscripcion,
       horario: (rawContacto["horario"] as string) || DEFAULT_SITE_SETTINGS.contacto.horario,
     };
 
     let institucional: SiteInstitucionalConfig = {
       nombre: (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.nombre,
       sigla: (rawInstitucional["sigla"] as string) || DEFAULT_SITE_SETTINGS.institucional.sigla,
-      razonSocial: (rawInstitucional["razonSocial"] as string) || (rawInstitucional["nombre"] as string) || DEFAULT_SITE_SETTINGS.institucional.razonSocial,
+      razonSocial:
+        (rawInstitucional["razonSocial"] as string) ||
+        (rawInstitucional["nombre"] as string) ||
+        DEFAULT_SITE_SETTINGS.institucional.razonSocial,
       nit: (rawInstitucional["nit"] as string) || DEFAULT_SITE_SETTINGS.institucional.nit,
-      eslogan: (rawInstitucional["eslogan"] as string) || DEFAULT_SITE_SETTINGS.institucional.eslogan,
-      esloganSecundario: (rawInstitucional["esloganSecundario"] as string) || DEFAULT_SITE_SETTINGS.institucional.esloganSecundario,
+      eslogan:
+        (rawInstitucional["eslogan"] as string) || DEFAULT_SITE_SETTINGS.institucional.eslogan,
+      esloganSecundario:
+        (rawInstitucional["esloganSecundario"] as string) ||
+        DEFAULT_SITE_SETTINGS.institucional.esloganSecundario,
       frases:
         Array.isArray(rawInstitucional["frases"]) && rawInstitucional["frases"].length > 0
           ? (rawInstitucional["frases"] as string[])
@@ -603,14 +641,14 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 }
 
 export function getCategorizedPrograms(programas: ProgramaAcademico[]): CategoriaProgramas[] {
-  const categoryOrder = ["salud", "sst", "administracion", "educacion-social", "otras", "basica"];
+  const categoryOrder = ["salud", "administracion", "sst", "educacion-social", "basica", "otras"];
   const categoryLabels: Record<string, string> = {
     salud: "Área de salud",
-    sst: "Seguridad y Salud en el Trabajo",
     administracion: "Administración y empresa",
+    sst: "Seguridad y Salud en el Trabajo",
     "educacion-social": "Educación y área social",
-    otras: "Otras áreas de formación",
     basica: "Educación básica",
+    otras: "Otras áreas de formación",
   };
 
   const map = new Map<string, { id: string; categoria: string; programas: string[] }>();

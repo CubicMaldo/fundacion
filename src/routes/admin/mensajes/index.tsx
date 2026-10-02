@@ -408,25 +408,22 @@ function AdminMensajesPage() {
 
               {/* Botones de respuesta directa */}
               <div className="flex items-center gap-2">
-                {selectedMensaje.telefono && (() => {
-                  const digits = selectedMensaje.telefono.replace(/\D/g, "");
-                  const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
-                  return (
-                    <Button
-                      asChild
-                      size="sm"
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
-                    >
-                      <a
-                        href={`https://wa.me/${waNumber}`}
-                        target="_blank"
-                        rel="noreferrer"
+                {selectedMensaje.telefono &&
+                  (() => {
+                    const digits = selectedMensaje.telefono.replace(/\D/g, "");
+                    const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                    return (
+                      <Button
+                        asChild
+                        size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs h-8"
                       >
-                        <MessageCircle className="size-3.5 mr-1" /> WhatsApp
-                      </a>
-                    </Button>
-                  );
-                })()}
+                        <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer">
+                          <MessageCircle className="size-3.5 mr-1" /> WhatsApp
+                        </a>
+                      </Button>
+                    );
+                  })()}
                 <Button asChild size="sm" variant="outline" className="text-xs h-8">
                   <a
                     href={`mailto:${selectedMensaje.correo}?subject=Respuesta:%20${encodeURIComponent(

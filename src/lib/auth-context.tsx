@@ -68,7 +68,9 @@ export function isSupabaseConfigured(): boolean {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => getStoredAuth()?.user ?? null);
-  const [profile, setProfile] = useState<UserProfile | null>(() => getStoredAuth()?.profile ?? null);
+  const [profile, setProfile] = useState<UserProfile | null>(
+    () => getStoredAuth()?.profile ?? null,
+  );
   const [isLoading, setIsLoading] = useState(() => !getStoredAuth()?.user);
   const configured = isSupabaseConfigured();
 

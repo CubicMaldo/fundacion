@@ -15,11 +15,11 @@ import type { ProgramaAdminItem } from "@/routes/admin/programas/index";
 
 const CATEGORIAS_PREDEFINIDAS = [
   { id: "salud", label: "Área de salud" },
-  { id: "sst", label: "Seguridad y Salud en el Trabajo" },
   { id: "administracion", label: "Administración y empresa" },
+  { id: "sst", label: "Seguridad y Salud en el Trabajo" },
   { id: "educacion-social", label: "Educación y área social" },
-  { id: "otras", label: "Otras áreas de formación" },
   { id: "basica", label: "Educación básica" },
+  { id: "otras", label: "Otras áreas de formación" },
 ];
 
 const MODALIDADES_DISPONIBLES = ["Presencial", "Semipresencial", "Virtual"];
@@ -32,6 +32,7 @@ const ProgramaFormSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Solo letras minúsculas, números y guiones"),
   categoriaId: z.string().min(1, "Selecciona un área de formación"),
   categoria: z.string().min(1, "La categoría es obligatoria"),
+  imagenUrl: z.string().optional(),
   descripcion: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
   objetivo: z.string().min(10, "El objetivo debe tener al menos 10 caracteres"),
   duracionEstimada: z.string().optional(),
@@ -163,9 +164,7 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
       perfil_ocupacional: values.perfilOcupacional
         .map((p) => p.value.trim())
         .filter((val) => val.length > 0),
-      requisitos: values.requisitos
-        .map((r) => r.value.trim())
-        .filter((val) => val.length > 0),
+      requisitos: values.requisitos.map((r) => r.value.trim()).filter((val) => val.length > 0),
       orden: values.orden,
       activo: values.activo,
     };
@@ -428,24 +427,14 @@ export function ProgramaForm({ initialData, isEdit }: ProgramaFormProps) {
                 control={control}
                 name="activo"
                 render={({ field }) => (
-                  <Switch
-                    id="activo"
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
+                  <Switch id="activo" checked={field.value} onCheckedChange={field.onChange} />
                 )}
               />
             </div>
 
             <div className="space-y-2 pt-2 border-t border-border">
               <Label htmlFor="orden">Orden en el catálogo</Label>
-              <Input
-                id="orden"
-                type="number"
-                min={1}
-                {...register("orden")}
-                className="h-10"
-              />
+              <Input id="orden" type="number" min={1} {...register("orden")} className="h-10" />
               <p className="text-[11px] text-muted-foreground">
                 Determina la posición en la lista (1 = primero).
               </p>

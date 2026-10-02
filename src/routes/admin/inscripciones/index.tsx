@@ -107,10 +107,10 @@ const DEMO_INSCRIPCIONES: InscripcionItem[] = [
 ];
 
 const ESTADOS_INFO: Record<InscripcionItem["estado"], { label: string; badgeClass: string }> = {
-  nuevo: { label: "Nuevo", badgeClass: "bg-amber-500 text-white" },
-  contactado: { label: "Contactado", badgeClass: "bg-blue-500 text-white" },
-  en_revision: { label: "En revisión", badgeClass: "bg-purple-500 text-white" },
-  admitido: { label: "Admitido", badgeClass: "bg-emerald-600 text-white" },
+  nuevo: { label: "Nuevo", badgeClass: "bg-amber-600 text-white" },
+  contactado: { label: "Contactado", badgeClass: "bg-sky-600 text-white" },
+  en_revision: { label: "En revisión", badgeClass: "bg-brand-brown text-white" },
+  admitido: { label: "Admitido", badgeClass: "bg-brand-green text-white" },
   descartado: { label: "Descartado", badgeClass: "bg-muted text-muted-foreground" },
 };
 
@@ -497,11 +497,7 @@ function AdminInscripcionesPage() {
                 const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
                 return (
                   <Button asChild size="sm" variant="outline" className="text-xs">
-                    <a
-                      href={`https://wa.me/${waNumber}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
+                    <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer">
                       <MessageCircle className="size-3.5 mr-1 text-emerald-600" /> WhatsApp
                     </a>
                   </Button>

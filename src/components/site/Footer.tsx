@@ -28,6 +28,7 @@ const columnas = [
       { label: "Blog", to: "/blog", hash: undefined },
       { label: "Galería", to: "/galeria", hash: undefined },
       { label: "Voluntariado", to: "/portal-informativo", hash: "voluntariado" },
+      { label: "Trabaja con nosotros", to: "/trabaja-con-nosotros", hash: undefined },
       { label: "Alianzas", to: "/portal-informativo", hash: "alianzas" },
     ],
   },

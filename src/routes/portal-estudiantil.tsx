@@ -44,14 +44,10 @@ function PortalEstudiantilComponent() {
   return (
     <div className="flex flex-col">
       {/* Hero del Portal */}
-      <header className="surface-hero relative overflow-hidden py-16 md:py-24">
-        <div
-          aria-hidden
-          className="bg-brand-gold/15 pointer-events-none absolute -top-24 -right-24 size-80 rounded-full blur-3xl"
-        />
+      <header className="surface-hero relative overflow-hidden py-14 md:py-20">
         <div className="container-page relative">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-brand-gold/20 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-gold">
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-gold">
               <GraduationCap className="size-4" />
               Comunidad Académica FUNASF
             </span>
