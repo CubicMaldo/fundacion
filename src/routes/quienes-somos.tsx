@@ -43,7 +43,8 @@ export const Route = createFileRoute("/quienes-somos")({
   component: QuienesSomos,
 });
 
-function Dato({ etiqueta, valor }: { etiqueta: string; valor: string }) {
+function Dato({ etiqueta, valor }: { etiqueta: string; valor?: string | undefined }) {
+  if (!valor) return null;
   return (
     <p className="text-sm">
       <span className="text-muted-foreground">{etiqueta}: </span>
