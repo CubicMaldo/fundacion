@@ -190,6 +190,15 @@
   color: var(--color-brand-brown);
 }
 
+/* Espaciado vertical de secciones (Ritmo) */
+@utility section-spacing {
+  padding-block: 4rem;
+
+  @media (min-width: 1024px) {
+    padding-block: 6rem;
+  }
+}
+
 /* Superficie de tarjeta institucional */
 @utility card-institucional {
   background-color: var(--color-card);
@@ -198,12 +207,14 @@
   padding: 1.5rem;
   box-shadow: var(--shadow-soft);
   transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
 
   &:hover {
     border-color: color-mix(in oklab, var(--color-brand-green) 45%, var(--color-border));
     box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
   }
 }
 

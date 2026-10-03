@@ -377,14 +377,14 @@ export function Header() {
                         value={item.label}
                         className="border-border/50 border-b"
                       >
-                        <AccordionTrigger className="text-foreground px-2 py-3 text-sm font-semibold hover:no-underline">
+                        <AccordionTrigger className="text-foreground px-2 py-4 text-base font-semibold hover:no-underline">
                           <span>{item.label}</span>
                         </AccordionTrigger>
-                        <AccordionContent className="space-y-1 pt-1 pb-3">
+                        <AccordionContent className="space-y-1 pt-1 pb-4">
                           <Link
                             to={item.to}
                             onClick={() => setAbierto(false)}
-                            className="text-primary bg-primary/5 hover:bg-primary/10 block rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
+                            className="text-primary bg-primary/5 hover:bg-primary/10 block rounded-lg px-4 py-3 text-sm font-semibold transition-colors"
                           >
                             Ver todo en {item.label} →
                           </Link>
@@ -394,7 +394,7 @@ export function Header() {
                               to={child.to}
                               {...(child.hash ? { hash: child.hash } : {})}
                               onClick={() => setAbierto(false)}
-                              className="text-muted-foreground hover:text-foreground hover:bg-secondary/70 block rounded-lg px-3 py-2 text-xs font-medium transition-colors"
+                              className="text-muted-foreground hover:text-foreground hover:bg-secondary/70 block rounded-lg px-4 py-3 text-sm font-medium transition-colors"
                             >
                               {child.label}
                             </Link>
@@ -406,7 +406,7 @@ export function Header() {
                         key={item.label}
                         to={item.to}
                         onClick={() => setAbierto(false)}
-                        className="text-foreground hover:bg-secondary/70 border-border/50 flex items-center border-b px-2 py-3 text-sm font-semibold transition-colors"
+                        className="text-foreground hover:bg-secondary/70 border-border/50 flex items-center border-b px-2 py-4 text-base font-semibold transition-colors"
                       >
                         {item.label}
                       </Link>

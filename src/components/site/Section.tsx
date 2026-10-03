@@ -16,7 +16,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "scroll-mt-28 py-16 md:py-24",
+        "scroll-mt-28 section-spacing",
         tone === "soft" && "surface-soft",
         tone === "surface" && "bg-surface",
         tone === "deep" && "surface-hero text-primary-foreground",
