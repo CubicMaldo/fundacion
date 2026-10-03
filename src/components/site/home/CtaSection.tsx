@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/site/Section";
 import type { LlamadoAccion, Organization } from "@/models/schema";
+import { ModalInscripcion } from "@/components/site/ModalInscripcion";
+import { ModalDonacion } from "@/components/site/ModalDonacion";
 
 interface CtaSectionProps {
   llamadoAccion: LlamadoAccion;
@@ -33,11 +35,20 @@ export function CtaSection({ llamadoAccion, org }: CtaSectionProps) {
         <Button asChild size="lg" variant="gold">
           <Link to="/contacto">Contáctanos</Link>
         </Button>
-        <Button asChild size="lg" variant="outlineInvert">
-          <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-            Formulario de inscripción
-          </a>
-        </Button>
+        <ModalInscripcion
+          triggerButton={
+            <Button size="lg" variant="outlineInvert">
+              Formulario de inscripción
+            </Button>
+          }
+        />
+        <ModalDonacion
+          triggerButton={
+            <Button size="lg" variant="outlineInvert">
+              Donar
+            </Button>
+          }
+        />
       </div>
     </Section>
   );
