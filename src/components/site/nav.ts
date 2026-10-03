@@ -59,6 +59,11 @@ export const navegacion: NavItem[] = [
         description: "Proceso de admisión paso a paso",
       },
       {
+        label: "Formulario de inscripción",
+        to: "/inscripcion",
+        description: "Postúlate en línea a nuestras becas",
+      },
+      {
         label: "Portal estudiantil",
         to: "/portal-estudiantil",
         description: "Servicios y recursos para estudiantes",

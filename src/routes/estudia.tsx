@@ -13,6 +13,7 @@ import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
 import { getProgramasAcademicos, getSiteSettings, getCategorizedPrograms } from "@/services/api";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
+import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 
 export const Route = createFileRoute("/estudia")({
   head: () =>
@@ -58,11 +59,13 @@ function Estudia() {
         description={formacionAcademica.parrafos[0]}
       >
         <div className="flex flex-wrap gap-3">
-          <Button asChild variant="gold" size="lg">
-            <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-              Formulario de inscripción
-            </a>
-          </Button>
+          <ModalInscripcion
+            triggerButton={
+              <Button variant="gold" size="lg">
+                Formulario de inscripción
+              </Button>
+            }
+          />
           <Button asChild variant="outlineInvert" size="lg">
             <Link to="/contacto">Solicitar información</Link>
           </Button>
@@ -287,11 +290,13 @@ function Estudia() {
           ))}
         </ol>
         <div className="mt-10 flex flex-wrap gap-3">
-          <Button asChild variant="default">
-            <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-              Ir al formulario <ArrowRight aria-hidden className="size-4" />
-            </a>
-          </Button>
+          <ModalInscripcion
+            triggerButton={
+              <Button variant="default">
+                Ir al formulario <ArrowRight aria-hidden className="size-4 ml-1.5" />
+              </Button>
+            }
+          />
           <Button asChild variant="outline">
             <Link to="/contacto">Hablar con la Fundación</Link>
           </Button>

@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { enviarMensajeContacto } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema, SITE_URL } from "@/lib/seo";
+import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 
 export const Route = createFileRoute("/contacto")({
   head: () =>
@@ -273,11 +274,13 @@ function Contacto() {
               <MapPin aria-hidden className="size-4" /> {org.direccionPrincipal}
             </p>
           </div>
-          <Button asChild size="lg">
-            <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-              Formulario de inscripción
-            </a>
-          </Button>
+          <ModalInscripcion
+            triggerButton={
+              <Button size="lg">
+                Formulario de inscripción
+              </Button>
+            }
+          />
         </div>
       </Section>
     </>

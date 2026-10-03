@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ContactoRouteImport } from './routes/contacto'
 import { Route as EstudiaRouteImport } from './routes/estudia'
 import { Route as GaleriaRouteImport } from './routes/galeria'
+import { Route as InscripcionRouteImport } from './routes/inscripcion'
 import { Route as PoliticaPrivacidadRouteImport } from './routes/politica-privacidad'
 import { Route as PortalEstudiantilRouteImport } from './routes/portal-estudiantil'
 import { Route as PortalInformativoRouteImport } from './routes/portal-informativo'
@@ -56,6 +57,11 @@ const EstudiaRoute = EstudiaRouteImport.update({
 const GaleriaRoute = GaleriaRouteImport.update({
   id: '/galeria',
   path: '/galeria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InscripcionRoute = InscripcionRouteImport.update({
+  id: '/inscripcion',
+  path: '/inscripcion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PoliticaPrivacidadRoute = PoliticaPrivacidadRouteImport.update({
@@ -184,6 +190,7 @@ export interface FileRoutesByFullPath {
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
+  '/inscripcion': typeof InscripcionRoute
   '/politica-privacidad': typeof PoliticaPrivacidadRoute
   '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
@@ -214,6 +221,7 @@ export interface FileRoutesByTo {
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
+  '/inscripcion': typeof InscripcionRoute
   '/politica-privacidad': typeof PoliticaPrivacidadRoute
   '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/contacto': typeof ContactoRoute
   '/estudia': typeof EstudiaRoute
   '/galeria': typeof GaleriaRoute
+  '/inscripcion': typeof InscripcionRoute
   '/politica-privacidad': typeof PoliticaPrivacidadRoute
   '/portal-estudiantil': typeof PortalEstudiantilRoute
   '/portal-informativo': typeof PortalInformativoRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/estudia'
     | '/galeria'
+    | '/inscripcion'
     | '/politica-privacidad'
     | '/portal-estudiantil'
     | '/portal-informativo'
@@ -307,6 +317,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/estudia'
     | '/galeria'
+    | '/inscripcion'
     | '/politica-privacidad'
     | '/portal-estudiantil'
     | '/portal-informativo'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/contacto'
     | '/estudia'
     | '/galeria'
+    | '/inscripcion'
     | '/politica-privacidad'
     | '/portal-estudiantil'
     | '/portal-informativo'
@@ -368,6 +380,7 @@ export interface RootRouteChildren {
   ContactoRoute: typeof ContactoRoute
   EstudiaRoute: typeof EstudiaRoute
   GaleriaRoute: typeof GaleriaRoute
+  InscripcionRoute: typeof InscripcionRoute
   PoliticaPrivacidadRoute: typeof PoliticaPrivacidadRoute
   PortalEstudiantilRoute: typeof PortalEstudiantilRoute
   PortalInformativoRoute: typeof PortalInformativoRoute
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/galeria'
       fullPath: '/galeria'
       preLoaderRoute: typeof GaleriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inscripcion': {
+      id: '/inscripcion'
+      path: '/inscripcion'
+      fullPath: '/inscripcion'
+      preLoaderRoute: typeof InscripcionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politica-privacidad': {
@@ -600,6 +620,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactoRoute: ContactoRoute,
   EstudiaRoute: EstudiaRoute,
   GaleriaRoute: GaleriaRoute,
+  InscripcionRoute: InscripcionRoute,
   PoliticaPrivacidadRoute: PoliticaPrivacidadRoute,
   PortalEstudiantilRoute: PortalEstudiantilRoute,
   PortalInformativoRoute: PortalInformativoRoute,

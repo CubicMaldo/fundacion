@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { org, telefonoPrincipal, whatsappLink } from "@/data/funasf";
+import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 import type { InfoContactoPost } from "@/services/api";
 
 interface BlogContactoDirectoProps {
@@ -191,15 +192,29 @@ export function BlogContactoDirecto({ contacto, postTitulo, categoria }: BlogCon
               </div>
             </div>
 
-            <Button
-              asChild
-              size="sm"
-              className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground shrink-0"
-            >
-              <a href={formUrl} target="_blank" rel="noopener noreferrer">
-                Formulario de Inscripción <ExternalLink className="size-3 ml-1.5" />
-              </a>
-            </Button>
+            {contacto?.enlacePostulacion ? (
+              <Button
+                asChild
+                size="sm"
+                className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground shrink-0"
+              >
+                <a href={contacto.enlacePostulacion} target="_blank" rel="noopener noreferrer">
+                  Formulario de Inscripción <ExternalLink className="size-3 ml-1.5" />
+                </a>
+              </Button>
+            ) : (
+              <ModalInscripcion
+                programaNombre={postTitulo}
+                triggerButton={
+                  <Button
+                    size="sm"
+                    className="bg-brand-green hover:bg-brand-green-deep text-primary-foreground shrink-0"
+                  >
+                    Formulario de Inscripción
+                  </Button>
+                }
+              />
+            )}
           </div>
         )}
 

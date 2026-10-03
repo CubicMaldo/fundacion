@@ -110,9 +110,9 @@ function PortalEstudiantilComponent() {
 
               <div className="mt-6 pt-4 border-t border-border">
                 <Button asChild className="w-full" variant="default">
-                  <a href={org.formularioInscripcion} target="_blank" rel="noreferrer">
-                    Ingresar con credenciales
-                  </a>
+                  <Link to="/contacto">
+                    Solicitar acceso al campus
+                  </Link>
                 </Button>
                 <p className="mt-2 text-center text-[11px] text-muted-foreground">
                   Usuario y contraseña asignados tras la matrícula oficial.
