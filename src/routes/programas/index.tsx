@@ -38,6 +38,12 @@ function ProgramasIndexComponent() {
       >
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg" variant="gold">
+            <Link to="/inscripcion">
+              <GraduationCap aria-hidden className="size-5 mr-1.5" />
+              Formulario de inscripción
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outlineInvert">
             <Link to="/estudia" hash="becas">
               Conocer las becas <ArrowRight aria-hidden className="size-4" />
             </Link>

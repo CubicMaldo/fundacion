@@ -17,6 +17,7 @@ const columnas = [
     titulo: "Estudia",
     enlaces: [
       { label: "Catálogo de programas", to: "/programas", hash: undefined },
+      { label: "Formulario de inscripción", to: "/inscripcion", hash: undefined },
       { label: "Áreas académicas", to: "/estudia", hash: "programas" },
       { label: "Becas de hasta 90 %", to: "/estudia", hash: "becas" },
       { label: "Requisitos y matrícula", to: "/estudia", hash: "matriculas" },

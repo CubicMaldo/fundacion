@@ -16,11 +16,18 @@ export function BecasSection({ becas }: BecasSectionProps) {
           <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
           <p className="text-primary-foreground/80 mt-5 leading-relaxed">{becas.proposito}</p>
           <p className="text-brand-gold mt-8 text-2xl font-semibold">{becas.destacado}</p>
-          <Button asChild className="mt-8" variant="gold">
-            <Link to="/estudia" hash="becas">
-              Conocer las convocatorias <ArrowRight aria-hidden className="size-4" />
-            </Link>
-          </Button>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild variant="gold">
+              <Link to="/inscripcion">
+                Formulario de postulación <ArrowRight aria-hidden className="size-4 ml-1" />
+              </Link>
+            </Button>
+            <Button asChild variant="outlineInvert">
+              <Link to="/estudia" hash="becas">
+                Conocer las convocatorias
+              </Link>
+            </Button>
+          </div>
         </div>
         <ul className="grid gap-3 sm:grid-cols-2">
           {becas.beneficios.map((b) => (

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Organization, QuienesSomos } from "@/models/schema";
 
@@ -25,7 +25,13 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
           <p className="text-primary-foreground/75 mt-3 text-sm italic">{org.frases[0]}</p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" variant="gold">
+            <Button asChild size="lg" variant="gold" className="shadow-md">
+              <Link to="/inscripcion">
+                <GraduationCap aria-hidden className="size-5 mr-1.5" />
+                Formulario de estudiante
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outlineInvert">
               <Link to="/estudia" hash="becas">
                 Conocer las becas <ArrowRight aria-hidden className="size-4 ml-1.5" />
               </Link>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, ClipboardCheck, GraduationCap, Mail, Menu, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -149,6 +149,21 @@ export function Header() {
             </a>
             <span className="text-primary-foreground/30" aria-hidden="true">
               |
+            </span>
+            <Link
+              to="/inscripcion"
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-semibold transition-all",
+                pathname === "/inscripcion"
+                  ? "bg-brand-gold text-brand-green-deep font-bold shadow-xs"
+                  : "text-brand-gold hover:bg-white/10 hover:text-white",
+              )}
+            >
+              <ClipboardCheck aria-hidden className="size-3.5" />
+              <span>Formulario de Estudiante</span>
+            </Link>
+            <span className="text-primary-foreground/30" aria-hidden="true">
+              ·
             </span>
             <Link
               to="/portal-estudiantil"
@@ -342,8 +357,32 @@ export function Header() {
                 </div>
               </div>
 
-              {/* Acceso destacado al Portal Estudiantil en móvil */}
-              <div className="p-3.5 border-b border-border/70 bg-brand-green-soft/20">
+              {/* Acceso destacado en móvil: Formulario de Estudiante y Portal */}
+              <div className="p-3.5 border-b border-border/70 bg-brand-green-soft/20 space-y-2">
+                <Link
+                  to="/inscripcion"
+                  onClick={() => setAbierto(false)}
+                  className={cn(
+                    "flex items-center justify-between rounded-xl border p-3 transition-all shadow-2xs",
+                    pathname === "/inscripcion"
+                      ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/30"
+                      : "border-border bg-card text-foreground hover:border-brand-green/40 hover:bg-brand-green-soft/30",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="flex size-9 items-center justify-center rounded-lg bg-brand-gold text-brand-green-deep font-bold shadow-xs">
+                      <ClipboardCheck className="size-5" />
+                    </span>
+                    <div>
+                      <p className="text-sm font-bold leading-tight">Formulario de Estudiante</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        Inscripción en línea y becas hasta el 90 %
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 text-brand-green shrink-0" />
+                </Link>
+
                 <Link
                   to="/portal-estudiantil"
                   onClick={() => setAbierto(false)}
@@ -414,14 +453,21 @@ export function Header() {
                   )}
                 </Accordion>
                 <div className="grid gap-2.5 pt-6">
-                  <Button asChild onClick={() => setAbierto(false)} className="w-full rounded-full">
+                  <Button
+                    asChild
+                    onClick={() => setAbierto(false)}
+                    className="w-full rounded-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold"
+                  >
+                    <Link to="/inscripcion">Formulario de estudiante</Link>
+                  </Button>
+                  <Button asChild onClick={() => setAbierto(false)} variant="outline" className="w-full rounded-full">
                     <Link to="/estudia" hash="becas">
                       Conoce las becas
                     </Link>
                   </Button>
                   <Button
                     asChild
-                    variant="outline"
+                    variant="ghost"
                     onClick={() => setAbierto(false)}
                     className="w-full rounded-full"
                   >
