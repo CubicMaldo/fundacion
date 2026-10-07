@@ -22,7 +22,7 @@ export const Route = createFileRoute("/admin/login")({
 });
 
 function AdminLogin() {
-  const { user, signIn, isLoading, isConfigured } = useAuth();
+  const { user, role, signIn, isLoading, isConfigured } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,9 +31,13 @@ function AdminLogin() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      navigate({ to: "/admin" });
+      if (role === "estudiante") {
+        navigate({ to: "/portal-estudiantil" });
+      } else {
+        navigate({ to: "/admin" });
+      }
     }
-  }, [user, isLoading, navigate]);
+  }, [user, role, isLoading, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,8 +48,6 @@ function AdminLogin() {
       const result = await signIn(email, password);
       if (result.error) {
         setErrorMessage(result.error);
-      } else {
-        navigate({ to: "/admin" });
       }
     } catch (err) {
       setErrorMessage((err as Error).message || "Error al iniciar sesión");

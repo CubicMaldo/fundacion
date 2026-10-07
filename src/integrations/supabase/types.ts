@@ -1,421 +1,721 @@
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.18";
-  };
+    PostgrestVersion: "14.18"
+  }
   public: {
     Tables: {
-      perfiles: {
-        Row: {
-          id: string;
-          email: string;
-          nombre_completo: string | null;
-          rol: "admin" | "editor";
-          avatar_url: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id: string;
-          email: string;
-          nombre_completo?: string | null;
-          rol?: "admin" | "editor";
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          email?: string;
-          nombre_completo?: string | null;
-          rol?: "admin" | "editor";
-          avatar_url?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      programas: {
-        Row: {
-          id: string;
-          slug: string;
-          nombre: string;
-          categoria_id: string;
-          categoria: string;
-          descripcion: string;
-          objetivo: string;
-          modalidades: string[];
-          perfil_ocupacional: string[];
-          requisitos: string[];
-          certificacion_nota: string | null;
-          duracion_estimada: string | null;
-          orden: number;
-          activo: boolean;
-          destacado: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          slug: string;
-          nombre: string;
-          categoria_id: string;
-          categoria: string;
-          descripcion: string;
-          objetivo: string;
-          modalidades?: string[];
-          perfil_ocupacional?: string[];
-          requisitos?: string[];
-          certificacion_nota?: string | null;
-          duracion_estimada?: string | null;
-          orden?: number;
-          activo?: boolean;
-          destacado?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          slug?: string;
-          nombre?: string;
-          categoria_id?: string;
-          categoria?: string;
-          descripcion?: string;
-          objetivo?: string;
-          modalidades?: string[];
-          perfil_ocupacional?: string[];
-          requisitos?: string[];
-          certificacion_nota?: string | null;
-          duracion_estimada?: string | null;
-          orden?: number;
-          activo?: boolean;
-          destacado?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
       articulos: {
         Row: {
-          id: string;
-          slug: string;
-          titulo: string;
-          resumen: string;
-          contenido: string;
-          autor_id: string | null;
-          autor_nombre: string;
-          categoria: string;
-          imagen_portada: string | null;
-          estado: "borrador" | "publicado";
-          fecha_publicacion: string | null;
-          created_at: string;
-          updated_at: string;
-        };
+          autor_id: string | null
+          autor_nombre: string
+          categoria: string
+          contenido: string
+          created_at: string
+          estado: Database["public"]["Enums"]["post_estado"]
+          fecha_publicacion: string | null
+          id: string
+          imagen_portada: string | null
+          resumen: string
+          slug: string
+          titulo: string
+          updated_at: string
+        }
         Insert: {
-          id?: string;
-          slug: string;
-          titulo: string;
-          resumen: string;
-          contenido: string;
-          autor_id?: string | null;
-          autor_nombre?: string;
-          categoria?: string;
-          imagen_portada?: string | null;
-          estado?: "borrador" | "publicado";
-          fecha_publicacion?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
+          autor_id?: string | null
+          autor_nombre?: string
+          categoria?: string
+          contenido: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["post_estado"]
+          fecha_publicacion?: string | null
+          id?: string
+          imagen_portada?: string | null
+          resumen: string
+          slug: string
+          titulo: string
+          updated_at?: string
+        }
         Update: {
-          id?: string;
-          slug?: string;
-          titulo?: string;
-          resumen?: string;
-          contenido?: string;
-          autor_id?: string | null;
-          autor_nombre?: string;
-          categoria?: string;
-          imagen_portada?: string | null;
-          estado?: "borrador" | "publicado";
-          fecha_publicacion?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      galeria: {
-        Row: {
-          id: string;
-          titulo: string;
-          descripcion: string | null;
-          categoria: string;
-          imagen_url: string;
-          alt_text: string | null;
-          orden: number;
-          activo: boolean;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          titulo: string;
-          descripcion?: string | null;
-          categoria?: string;
-          imagen_url: string;
-          alt_text?: string | null;
-          orden?: number;
-          activo?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          titulo?: string;
-          descripcion?: string | null;
-          categoria?: string;
-          imagen_url?: string;
-          alt_text?: string | null;
-          orden?: number;
-          activo?: boolean;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      inscripciones: {
-        Row: {
-          id: string;
-          nombre_completo: string;
-          documento_tipo: string;
-          documento_numero: string;
-          telefono: string;
-          correo: string;
-          ciudad: string;
-          programa_id: string | null;
-          programa_nombre: string;
-          estado: "nuevo" | "contactado" | "en_revision" | "admitido" | "descartado";
-          notas_internas: string | null;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          nombre_completo: string;
-          documento_tipo?: string;
-          documento_numero: string;
-          telefono: string;
-          correo: string;
-          ciudad: string;
-          programa_id?: string | null;
-          programa_nombre: string;
-          estado?: "nuevo" | "contactado" | "en_revision" | "admitido" | "descartado";
-          notas_internas?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          nombre_completo?: string;
-          documento_tipo?: string;
-          documento_numero?: string;
-          telefono?: string;
-          correo?: string;
-          ciudad?: string;
-          programa_id?: string | null;
-          programa_nombre?: string;
-          estado?: "nuevo" | "contactado" | "en_revision" | "admitido" | "descartado";
-          notas_internas?: string | null;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-      mensajes_contacto: {
-        Row: {
-          id: string;
-          nombre: string;
-          correo: string;
-          telefono: string | null;
-          asunto: string;
-          mensaje: string;
-          leido: boolean;
-          estado: "nuevo" | "respondido" | "archivado";
-          created_at: string;
-        };
-        Insert: {
-          id?: string;
-          nombre: string;
-          correo: string;
-          telefono?: string | null;
-          asunto: string;
-          mensaje: string;
-          leido?: boolean;
-          estado?: "nuevo" | "respondido" | "archivado";
-          created_at?: string;
-        };
-        Update: {
-          id?: string;
-          nombre?: string;
-          correo?: string;
-          telefono?: string | null;
-          asunto?: string;
-          mensaje?: string;
-          leido?: boolean;
-          estado?: "nuevo" | "respondido" | "archivado";
-          created_at?: string;
-        };
-        Relationships: [];
-      };
+          autor_id?: string | null
+          autor_nombre?: string
+          categoria?: string
+          contenido?: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["post_estado"]
+          fecha_publicacion?: string | null
+          id?: string
+          imagen_portada?: string | null
+          resumen?: string
+          slug?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "articulos_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       configuracion: {
         Row: {
-          clave: string;
-          valor: Json;
-          updated_at: string;
-          updated_by: string | null;
-        };
+          clave: string
+          updated_at: string
+          updated_by: string | null
+          valor: Json
+        }
         Insert: {
-          clave: string;
-          valor: Json;
-          updated_at?: string;
-          updated_by?: string | null;
-        };
+          clave: string
+          updated_at?: string
+          updated_by?: string | null
+          valor: Json
+        }
         Update: {
-          clave?: string;
-          valor?: Json;
-          updated_at?: string;
-          updated_by?: string | null;
-        };
-        Relationships: [];
-      };
-    };
+          clave?: string
+          updated_at?: string
+          updated_by?: string | null
+          valor?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "configuracion_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cursos: {
+        Row: {
+          activo: boolean
+          aula: string | null
+          codigo: string
+          created_at: string
+          docente_id: string | null
+          horario_descripcion: string | null
+          id: string
+          nombre: string
+          periodo: string
+          programa_id: string
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          aula?: string | null
+          codigo: string
+          created_at?: string
+          docente_id?: string | null
+          horario_descripcion?: string | null
+          id?: string
+          nombre: string
+          periodo?: string
+          programa_id: string
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          aula?: string | null
+          codigo?: string
+          created_at?: string
+          docente_id?: string | null
+          horario_descripcion?: string | null
+          id?: string
+          nombre?: string
+          periodo?: string
+          programa_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cursos_docente_id_fkey"
+            columns: ["docente_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cursos_programa_id_fkey"
+            columns: ["programa_id"]
+            isOneToOne: false
+            referencedRelation: "programas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      entregas_trabajos: {
+        Row: {
+          archivo_url: string
+          created_at: string
+          descripcion: string | null
+          estado: string
+          fecha_entrega: string
+          id: string
+          matricula_id: string
+          nota: number | null
+          retroalimentacion: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          archivo_url: string
+          created_at?: string
+          descripcion?: string | null
+          estado?: string
+          fecha_entrega?: string
+          id?: string
+          matricula_id: string
+          nota?: number | null
+          retroalimentacion?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          archivo_url?: string
+          created_at?: string
+          descripcion?: string | null
+          estado?: string
+          fecha_entrega?: string
+          id?: string
+          matricula_id?: string
+          nota?: number | null
+          retroalimentacion?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entregas_trabajos_matricula_id_fkey"
+            columns: ["matricula_id"]
+            isOneToOne: false
+            referencedRelation: "matriculas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evaluaciones_notas: {
+        Row: {
+          created_at: string
+          id: string
+          matricula_id: string
+          nota: number
+          porcentaje: number
+          retroalimentacion: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          matricula_id: string
+          nota: number
+          porcentaje: number
+          retroalimentacion?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          matricula_id?: string
+          nota?: number
+          porcentaje?: number
+          retroalimentacion?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluaciones_notas_matricula_id_fkey"
+            columns: ["matricula_id"]
+            isOneToOne: false
+            referencedRelation: "matriculas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      galeria: {
+        Row: {
+          activo: boolean
+          alt_text: string | null
+          categoria: string
+          created_at: string
+          descripcion: string | null
+          id: string
+          imagen_url: string
+          orden: number
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          alt_text?: string | null
+          categoria?: string
+          created_at?: string
+          descripcion?: string | null
+          id?: string
+          imagen_url: string
+          orden?: number
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          alt_text?: string | null
+          categoria?: string
+          created_at?: string
+          descripcion?: string | null
+          id?: string
+          imagen_url?: string
+          orden?: number
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      inscripciones: {
+        Row: {
+          ciudad: string
+          correo: string
+          created_at: string
+          documento_numero: string
+          documento_tipo: string
+          estado: Database["public"]["Enums"]["inscripcion_estado"]
+          id: string
+          nombre_completo: string
+          notas_internas: string | null
+          programa_id: string | null
+          programa_nombre: string
+          telefono: string
+          updated_at: string
+        }
+        Insert: {
+          ciudad: string
+          correo: string
+          created_at?: string
+          documento_numero: string
+          documento_tipo?: string
+          estado?: Database["public"]["Enums"]["inscripcion_estado"]
+          id?: string
+          nombre_completo: string
+          notas_internas?: string | null
+          programa_id?: string | null
+          programa_nombre: string
+          telefono: string
+          updated_at?: string
+        }
+        Update: {
+          ciudad?: string
+          correo?: string
+          created_at?: string
+          documento_numero?: string
+          documento_tipo?: string
+          estado?: Database["public"]["Enums"]["inscripcion_estado"]
+          id?: string
+          nombre_completo?: string
+          notas_internas?: string | null
+          programa_id?: string | null
+          programa_nombre?: string
+          telefono?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inscripciones_programa_id_fkey"
+            columns: ["programa_id"]
+            isOneToOne: false
+            referencedRelation: "programas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      matriculas: {
+        Row: {
+          created_at: string
+          curso_id: string
+          estado: string
+          estudiante_id: string
+          fecha_matricula: string
+          id: string
+          nota_definitiva: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          curso_id: string
+          estado?: string
+          estudiante_id: string
+          fecha_matricula?: string
+          id?: string
+          nota_definitiva?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          curso_id?: string
+          estado?: string
+          estudiante_id?: string
+          fecha_matricula?: string
+          id?: string
+          nota_definitiva?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "matriculas_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "cursos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "matriculas_estudiante_id_fkey"
+            columns: ["estudiante_id"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mensajes_contacto: {
+        Row: {
+          asunto: string
+          correo: string
+          created_at: string
+          estado: Database["public"]["Enums"]["mensaje_estado"]
+          id: string
+          leido: boolean
+          mensaje: string
+          nombre: string
+          telefono: string | null
+        }
+        Insert: {
+          asunto: string
+          correo: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["mensaje_estado"]
+          id?: string
+          leido?: boolean
+          mensaje: string
+          nombre: string
+          telefono?: string | null
+        }
+        Update: {
+          asunto?: string
+          correo?: string
+          created_at?: string
+          estado?: Database["public"]["Enums"]["mensaje_estado"]
+          id?: string
+          leido?: boolean
+          mensaje?: string
+          nombre?: string
+          telefono?: string | null
+        }
+        Relationships: []
+      }
+      observaciones_academicas: {
+        Row: {
+          creado_por: string | null
+          created_at: string
+          detalle: string
+          id: string
+          matricula_id: string
+          tipo: string
+          titulo: string
+        }
+        Insert: {
+          creado_por?: string | null
+          created_at?: string
+          detalle: string
+          id?: string
+          matricula_id: string
+          tipo?: string
+          titulo: string
+        }
+        Update: {
+          creado_por?: string | null
+          created_at?: string
+          detalle?: string
+          id?: string
+          matricula_id?: string
+          tipo?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "observaciones_academicas_creado_por_fkey"
+            columns: ["creado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "observaciones_academicas_matricula_id_fkey"
+            columns: ["matricula_id"]
+            isOneToOne: false
+            referencedRelation: "matriculas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      perfiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          id: string
+          nombre_completo: string | null
+          rol: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          id: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          nombre_completo?: string | null
+          rol?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      programas: {
+        Row: {
+          activo: boolean
+          categoria: string
+          categoria_id: string
+          certificacion_nota: string | null
+          created_at: string
+          descripcion: string
+          destacado: boolean
+          duracion_estimada: string | null
+          id: string
+          modalidades: string[]
+          nombre: string
+          objetivo: string
+          orden: number
+          perfil_ocupacional: string[]
+          requisitos: string[]
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          activo?: boolean
+          categoria: string
+          categoria_id: string
+          certificacion_nota?: string | null
+          created_at?: string
+          descripcion: string
+          destacado?: boolean
+          duracion_estimada?: string | null
+          id?: string
+          modalidades?: string[]
+          nombre: string
+          objetivo: string
+          orden?: number
+          perfil_ocupacional?: string[]
+          requisitos?: string[]
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          activo?: boolean
+          categoria?: string
+          categoria_id?: string
+          certificacion_nota?: string | null
+          created_at?: string
+          descripcion?: string
+          destacado?: boolean
+          duracion_estimada?: string | null
+          id?: string
+          modalidades?: string[]
+          nombre?: string
+          objetivo?: string
+          orden?: number
+          perfil_ocupacional?: string[]
+          requisitos?: string[]
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+    }
     Views: {
-      [_ in never]: never;
-    };
+      [_ in never]: never
+    }
     Functions: {
-      is_admin: {
-        Args: Record<PropertyKey, never>;
-        Returns: boolean;
-      };
-      is_editor_or_admin: {
-        Args: Record<PropertyKey, never>;
-        Returns: boolean;
-      };
-    };
+      is_admin: { Args: never; Returns: boolean }
+      is_editor_or_admin: { Args: never; Returns: boolean }
+    }
     Enums: {
-      app_role: "admin" | "editor";
-      post_estado: "borrador" | "publicado";
-      inscripcion_estado: "nuevo" | "contactado" | "en_revision" | "admitido" | "descartado";
-      mensaje_estado: "nuevo" | "respondido" | "archivado";
-    };
+      app_role: "admin" | "editor" | "docente" | "estudiante"
+      inscripcion_estado:
+        | "nuevo"
+        | "contactado"
+        | "en_revision"
+        | "admitido"
+        | "descartado"
+      mensaje_estado: "nuevo" | "respondido" | "archivado"
+      post_estado: "borrador" | "publicado"
+    }
     CompositeTypes: {
-      [_ in never]: never;
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">];
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
       DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
-      Row: infer R;
+      Row: infer R
     }
     ? R
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] & DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R;
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
       }
       ? R
       : never
-    : never;
+    : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I;
+      Insert: infer I
     }
     ? I
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I;
+        Insert: infer I
       }
       ? I
       : never
-    : never;
+    : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends (DefaultSchemaTableNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U;
+      Update: infer U
     }
     ? U
     : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
     ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U;
+        Update: infer U
       }
       ? U
       : never
-    : never;
+    : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends (DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals;
+    schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals;
+  schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never;
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
 
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "editor"],
-      post_estado: ["borrador", "publicado"],
-      inscripcion_estado: ["nuevo", "contactado", "en_revision", "admitido", "descartado"],
+      app_role: ["admin", "editor", "docente", "estudiante"],
+      inscripcion_estado: [
+        "nuevo",
+        "contactado",
+        "en_revision",
+        "admitido",
+        "descartado",
+      ],
       mensaje_estado: ["nuevo", "respondido", "archivado"],
+      post_estado: ["borrador", "publicado"],
     },
   },
-} as const;
+} as const

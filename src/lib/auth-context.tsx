@@ -3,7 +3,7 @@ import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-export type UserRole = "admin" | "editor";
+export type UserRole = "admin" | "editor" | "docente" | "estudiante";
 
 export interface UserProfile {
   id: string;
@@ -19,6 +19,8 @@ interface AuthContextType {
   role: UserRole | null;
   isAdmin: boolean;
   isEditor: boolean;
+  isDocente: boolean;
+  isEstudiante: boolean;
   isLoading: boolean;
   isConfigured: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>;
@@ -239,6 +241,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const role = profile?.rol ?? null;
   const isAdmin = role === "admin";
   const isEditor = role === "editor" || isAdmin;
+  const isDocente = role === "docente" || isAdmin;
+  const isEstudiante = role === "estudiante";
 
   return (
     <AuthContext.Provider
@@ -248,6 +252,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role,
         isAdmin,
         isEditor,
+        isDocente,
+        isEstudiante,
         isLoading,
         isConfigured: configured,
         signIn,

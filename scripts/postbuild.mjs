@@ -88,4 +88,11 @@ if (fs.existsSync(publicDir)) {
   fs.writeFileSync(path.join(publicDir, "index.html"), indexHtmlContent, "utf8");
 }
 
+// 5. Ensure .htaccess is copied to dist root for Hostinger / Apache
+const htaccessSrc = path.join(rootDir, "public", ".htaccess");
+if (fs.existsSync(htaccessSrc)) {
+  fs.copyFileSync(htaccessSrc, path.join(distDir, ".htaccess"));
+  console.log("[postbuild] .htaccess successfully copied to dist/.");
+}
+
 console.log("[postbuild] dist artifacts successfully prepared for deployment.");
