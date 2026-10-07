@@ -26,18 +26,20 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild size="lg" variant="gold" className="shadow-md">
-              <Link to="/inscripcion">
-                <GraduationCap aria-hidden className="size-5 mr-1.5" />
-                Formulario de estudiante
+              <Link to="/programas">
+                Explorar programas <ArrowRight aria-hidden className="size-4 ml-1.5" />
               </Link>
             </Button>
             <Button asChild size="lg" variant="outlineInvert">
               <Link to="/estudia" hash="becas">
-                Conocer las becas <ArrowRight aria-hidden className="size-4 ml-1.5" />
+                Conocer las becas
               </Link>
             </Button>
             <Button asChild size="lg" variant="outlineInvert">
-              <Link to="/programas">Explorar programas</Link>
+              <Link to="/inscripcion">
+                <GraduationCap aria-hidden className="size-4.5 mr-1.5" />
+                Formulario de estudiante
+              </Link>
             </Button>
           </div>
         </div>
