@@ -72,7 +72,7 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
       </div>
       <div className="mt-10 flex justify-center">
         <Button asChild variant="outline">
-          <Link to="/estudia" hash="programas">
+          <Link to="/programas">
             Ver toda la oferta <ArrowRight aria-hidden className="size-4" />
           </Link>
         </Button>
