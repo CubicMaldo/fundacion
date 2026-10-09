@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown, ClipboardCheck, GraduationCap, Mail, Menu, Phone } from "lucide-react";
+import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Accordion,
@@ -18,6 +12,7 @@ import {
 import { navegacion } from "./nav";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { Logo } from "@/components/site/Logo";
+import { whatsappLink } from "@/data/funasf";
 import { cn } from "@/lib/utils";
 
 function Wordmark({ invert = false }: { invert?: boolean }) {
@@ -120,7 +115,7 @@ export function Header() {
         scrolled ? "border-border shadow-xs" : "border-border/60",
       )}
     >
-      {/* Barra superior institucional informativa */}
+      {/* 1. Barra superior institucional limpia (contacto + acceso estudiantes) */}
       <div className="bg-brand-green-deep text-primary-foreground/90 hidden border-b border-white/10 py-1.5 text-xs lg:block">
         <div className="container-page flex h-6 items-center justify-between gap-6">
           <div className="flex items-center gap-2">
@@ -129,7 +124,7 @@ export function Header() {
               {org.eslogan}
             </p>
           </div>
-          <div className="text-primary-foreground/80 flex items-center gap-3.5 text-[11px]">
+          <div className="text-primary-foreground/80 flex items-center gap-4 text-[11px]">
             <a
               className="hover:text-brand-gold inline-flex items-center gap-1.5 transition-colors"
               href={phoneHref}
@@ -150,45 +145,31 @@ export function Header() {
             <span className="text-primary-foreground/30" aria-hidden="true">
               |
             </span>
-            <Link
-              to="/inscripcion"
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-semibold transition-all",
-                pathname === "/inscripcion"
-                  ? "bg-brand-gold text-brand-green-deep font-bold shadow-xs"
-                  : "text-brand-gold hover:bg-white/10 hover:text-white",
-              )}
-            >
-              <ClipboardCheck aria-hidden className="size-3.5" />
-              <span>Formulario de Estudiante</span>
-            </Link>
-            <span className="text-primary-foreground/30" aria-hidden="true">
-              ·
-            </span>
+            {/* Acceso discreto para estudiantes activos (no satura al visitante nuevo) */}
             <Link
               to="/portal-estudiantil"
               className={cn(
-                "inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-semibold transition-all",
+                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-medium transition-colors",
                 pathname === "/portal-estudiantil"
-                  ? "bg-brand-gold text-brand-green-deep font-bold shadow-xs"
-                  : "text-brand-gold hover:bg-white/10 hover:text-white",
+                  ? "bg-white/15 text-white font-semibold"
+                  : "text-white/80 hover:bg-white/10 hover:text-white",
               )}
             >
-              <GraduationCap aria-hidden className="size-3.5" />
-              <span>Portal Estudiantil</span>
+              <GraduationCap aria-hidden className="size-3 text-brand-gold" />
+              <span>Soy estudiante activo</span>
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Barra de navegación principal */}
+      {/* 2. Barra de navegación principal */}
       <div className="container-page flex h-20 items-center justify-between gap-6">
-        {/* Zona 1: Identidad de Marca */}
+        {/* Marca oficial */}
         <Link to="/" aria-label="FUNASF — Inicio" className="shrink-0">
           <Wordmark />
         </Link>
 
-        {/* Zona 2: Enlaces de navegación con espaciado consistente y tipografía uniforme */}
+        {/* Enlaces de navegación con hover cards refinados */}
         <nav
           aria-label="Navegación principal"
           className="hidden lg:flex lg:items-center lg:gap-1 xl:gap-1.5"
@@ -295,35 +276,20 @@ export function Header() {
           })}
         </nav>
 
-        {/* Zona 3: Acción destacada y menú móvil */}
-        <div className="flex items-center gap-2.5">
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className={cn(
-              "hidden sm:inline-flex h-9 rounded-full px-3.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border",
-              pathname === "/portal-estudiantil"
-                ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-2 ring-brand-green/20 shadow-xs"
-                : "border-border/90 bg-background text-foreground/85 hover:border-brand-green/50 hover:bg-brand-green-soft/40 hover:text-brand-green-deep",
-            )}
-          >
-            <Link to="/portal-estudiantil">
-              <GraduationCap className="size-4 text-brand-green" />
-              <span>Portal Estudiantil</span>
-            </Link>
-          </Button>
-
+        {/* 3. Acción comercial primaria única (sin saturar con botones redundantes) */}
+        <div className="flex items-center gap-3">
           <Button
             asChild
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground hidden md:inline-flex h-9 rounded-full px-5 text-xs font-semibold tracking-wider whitespace-nowrap uppercase shadow-xs transition-all hover:shadow"
+            className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-full px-5 text-xs font-bold tracking-wide uppercase shadow-sm transition-all hover:shadow-md"
           >
-            <Link to="/estudia" hash="becas">
-              Conoce las becas
+            <Link to="/inscripcion">
+              <Sparkles className="size-3.5 mr-1.5 text-brand-gold" />
+              Postularme a Beca
             </Link>
           </Button>
 
+          {/* Botón Hamburguesa para Móvil */}
           <Sheet open={abierto} onOpenChange={setAbierto}>
             <SheetTrigger asChild>
               <Button
@@ -337,144 +303,114 @@ export function Header() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="flex w-[min(22rem,90vw)] flex-col overflow-y-auto p-0"
+              className="flex w-[min(22rem,88vw)] flex-col justify-between overflow-y-auto p-0"
             >
-              <div className="border-b px-5 py-4">
-                <Wordmark />
-              </div>
-              <div className="bg-brand-green-deep text-primary-foreground/90 px-5 py-3 text-xs">
-                <p className="font-medium">{org.eslogan}</p>
-                <div className="text-primary-foreground/80 mt-2 flex flex-col gap-1.5 text-[11px]">
-                  <a href={phoneHref} className="hover:text-brand-gold flex items-center gap-1.5">
-                    <Phone className="text-brand-gold size-3" /> {org.telefonos[0]}
-                  </a>
-                  <a
-                    href={`mailto:${org.correo}`}
-                    className="hover:text-brand-gold flex items-center gap-1.5"
-                  >
-                    <Mail className="text-brand-gold size-3" /> {org.correo}
-                  </a>
+              <div>
+                {/* Cabecera compacta móvil */}
+                <div className="border-b px-5 py-4 flex items-center justify-between">
+                  <Wordmark />
                 </div>
-              </div>
 
-              {/* Acceso destacado en móvil: Formulario de Estudiante y Portal */}
-              <div className="p-3.5 border-b border-border/70 bg-brand-green-soft/20 space-y-2">
-                <Link
-                  to="/inscripcion"
-                  onClick={() => setAbierto(false)}
-                  className={cn(
-                    "flex items-center justify-between rounded-xl border p-3 transition-all shadow-2xs",
-                    pathname === "/inscripcion"
-                      ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/30"
-                      : "border-border bg-card text-foreground hover:border-brand-green/40 hover:bg-brand-green-soft/30",
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-9 items-center justify-center rounded-lg bg-brand-gold text-brand-green-deep font-bold shadow-xs">
-                      <ClipboardCheck className="size-5" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold leading-tight">Formulario de Estudiante</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
-                        Inscripción en línea y becas hasta el 90 %
-                      </p>
+                {/* Llamado a la acción destacado para aspirantes en móvil */}
+                <div className="p-4 border-b border-border/70 bg-emerald-50/60">
+                  <Link
+                    to="/inscripcion"
+                    onClick={() => setAbierto(false)}
+                    className="flex items-center justify-between rounded-xl bg-brand-green p-3 text-white shadow-xs hover:bg-brand-green-deep transition-all"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Sparkles className="size-4 text-brand-gold shrink-0" />
+                      <div className="text-left">
+                        <p className="text-xs font-bold leading-tight uppercase tracking-wider">
+                          Postulación a Becas 90 %
+                        </p>
+                        <p className="text-[11px] text-white/80 mt-0.5">
+                          Diligencia tu cupo en línea
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <ArrowRight className="size-4 text-brand-green shrink-0" />
-                </Link>
+                    <ArrowRight className="size-4 shrink-0" />
+                  </Link>
+                </div>
 
-                <Link
-                  to="/portal-estudiantil"
-                  onClick={() => setAbierto(false)}
-                  className={cn(
-                    "flex items-center justify-between rounded-xl border p-3 transition-all shadow-2xs",
-                    pathname === "/portal-estudiantil"
-                      ? "border-brand-green bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/30"
-                      : "border-border bg-card text-foreground hover:border-brand-green/40 hover:bg-brand-green-soft/30",
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-9 items-center justify-center rounded-lg bg-brand-green text-primary-foreground shadow-xs">
-                      <GraduationCap className="size-5" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-bold leading-tight">Portal Estudiantil</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">
-                        Campus virtual, notas y certificados
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowRight className="size-4 text-brand-green shrink-0" />
-                </Link>
-              </div>
-              <nav aria-label="Navegación móvil" className="flex-1 space-y-1 px-4 py-4">
-                <Accordion type="multiple" className="w-full">
-                  {navegacion.map((item) =>
-                    item.children ? (
-                      <AccordionItem
-                        key={item.label}
-                        value={item.label}
-                        className="border-border/50 border-b"
-                      >
-                        <AccordionTrigger className="text-foreground px-2 py-4 text-base font-semibold hover:no-underline">
-                          <span>{item.label}</span>
-                        </AccordionTrigger>
-                        <AccordionContent className="space-y-1 pt-1 pb-4">
+                {/* Navegación móvil estructurada y clara */}
+                <nav aria-label="Navegación móvil" className="px-4 py-2">
+                  <Accordion type="multiple" className="w-full">
+                    {navegacion.map((item) =>
+                      item.children ? (
+                        <AccordionItem
+                          key={item.label}
+                          value={item.label}
+                          className="border-border/50 border-b"
+                        >
+                          <AccordionTrigger className="text-foreground px-2 py-3.5 text-sm font-semibold hover:no-underline">
+                            <span>{item.label}</span>
+                          </AccordionTrigger>
+                          <AccordionContent className="space-y-1 pt-1 pb-3 pl-2">
+                            <Link
+                              to={item.to}
+                              onClick={() => setAbierto(false)}
+                              className="text-primary bg-primary/5 hover:bg-primary/10 block rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
+                            >
+                              Ver todo en {item.label} →
+                            </Link>
+                            {item.children.map((child) => (
+                              <Link
+                                key={child.label}
+                                to={child.to}
+                                {...(child.hash ? { hash: child.hash } : {})}
+                                onClick={() => setAbierto(false)}
+                                className="block rounded-lg px-3 py-2 text-xs text-foreground/80 hover:bg-brand-green-soft/40 hover:text-foreground"
+                              >
+                                {child.label}
+                              </Link>
+                            ))}
+                          </AccordionContent>
+                        </AccordionItem>
+                      ) : (
+                        <div key={item.label} className="border-border/50 border-b">
                           <Link
                             to={item.to}
                             onClick={() => setAbierto(false)}
-                            className="text-primary bg-primary/5 hover:bg-primary/10 block rounded-lg px-4 py-3 text-sm font-semibold transition-colors"
+                            className="block px-2 py-3.5 text-sm font-semibold text-foreground hover:text-brand-green transition-colors"
                           >
-                            Ver todo en {item.label} →
+                            {item.label}
                           </Link>
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.label}
-                              to={child.to}
-                              {...(child.hash ? { hash: child.hash } : {})}
-                              onClick={() => setAbierto(false)}
-                              className="text-muted-foreground hover:text-foreground hover:bg-secondary/70 block rounded-lg px-4 py-3 text-sm font-medium transition-colors"
-                            >
-                              {child.label}
-                            </Link>
-                          ))}
-                        </AccordionContent>
-                      </AccordionItem>
-                    ) : (
-                      <Link
-                        key={item.label}
-                        to={item.to}
-                        onClick={() => setAbierto(false)}
-                        className="text-foreground hover:bg-secondary/70 border-border/50 flex items-center border-b px-2 py-4 text-base font-semibold transition-colors"
-                      >
-                        {item.label}
-                      </Link>
-                    ),
-                  )}
-                </Accordion>
-                <div className="grid gap-2.5 pt-6">
-                  <Button
-                    asChild
-                    onClick={() => setAbierto(false)}
-                    className="w-full rounded-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold"
+                        </div>
+                      ),
+                    )}
+                  </Accordion>
+                </nav>
+              </div>
+
+              {/* Pie del menú móvil con soporte y enlace a portal */}
+              <div className="border-t border-border/80 bg-muted/30 p-4 space-y-3">
+                <Link
+                  to="/portal-estudiantil"
+                  onClick={() => setAbierto(false)}
+                  className="flex items-center justify-between rounded-lg border border-border/80 bg-card px-3 py-2.5 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="size-4 text-brand-green" />
+                    <span>Portal para Estudiantes Activos</span>
+                  </div>
+                  <ArrowRight className="size-3.5 text-muted-foreground" />
+                </Link>
+
+                <div className="pt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                  <a href={phoneHref} className="hover:text-foreground flex items-center gap-1">
+                    <Phone className="size-3" /> {org.telefonos[0]}
+                  </a>
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-brand-green font-semibold hover:underline"
                   >
-                    <Link to="/inscripcion">Formulario de estudiante</Link>
-                  </Button>
-                  <Button asChild onClick={() => setAbierto(false)} variant="outline" className="w-full rounded-full">
-                    <Link to="/estudia" hash="becas">
-                      Conoce las becas
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="ghost"
-                    onClick={() => setAbierto(false)}
-                    className="w-full rounded-full"
-                  >
-                    <Link to="/contacto">Contáctanos</Link>
-                  </Button>
+                    WhatsApp Admisiones
+                  </a>
                 </div>
-              </nav>
+              </div>
             </SheetContent>
           </Sheet>
         </div>

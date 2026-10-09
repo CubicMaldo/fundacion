@@ -11,13 +11,12 @@ import {
   HelpCircle,
   Phone,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { programasAcademicos } from "@/data/programas";
 import { getProgramaBySlug } from "@/services/api";
-import { ModalInscripcion } from "@/components/site/ModalInscripcion";
-
 import { createSeoMeta, getBreadcrumbSchema, getCourseSchema } from "@/lib/seo";
 
 export const Route = createFileRoute("/programas/$slug")({
@@ -53,10 +52,10 @@ export const Route = createFileRoute("/programas/$slug")({
       ],
     });
   },
-  component: ProgramaDetailComponent,
+  component: DetallePrograma,
 });
 
-function ProgramaDetailComponent() {
+function DetallePrograma() {
   const { slug } = Route.useParams();
   const loaderData = Route.useLoaderData();
   const { settings } = useSiteSettings();
@@ -122,18 +121,13 @@ function ProgramaDetailComponent() {
           </nav>
 
           <div className="max-w-3xl">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-gold mb-3">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3 py-1 text-xs font-semibold text-brand-gold">
+              <GraduationCap className="size-3.5" />
               <span>{programa.categoria}</span>
-              <span aria-hidden="true" className="text-primary-foreground/40">
-                ·
-              </span>
-              <span className="text-primary-foreground/90">Beca de hasta 90 %</span>
             </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-foreground leading-tight">
+            <h1 className="mt-4 font-display text-3xl font-bold tracking-tight text-primary-foreground sm:text-4xl md:text-5xl">
               {programa.nombre}
             </h1>
-
             <p className="mt-4 text-base sm:text-lg text-primary-foreground/85 leading-relaxed">
               {programa.descripcion}
             </p>
@@ -141,20 +135,19 @@ function ProgramaDetailComponent() {
         </div>
       </header>
 
-      {/* Contenido principal y panel lateral */}
+      {/* Contenido principal */}
       <main className="container-page py-12 md:py-16">
-        <div className="grid gap-10 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
-          {/* Columna de contenido */}
+        <div className="grid gap-10 lg:grid-cols-[1fr_360px] items-start">
+          {/* Columna principal */}
           <div className="space-y-10">
-            {/* Imagen del programa */}
+            {/* Foto institucional del programa */}
             {imagenUrl && (
-              <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-card shadow-xs">
+              <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
                 <img
                   src={imagenUrl}
-                  alt={programa.nombre}
+                  alt={`Estudiantes del programa ${programa.nombre} en FUNASF`}
                   className="size-full object-cover"
                   loading="eager"
-                  fetchPriority="high"
                   decoding="async"
                   width={1000}
                   height={562}
@@ -282,18 +275,17 @@ function ProgramaDetailComponent() {
               </div>
 
               <div className="mt-6 space-y-2.5">
-                <ModalInscripcion
-                  programaNombre={programa.nombre}
-                  triggerButton={
-                    <Button
-                      size="lg"
-                      className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold"
-                    >
-                      Postularme a una beca
-                      <ArrowRight className="size-4 ml-2" />
-                    </Button>
-                  }
-                />
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold shadow-xs"
+                >
+                  <Link to="/inscripcion" search={{ programa: programa.slug }}>
+                    <Sparkles className="size-4 mr-1.5 text-brand-gold" />
+                    Postularme a esta beca
+                    <ArrowRight className="size-4 ml-1.5" />
+                  </Link>
+                </Button>
 
                 <Button asChild size="lg" variant="outline" className="w-full">
                   <Link to="/contacto">Consultar por este programa</Link>
