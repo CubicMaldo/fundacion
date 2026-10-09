@@ -41,7 +41,7 @@ const columnas = [
       { label: "Tratamiento de datos", to: "/tratamiento-datos", hash: undefined },
       { label: "Términos y condiciones", to: "/terminos-condiciones", hash: undefined },
       { label: "Información institucional", to: "/", hash: undefined },
-      { label: "Acceso administrativo", to: "/admin", hash: undefined },
+      { label: "Acceso administrativo", to: "/admin/login", hash: undefined },
     ],
   },
 ] as const;
@@ -167,7 +167,7 @@ export function Footer() {
 
             <div className="shrink-0">
               <Link
-                to="/admin"
+                to="/admin/login"
                 className="inline-flex items-center gap-2 rounded-lg border border-primary-foreground/20 bg-primary-foreground/5 px-3.5 py-2 text-xs font-medium text-primary-foreground/85 transition-colors hover:bg-primary-foreground/15 hover:text-white hover:border-brand-gold/40 shadow-2xs"
               >
                 <Lock className="size-3.5 text-brand-gold" />

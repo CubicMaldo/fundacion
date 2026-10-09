@@ -18,9 +18,13 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    // Si el usuario autenticado tiene rol estudiante, no debe acceder al CMS administrativo
+    // Si el usuario autenticado tiene rol estudiante, no debe acceder al CMS administrativo.
+    // Redirigir a login con aviso para permitir cambiar a credenciales de administrador.
     if (!isLoading && user && role === "estudiante") {
-      navigate({ to: "/portal-estudiantil" });
+      navigate({
+        to: "/admin/login",
+        search: { redirect: location.pathname, reason: "requiere_admin" },
+      });
       return;
     }
 
@@ -53,26 +57,18 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
     );
   }
 
-  // Si no hay usuario y ya terminó de cargar, no renderizar el CMS (esperando redirección)
+  // Si no hay usuario autenticado o tiene rol estudiante, no renderizar el CMS (esperar redirección)
   if (!user || role === "estudiante") {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-muted/20 flex flex-col md:flex-row">
-      {/* Sidebar fijo en desktop, desplegable en móvil */}
+    <div className="flex min-h-screen bg-muted/20">
       <AdminSidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
-
-      {/* Contenido principal */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <AdminHeader
-          title={title}
-          subtitle={subtitle}
-          onOpenMobile={() => setMobileOpen(true)}
-        />
-
-        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
-          {children}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        <AdminHeader onOpenMobile={() => setMobileOpen(true)} title={title} subtitle={subtitle} />
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>
     </div>
