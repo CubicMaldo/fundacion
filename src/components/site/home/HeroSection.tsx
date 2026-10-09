@@ -50,16 +50,29 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
               </Link>
             </Button>
 
+            {/* En pantallas desktop: enlace directo a WhatsApp */}
             <Button
               asChild
               size="lg"
               variant="outlineInvert"
-              className="h-12 rounded-full px-6 border-white/30 text-white hover:bg-white/10"
+              className="h-12 rounded-full px-6 border-white/30 text-white hover:bg-white/10 hidden sm:inline-flex"
             >
               <a href={whatsappLink} target="_blank" rel="noreferrer">
                 <MessageCircle className="size-4 mr-2 text-emerald-400" />
                 Consultar por WhatsApp
               </a>
+            </Button>
+
+            {/* En móviles: enlace institucional secundario sin duplicar el WhatsApp de la barra inferior */}
+            <Button
+              asChild
+              size="lg"
+              variant="outlineInvert"
+              className="h-12 rounded-full px-6 border-white/30 text-white hover:bg-white/10 sm:hidden"
+            >
+              <Link to="/quienes-somos">
+                Conoce la Fundación
+              </Link>
             </Button>
           </div>
         </div>
@@ -76,23 +89,6 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
             width={1200}
             height={900}
           />
-        </div>
-      </div>
-
-      <div className="border-primary-foreground/15 border-t mt-12">
-        <div className="container-page text-primary-foreground/85 grid gap-6 py-7 sm:grid-cols-3">
-          <p className="text-sm">
-            <strong className="text-brand-gold block text-2xl font-bold font-display">Hasta 90 %</strong>
-            de cobertura en becas según convocatoria
-          </p>
-          <p className="text-sm">
-            <strong className="text-brand-gold block text-2xl font-bold font-display">Presencial y virtual</strong>
-            horarios flexibles para jóvenes y trabajadores
-          </p>
-          <p className="text-sm">
-            <strong className="text-brand-gold block text-2xl font-bold font-display">Panamá y Colombia</strong>
-            origen y vocación social de nuestra labor
-          </p>
         </div>
       </div>
     </section>
