@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   GraduationCap,
+  HelpCircle,
   Phone,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section } from "@/components/site/Section";
@@ -77,7 +77,7 @@ function InscripcionPage() {
           <div className="lg:col-span-7 bg-card border border-border/80 rounded-2xl p-6 sm:p-8 shadow-xs">
             <div className="mb-6 pb-4 border-b border-border/70">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-700 text-xs font-semibold mb-2">
-                <Sparkles className="size-3.5" />
+                <span className="size-1.5 rounded-full bg-emerald-600" />
                 <span>Paso 1: Registro preliminar de aspirante</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-bold font-display text-foreground">
@@ -99,7 +99,7 @@ function InscripcionPage() {
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-brand-cream/60 border border-brand-gold/30 rounded-2xl p-6">
               <div className="flex items-center gap-2 text-brand-gold-deep mb-3 font-semibold text-sm">
-                <Sparkles className="size-4" />
+                <HelpCircle className="size-4" />
                 <span>¿Cómo funciona el proceso de beca?</span>
               </div>
               <ul className="space-y-3.5 text-xs text-foreground/80 leading-relaxed">

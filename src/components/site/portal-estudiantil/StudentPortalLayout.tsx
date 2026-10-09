@@ -15,7 +15,6 @@ import {
   ShieldCheck,
   ChevronRight,
   ArrowLeft,
-  Sparkles,
   Phone,
   Mail,
 } from "lucide-react";
@@ -34,242 +33,200 @@ interface StudentPortalLayoutProps {
 export function StudentPortalLayout({ children }: StudentPortalLayoutProps) {
   const { user, profile, signOut } = useAuth();
   const { settings } = useSiteSettings();
-  const contacto = settings.contacto;
+  const [menuAbierto, setMenuAbierto] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onSubdomain = isStudentSubdomain();
+  const mainSiteUrl = getMainSiteUrl();
 
-  const [mounted, setMounted] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [onSubdomain, setOnSubdomain] = useState(false);
+  const org = settings.org;
+  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
 
   useEffect(() => {
-    setMounted(true);
-    setOnSubdomain(isStudentSubdomain());
-  }, []);
-
-  const mainSiteUrl = getMainSiteUrl();
-  const studentEmail = user?.email || "";
-  const studentName =
-    profile?.nombre_completo ||
-    (studentEmail ? (studentEmail.split("@")[0]?.replace(".", " ") ?? "Estudiante FUNASF") : "Estudiante FUNASF");
+    setMenuAbierto(false);
+  }, [pathname]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50/70 text-slate-800 antialiased selection:bg-brand-green/20 selection:text-brand-green-deep">
-      {/* 1. Barra superior académica exclusiva */}
-      <div className="bg-brand-green-deep text-white border-b border-emerald-900/30 text-xs">
-        <div className="container-page flex h-8 items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <span className="font-semibold tracking-wide text-emerald-100 text-[11px] sm:text-xs">
-              Portal Académico Oficial &bull; FUNASF Estudiantes
-            </span>
-            <span className="hidden md:inline-block text-white/30">&bull;</span>
-            <span className="hidden md:inline-block text-white/80 text-[11px]">
-              Período Activo 2026-II
-            </span>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* 1. Header Dedicado del Portal Estudiantil */}
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+        <div className="container-page flex h-16 items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-3">
+              <Logo variant="horizontal" size="sm" showSubtitle={false} />
+            </Link>
+            <div className="hidden sm:block h-5 w-px bg-slate-200" />
+            <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-brand-green-deep bg-brand-green-soft px-2.5 py-1 rounded-full">
+              <GraduationCap className="size-3.5" />
+              <span>Portal Estudiantil</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 text-[11px]">
-            <a
-              href={`https://wa.me/${contacto.whatsappLlamadas || "573232946184"}?text=Hola%20Mesa%20de%20Ayuda%20FUNASF,%20necesito%20asistencia%20con%20mi%20portal%20de%20estudiante`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 text-brand-gold hover:text-white transition-colors"
-            >
-              <LifeBuoy className="size-3" />
-              <span>Soporte Académico</span>
-            </a>
-            <span className="hidden sm:inline text-white/30">&bull;</span>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Si está en subdominio, botón sutil para ir al portal informativo general */}
             <a
               href={mainSiteUrl}
-              className="inline-flex items-center gap-1 font-medium text-emerald-200 hover:text-white transition-colors"
+              className="text-xs text-slate-500 hover:text-slate-800 hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
             >
               <ArrowLeft className="size-3" />
-              <span>Ir al Sitio Institucional FUNASF</span>
+              <span>Ir a edufunasf.org</span>
             </a>
-          </div>
-        </div>
-      </div>
 
-      {/* 2. Cabecera diferenciada del Portal Estudiantil */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
-        <div className="container-page flex h-20 items-center justify-between gap-4">
-          {/* Identidad con insignia de Portal Estudiantil */}
-          <div className="flex items-center gap-3">
-            <Link
-              to={onSubdomain ? "/" : "/portal-estudiantil"}
-              className="flex items-center gap-2 group focus-visible:outline-hidden"
-            >
-              <div className="size-11 sm:size-12 shrink-0">
-                <Logo variant="emblem" size="md" />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-display font-bold text-lg sm:text-xl tracking-tight text-brand-green-deep">
-                    EduFUNASF
-                  </span>
-                  <Badge className="bg-brand-green text-white hover:bg-brand-green border-none px-2 py-0 text-[10px] tracking-wider uppercase font-bold shadow-xs">
-                    Campus Estudiantil
-                  </Badge>
-                </div>
-                <span className="text-[11px] font-medium text-slate-500 tracking-tight">
-                  Servicios Académicos &bull; Expediente &bull; Aulas
-                </span>
-              </div>
-            </Link>
-          </div>
-
-          {/* Navegación de escritorio específica del estudiante */}
-          <nav className="hidden lg:flex items-center gap-1">
-            <a
-              href="#expediente"
-              className="px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-green rounded-md hover:bg-slate-100 transition-colors inline-flex items-center gap-1.5"
-            >
-              <GraduationCap className="size-3.5 text-brand-green" />
-              <span>Mi Expediente</span>
-            </a>
-            <a
-              href="#plataformas"
-              className="px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-green rounded-md hover:bg-slate-100 transition-colors inline-flex items-center gap-1.5"
-            >
-              <Laptop className="size-3.5 text-brand-green" />
-              <span>Campus Virtual LMS</span>
-            </a>
-            <a
-              href="#tramites"
-              className="px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-green rounded-md hover:bg-slate-100 transition-colors inline-flex items-center gap-1.5"
-            >
-              <FileText className="size-3.5 text-brand-green" />
-              <span>Trámites & Solicitudes</span>
-            </a>
-            <a
-              href="#calendario"
-              className="px-3 py-2 text-xs font-semibold text-slate-700 hover:text-brand-green rounded-md hover:bg-slate-100 transition-colors inline-flex items-center gap-1.5"
-            >
-              <Calendar className="size-3.5 text-brand-green" />
-              <span>Calendario</span>
-            </a>
-          </nav>
-
-          {/* Acciones de usuario / sesión (hidratación segura) */}
-          <div className="flex items-center gap-2">
-            {mounted && user ? (
-              <div className="flex items-center gap-2.5 bg-slate-100/90 border border-slate-200 rounded-full pl-2 pr-1.5 py-1">
-                <div className="size-7 rounded-full bg-brand-green text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
-                  {studentName.charAt(0)}
-                </div>
-                <div className="hidden sm:flex flex-col text-left pr-1">
-                  <span className="text-xs font-bold text-slate-900 leading-tight max-w-[140px] truncate capitalize">
-                    {studentName}
-                  </span>
-                  <span className="text-[10px] text-emerald-700 font-semibold leading-none">
-                    Estudiante Activo
-                  </span>
+            {user ? (
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="text-right hidden sm:block">
+                  <p className="text-xs font-bold text-slate-800 leading-tight">
+                    {profile?.nombre_completo || user.email?.split("@")[0]}
+                  </p>
+                  <p className="text-[10px] text-slate-500">Estudiante</p>
                 </div>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
                   onClick={() => signOut()}
-                  className="size-7 p-0 rounded-full text-slate-500 hover:text-rose-600 hover:bg-rose-50"
-                  title="Cerrar sesión del portal"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-100 gap-1.5 h-8 px-2.5"
                 >
                   <LogOut className="size-3.5" />
-                  <span className="sr-only">Cerrar sesión</span>
+                  <span className="hidden sm:inline">Cerrar Sesión</span>
                 </Button>
               </div>
             ) : (
-              <Link
-                to="/admin/login"
-                search={{ portal: "estudiante", redirect: "/portal-estudiantil" }}
+              <Button
+                asChild
+                size="sm"
+                className="bg-brand-green hover:bg-brand-green-deep text-white font-medium text-xs h-8 px-3"
               >
-                <Button
-                  size="sm"
-                  className="bg-brand-green hover:bg-brand-green/90 text-white rounded-full px-4 text-xs font-semibold shadow-xs"
+                <Link
+                  to="/admin/login"
+                  search={{ portal: "estudiante", redirect: "/portal-estudiantil" }}
                 >
-                  <User className="size-3.5 mr-1.5" />
-                  <span>Ingresar a mi Expediente</span>
-                </Button>
-              </Link>
+                  Ingresar con mi cuenta
+                </Link>
+              </Button>
             )}
 
             {/* Botón menú móvil */}
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-              aria-label="Abrir menú de navegación estudiantil"
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden size-8 text-slate-600"
+              onClick={() => setMenuAbierto(!menuAbierto)}
             >
-              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
+              {menuAbierto ? <X className="size-4" /> : <Menu className="size-4" />}
+            </Button>
           </div>
         </div>
 
-        {/* Menú móvil */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-2 shadow-lg animate-in slide-in-from-top-2">
+        {/* Menú colapsable en móvil */}
+        {menuAbierto && (
+          <div className="md:hidden border-t border-slate-200 bg-white p-4 space-y-2 animate-in slide-in-from-top duration-200">
             <a
               href="#expediente"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-800 hover:bg-emerald-50 hover:text-brand-green"
+              onClick={() => setMenuAbierto(false)}
+              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
-              <GraduationCap className="size-4 text-brand-green" />
-              <span>Mi Expediente & Calificaciones</span>
+              Consulta de Notas
             </a>
             <a
               href="#plataformas"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-800 hover:bg-emerald-50 hover:text-brand-green"
+              onClick={() => setMenuAbierto(false)}
+              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
-              <Laptop className="size-4 text-brand-green" />
-              <span>Aulas y Campus Virtual</span>
+              Aulas y Plataformas
             </a>
             <a
               href="#tramites"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-800 hover:bg-emerald-50 hover:text-brand-green"
+              onClick={() => setMenuAbierto(false)}
+              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
-              <FileText className="size-4 text-brand-green" />
-              <span>Radicación de Trámites & Certificados</span>
+              Trámites y Certificados
             </a>
             <a
               href="#calendario"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-800 hover:bg-emerald-50 hover:text-brand-green"
+              onClick={() => setMenuAbierto(false)}
+              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
             >
-              <Calendar className="size-4 text-brand-green" />
-              <span>Calendario Académico</span>
+              Calendario Académico
             </a>
-            <div className="pt-2 border-t border-slate-100">
+            <div className="border-t border-slate-100 pt-2">
               <a
                 href={mainSiteUrl}
-                className="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-50"
+                className="block rounded-lg px-3 py-2 text-xs text-brand-green font-medium"
               >
-                <span>Volver al Sitio Institucional FUNASF</span>
-                <ExternalLink className="size-3.5" />
+                ← Volver al sitio web principal
               </a>
             </div>
           </div>
         )}
       </header>
 
-      {/* 3. Contenido principal del portal */}
-      <main id="contenido-estudiantil" className="flex-1">
-        {children}
-      </main>
+      {/* 2. Barra de Navegación de Pestañas del Portal (Desktop) */}
+      <nav
+        aria-label="Navegación del portal de estudiantes"
+        className="bg-white border-b border-slate-200/80 hidden md:block"
+      >
+        <div className="container-page flex items-center gap-1 overflow-x-auto py-1">
+          <a
+            href="#expediente"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <GraduationCap className="size-3.5 text-brand-green" />
+            <span>Registro de Notas</span>
+          </a>
+          <a
+            href="#plataformas"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <Laptop className="size-3.5 text-brand-green" />
+            <span>Aulas Virtuales</span>
+          </a>
+          <a
+            href="#tramites"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <FileText className="size-3.5 text-brand-green" />
+            <span>Trámites y Certificados</span>
+          </a>
+          <a
+            href="#calendario"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <Calendar className="size-3.5 text-brand-green" />
+            <span>Calendario Académico</span>
+          </a>
+        </div>
+      </nav>
 
-      {/* 4. Pie de página del portal estudiantil */}
+      {/* 3. Contenido Principal */}
+      <main className="flex-1">{children}</main>
+
+      {/* 4. Footer Específico del Portal Académico */}
       <footer className="border-t border-slate-200 bg-white py-8 text-xs text-slate-500">
-        <div className="container-page flex flex-col md:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} EduFUNASF &bull; División de Registro y Control Académico.</p>
+        <div className="container-page flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-slate-700">EduFUNASF</span>
+            <span>—</span>
+            <span>Campus Virtual & Secretaría Académica</span>
+          </div>
           <div className="flex items-center gap-4">
-            <a href="mailto:admisiones@edufunasf.org" className="hover:text-slate-800">
-              admisiones@edufunasf.org
+            <a
+              href={`mailto:${org.correo}`}
+              className="hover:text-brand-green flex items-center gap-1"
+            >
+              <Mail className="size-3" /> Soporte
             </a>
-            <span>&bull;</span>
-            <a href={`https://wa.me/${contacto.whatsappLlamadas || "573232946184"}`} target="_blank" rel="noreferrer" className="hover:text-slate-800">
-              Mesa de Ayuda WhatsApp
+            <a
+              href={`https://wa.me/57${org.telefonos[0]?.replace(/\D/g, "")}`}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-brand-green flex items-center gap-1"
+            >
+              <Phone className="size-3" /> Orientación
+            </a>
+            <a
+              href={mainSiteUrl}
+              className="hover:text-brand-green flex items-center gap-1"
+            >
+              <ExternalLink className="size-3" /> edufunasf.org
             </a>
           </div>
         </div>
