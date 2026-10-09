@@ -1,92 +1,85 @@
-import { useState, useEffect, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   GraduationCap,
-  BookOpen,
-  Calendar,
-  FileText,
-  LifeBuoy,
-  LogOut,
-  ExternalLink,
-  Laptop,
   Menu,
   X,
-  User,
-  ShieldCheck,
-  ChevronRight,
-  ArrowLeft,
-  Phone,
+  Laptop,
+  FileText,
+  Calendar,
+  LogOut,
   Mail,
+  MessageCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Logo } from "@/components/site/Logo";
+import { org } from "@/data/funasf";
 import { useAuth } from "@/lib/auth-context";
-import { useSiteSettings } from "@/lib/site-settings-context";
-import { getMainSiteUrl, isStudentSubdomain } from "@/lib/subdomain";
-import { cn } from "@/lib/utils";
 
-interface StudentPortalLayoutProps {
-  children: ReactNode;
-}
-
-export function StudentPortalLayout({ children }: StudentPortalLayoutProps) {
-  const { user, profile, signOut } = useAuth();
-  const { settings } = useSiteSettings();
+export function StudentPortalLayout({ children }: { children: React.ReactNode }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const onSubdomain = isStudentSubdomain();
-  const mainSiteUrl = getMainSiteUrl();
+  const { user, profile, signOut } = useAuth();
 
-  const org = settings.org;
-  const telefonoPrincipal = settings.contacto.telefonoPrincipal;
-
-  useEffect(() => {
-    setMenuAbierto(false);
-  }, [pathname]);
+  const mainSiteUrl = "/";
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      {/* 1. Header Dedicado del Portal Estudiantil */}
-      <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/95 backdrop-blur-md">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-800">
+      {/* 1. Header Superior Específico del Portal de Estudiantes */}
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-2xs">
         <div className="container-page flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-3">
-              <Logo variant="horizontal" size="sm" showSubtitle={false} />
+          {/* Identidad de Marca Institucional */}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/portal-estudiantil"
+              className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
+            >
+              <div className="flex size-9 items-center justify-center rounded-xl bg-brand-green text-white shadow-xs">
+                <GraduationCap className="size-5" />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-display font-bold text-sm text-slate-900 tracking-tight">
+                    EduFUNASF
+                  </span>
+                  <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-green ring-1 ring-emerald-500/20">
+                    Estudiantes
+                  </span>
+                </div>
+                <span className="text-[10px] text-slate-500 -mt-0.5">
+                  Fundación Amigos Sin Fronteras
+                </span>
+              </div>
             </Link>
-            <div className="hidden sm:block h-5 w-px bg-slate-200" />
-            <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-brand-green-deep bg-brand-green-soft px-2.5 py-1 rounded-full">
-              <GraduationCap className="size-3.5" />
-              <span>Portal Estudiantil</span>
-            </div>
           </div>
 
+          {/* Acciones del Estudiante y Perfil */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Si está en subdominio, botón sutil para ir al portal informativo general */}
-            <a
-              href={mainSiteUrl}
-              className="text-xs text-slate-500 hover:text-slate-800 hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="hidden lg:inline-flex text-xs text-slate-600 hover:text-brand-green"
             >
-              <ArrowLeft className="size-3" />
-              <span>Ir a edufunasf.org</span>
-            </a>
+              <a href={mainSiteUrl}>← Volver a FUNASF</a>
+            </Button>
 
             {user ? (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="text-right hidden sm:block">
-                  <p className="text-xs font-bold text-slate-800 leading-tight">
-                    {profile?.nombre_completo || user.email?.split("@")[0]}
-                  </p>
-                  <p className="text-[10px] text-slate-500">Estudiante</p>
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:flex flex-col text-right">
+                  <span className="text-xs font-semibold text-slate-800 leading-tight">
+                    {profile?.nombre_completo || "Estudiante"}
+                  </span>
+                  <span className="text-[10px] text-slate-500 leading-tight">
+                    {user.email}
+                  </span>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => signOut()}
-                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-100 gap-1.5 h-8 px-2.5"
+                  className="text-xs text-slate-600 hover:text-red-600 hover:border-red-200 h-8 px-2.5"
                 >
-                  <LogOut className="size-3.5" />
-                  <span className="hidden sm:inline">Cerrar Sesión</span>
+                  <LogOut className="size-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Cerrar sesión</span>
                 </Button>
               </div>
             ) : (
@@ -159,36 +152,36 @@ export function StudentPortalLayout({ children }: StudentPortalLayoutProps) {
         )}
       </header>
 
-      {/* 2. Barra de Navegación de Pestañas del Portal (Desktop) */}
+      {/* 2. Barra de Navegación de Pestañas del Portal (Optimizada para Móvil y Desktop) */}
       <nav
         aria-label="Navegación del portal de estudiantes"
-        className="bg-white border-b border-slate-200/80 hidden md:block"
+        className="bg-white border-b border-slate-200/80 sticky top-16 z-30 shadow-2xs"
       >
-        <div className="container-page flex items-center gap-1 overflow-x-auto py-1">
+        <div className="container-page flex items-center gap-2 overflow-x-auto py-2 scrollbar-none">
           <a
             href="#expediente"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
           >
             <GraduationCap className="size-3.5 text-brand-green" />
             <span>Registro de Notas</span>
           </a>
           <a
             href="#plataformas"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
           >
             <Laptop className="size-3.5 text-brand-green" />
             <span>Aulas Virtuales</span>
           </a>
           <a
             href="#tramites"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
           >
             <FileText className="size-3.5 text-brand-green" />
             <span>Trámites y Certificados</span>
           </a>
           <a
             href="#calendario"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg transition-colors"
+            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
           >
             <Calendar className="size-3.5 text-brand-green" />
             <span>Calendario Académico</span>
@@ -220,13 +213,7 @@ export function StudentPortalLayout({ children }: StudentPortalLayoutProps) {
               rel="noreferrer"
               className="hover:text-brand-green flex items-center gap-1"
             >
-              <Phone className="size-3" /> Orientación
-            </a>
-            <a
-              href={mainSiteUrl}
-              className="hover:text-brand-green flex items-center gap-1"
-            >
-              <ExternalLink className="size-3" /> edufunasf.org
+              <MessageCircle className="size-3" /> WhatsApp
             </a>
           </div>
         </div>

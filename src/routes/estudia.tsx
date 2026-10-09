@@ -13,7 +13,6 @@ import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
 import { getProgramasAcademicos, getSiteSettings, getCategorizedPrograms } from "@/services/api";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
-import { ModalInscripcion } from "@/components/site/ModalInscripcion";
 
 export const Route = createFileRoute("/estudia")({
   head: () =>
@@ -59,13 +58,9 @@ function Estudia() {
         description={formacionAcademica.parrafos[0]}
       >
         <div className="flex flex-wrap gap-3">
-          <ModalInscripcion
-            triggerButton={
-              <Button variant="gold" size="lg">
-                Formulario de inscripción
-              </Button>
-            }
-          />
+          <Button asChild variant="gold" size="lg">
+            <Link to="/inscripcion">Formulario de inscripción</Link>
+          </Button>
           <Button asChild variant="outlineInvert" size="lg">
             <Link to="/contacto">Solicitar información</Link>
           </Button>
@@ -102,21 +97,20 @@ function Estudia() {
                             aria-hidden
                             className="bg-brand-gold mt-2 size-2 shrink-0 rounded-full"
                           />
-                          {matchProg ? (
-                            <Link
-                              to="/programas/$slug"
-                              params={{ slug: matchProg.slug }}
-                              className="font-medium text-foreground hover:text-brand-green transition-colors inline-flex items-center gap-1.5 group"
-                            >
-                              <span>{p}</span>
-                              <ArrowRight
-                                aria-hidden
-                                className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-brand-green shrink-0"
-                              />
-                            </Link>
-                          ) : (
-                            <span>{p}</span>
-                          )}
+                          <div className="flex-1">
+                            {matchProg ? (
+                              <Link
+                                to="/programas/$slug"
+                                params={{ slug: matchProg.slug }}
+                                className="font-semibold text-foreground hover:text-brand-green flex items-center gap-1.5 transition-colors group"
+                              >
+                                <span>{matchProg.nombre}</span>
+                                <ArrowRight className="size-3.5 opacity-60 group-hover:translate-x-1 group-hover:opacity-100 transition-all text-brand-green" />
+                              </Link>
+                            ) : (
+                              <span className="font-semibold text-foreground">{p}</span>
+                            )}
+                          </div>
                         </li>
                       );
                     })}
@@ -126,18 +120,37 @@ function Estudia() {
             ))}
           </Accordion>
         </div>
-        <div className="mt-8 flex justify-center">
-          <Button asChild variant="outline">
-            <Link to="/programas">
-              Ver catálogo completo con filtros y fichas técnicas
-              <ArrowRight aria-hidden className="size-4 ml-2" />
-            </Link>
-          </Button>
+      </Section>
+
+      <Section id="matriculas" tone="surface">
+        <SectionHeading
+          eyebrow="Requisitos y matrícula"
+          title="El camino hacia tu título técnico laboral"
+          description={formacionAcademica.parrafos[2]}
+        />
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="card-institucional">
+            <h3 className="text-brand-green-deep text-lg">Requisitos de ingreso</h3>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              Copia de documento de identidad, certificado de estudios (grado 9° o bachiller según el
+              programa), 2 fotos 3x4 y diligenciamiento del formulario institucional de beca.
+            </p>
+          </div>
+          <div className="card-institucional">
+            <h3 className="text-brand-green-deep text-lg">Flexibilidad horaria</h3>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              Jornadas diurnas, nocturnas y sabatinas diseñadas para personas que trabajan o tienen
+              responsabilidades familiares, con acompañamiento permanente de tutores.
+            </p>
+          </div>
+          <div className="card-institucional">
+            <h3 className="text-brand-green-deep text-lg">Doble certificación</h3>
+            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
+              Formación técnica por competencias laborales certificada por institutos autorizados y
+              diploma de participación comunitaria expedido por FUNASF.
+            </p>
+          </div>
         </div>
-        <p className="text-muted-foreground mt-6 text-center text-xs">
-          La duración, la modalidad y las condiciones de cada programa dependen de la institución
-          aliada responsable y de la convocatoria vigente.
-        </p>
       </Section>
 
       <Section id="becas" tone="deep">
@@ -161,13 +174,9 @@ function Estudia() {
               ))}
             </ul>
             <div className="mt-8">
-              <ModalInscripcion
-                triggerButton={
-                  <Button variant="gold" className="w-full sm:w-auto">
-                    Solicitar beca de estudio
-                  </Button>
-                }
-              />
+              <Button asChild variant="gold" className="w-full sm:w-auto">
+                <Link to="/inscripcion">Solicitar beca de estudio</Link>
+              </Button>
             </div>
           </div>
         </div>

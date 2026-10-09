@@ -5,14 +5,21 @@ import { whatsappLink } from "@/data/funasf";
 export function MobileStickyBar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  // No mostrar en la propia página de inscripción, ni en el portal de notas, ni en el panel de administración
+  // No mostrar en la propia página de inscripción, ni en contacto, ni en el portal de notas, ni en el panel de administración
   if (
     pathname === "/inscripcion" ||
+    pathname === "/contacto" ||
     pathname.startsWith("/portal-estudiantil") ||
     pathname.startsWith("/admin")
   ) {
     return null;
   }
+
+  // Detectar si el usuario está explorando un programa específico para transferirlo a la postulación
+  const isProgramaDetail = pathname.startsWith("/programas/") && pathname !== "/programas/";
+  const programaSlug = isProgramaDetail
+    ? pathname.replace("/programas/", "").split("/")[0]
+    : undefined;
 
   return (
     <aside
@@ -33,10 +40,11 @@ export function MobileStickyBar() {
 
         <Link
           to="/inscripcion"
+          {...(programaSlug ? { search: { programa: programaSlug } } : {})}
           className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-brand-green px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all active:scale-[0.98] active:bg-brand-green-deep"
         >
           <GraduationCap className="size-4 text-brand-gold" />
-          <span>Postularme a Beca</span>
+          <span>{programaSlug ? "Postularme a esta Beca" : "Postularme a Beca"}</span>
         </Link>
       </div>
     </aside>
