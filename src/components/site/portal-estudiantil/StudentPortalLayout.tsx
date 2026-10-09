@@ -10,6 +10,7 @@ import {
   LogOut,
   Mail,
   MessageCircle,
+  Lock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { org } from "@/data/funasf";
@@ -215,6 +216,13 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
             >
               <MessageCircle className="size-3" /> WhatsApp
             </a>
+            <Link
+              to="/admin"
+              className="hover:text-brand-green flex items-center gap-1 text-slate-400 hover:text-slate-700 transition-colors"
+              title="Panel Administrativo FUNASF"
+            >
+              <Lock className="size-3" /> Panel Admin
+            </Link>
           </div>
         </div>
       </footer>

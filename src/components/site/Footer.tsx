@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, Phone } from "lucide-react";
+import { Instagram, Mail, Phone, Lock } from "lucide-react";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { Logo } from "@/components/site/Logo";
 
@@ -41,6 +41,7 @@ const columnas = [
       { label: "Tratamiento de datos", to: "/tratamiento-datos", hash: undefined },
       { label: "Términos y condiciones", to: "/terminos-condiciones", hash: undefined },
       { label: "Información institucional", to: "/", hash: undefined },
+      { label: "Acceso administrativo", to: "/admin", hash: undefined },
     ],
   },
 ] as const;
@@ -153,17 +154,37 @@ export function Footer() {
         </div>
 
         <div className="border-primary-foreground/15 mt-12 border-t pt-8">
-          <h2 className="text-primary-foreground/70 text-xs font-bold tracking-[0.14em] uppercase">
-            Información institucional
-          </h2>
-          <p className="text-primary-foreground/65 mt-3 max-w-3xl text-xs leading-relaxed">
-            Razón social: {org.razonSocial} · Sigla: {org.sigla} · Tipo: {org.tipoContribuyente} ·
-            NIT: {org.nit} · Domicilio principal: {org.ciudadPrincipal}.
-          </p>
-          <p className="text-primary-foreground/55 mt-6 text-xs">
-            © {new Date().getFullYear()} Fundación Internacional Amigos Sin Fronteras – FUNASF.
-            Todos los derechos reservados.
-          </p>
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-2">
+              <h2 className="text-primary-foreground/70 text-xs font-bold tracking-[0.14em] uppercase">
+                Información institucional
+              </h2>
+              <p className="text-primary-foreground/65 max-w-3xl text-xs leading-relaxed">
+                Razón social: {org.razonSocial} · Sigla: {org.sigla} · Tipo: {org.tipoContribuyente} ·
+                NIT: {org.nit} · Domicilio principal: {org.ciudadPrincipal}.
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-2 rounded-lg border border-primary-foreground/20 bg-primary-foreground/5 px-3.5 py-2 text-xs font-medium text-primary-foreground/85 transition-colors hover:bg-primary-foreground/15 hover:text-white hover:border-brand-gold/40 shadow-2xs"
+              >
+                <Lock className="size-3.5 text-brand-gold" />
+                <span>Panel Administrativo</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-primary-foreground/55">
+            <p>
+              © {new Date().getFullYear()} Fundación Internacional Amigos Sin Fronteras – FUNASF.
+              Todos los derechos reservados.
+            </p>
+            <p className="text-[11px] text-primary-foreground/45">
+              EduFUNASF · Gestión Institucional & Académica
+            </p>
+          </div>
         </div>
       </div>
     </footer>
