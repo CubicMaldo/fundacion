@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, GraduationCap } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Organization, QuienesSomos } from "@/models/schema";
 
@@ -36,10 +36,7 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outlineInvert">
-              <Link to="/inscripcion">
-                <GraduationCap aria-hidden className="size-4.5 mr-1.5" />
-                Formulario de estudiante
-              </Link>
+              <Link to="/inscripcion">Formulario de estudiante</Link>
             </Button>
           </div>
         </div>
