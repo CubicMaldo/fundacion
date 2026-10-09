@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { MobileStickyBar } from "./MobileStickyBar";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col pb-14 sm:pb-0">
       <a
         href="#contenido"
         className="bg-primary text-primary-foreground sr-only rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[60]"
@@ -16,6 +17,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         {children}
       </main>
       <Footer />
+      <MobileStickyBar />
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { ArrowLeft, GraduationCap, Loader2, Lock, Mail, Shield } from "lucide-react";
+import { ArrowLeft, GraduationCap, LifeBuoy, Loader2, Lock, Mail, Shield } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Logo } from "@/components/site/Logo";
+import { whatsappLink } from "@/data/funasf";
 
 export interface AdminLoginSearch {
   portal?: string;
@@ -92,29 +93,34 @@ function AdminLogin() {
         {/* Tarjeta de Login */}
         <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-lg">
           {/* Encabezado contextual */}
-          <div className="border-b border-border bg-brand-green p-8 text-center text-primary-foreground">
+          <div className="border-b border-border bg-brand-green p-7 text-center text-primary-foreground">
             <Logo variant="vertical" invert size="lg" showSubtitle className="mx-auto" />
-            <div className="mt-3 flex items-center justify-center gap-2">
+            <div className="mt-3.5 flex items-center justify-center gap-2">
               {isEstudianteLogin ? (
-                <>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white tracking-wide">
                   <GraduationCap className="size-4 text-brand-gold" />
-                  <p className="text-xs text-primary-foreground font-semibold tracking-wide uppercase">
-                    Portal Académico Estudiantil
-                  </p>
-                </>
+                  <span>Portal Académico Estudiantil</span>
+                </div>
               ) : (
-                <>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-white tracking-wide">
                   <Shield className="size-4 text-brand-gold" />
-                  <p className="text-xs text-primary-foreground/85 font-medium tracking-wide uppercase">
-                    Panel Administrativo Central
-                  </p>
-                </>
+                  <span>Panel Administrativo Central</span>
+                </div>
               )}
             </div>
           </div>
 
           {/* Formulario */}
-          <div className="p-8">
+          <div className="p-7 sm:p-8">
+            {isEstudianteLogin && (
+              <div className="mb-6 rounded-xl border border-emerald-500/20 bg-emerald-50/60 p-3.5 text-xs text-emerald-950 leading-relaxed">
+                <p className="font-bold text-emerald-900">¿Eres estudiante matriculado?</p>
+                <p className="mt-1 text-emerald-850">
+                  Ingresa con el correo electrónico registrado durante tu matrícula. Tu contraseña inicial es tu número de documento de identidad (a menos que la hayas actualizado).
+                </p>
+              </div>
+            )}
+
             {!isConfigured && (
               <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-3.5 text-xs text-amber-800 dark:text-amber-300">
                 <p className="font-semibold">Servicio de Autenticación Pendiente</p>
@@ -133,7 +139,7 @@ function AdminLogin() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">
-                  {isEstudianteLogin ? "Correo institucional o personal" : "Correo electrónico"}
+                  {isEstudianteLogin ? "Correo registrado" : "Correo electrónico"}
                 </Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -141,7 +147,7 @@ function AdminLogin() {
                     id="email"
                     type="email"
                     placeholder={
-                      isEstudianteLogin ? "estudiante@edufunasf.org" : "admin@edufunasf.org"
+                      isEstudianteLogin ? "tu-correo@ejemplo.com" : "admin@edufunasf.org"
                     }
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -153,7 +159,14 @@ function AdminLogin() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Contraseña</Label>
+                  {isEstudianteLogin && (
+                    <span className="text-[11px] text-muted-foreground">
+                      (N° de documento por defecto)
+                    </span>
+                  )}
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -172,7 +185,7 @@ function AdminLogin() {
               <Button
                 type="submit"
                 disabled={isSubmitting || !isConfigured}
-                className="w-full h-11 bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold mt-2"
+                className="w-full h-11 bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold mt-2 shadow-xs"
               >
                 {isSubmitting ? (
                   <>
@@ -186,6 +199,23 @@ function AdminLogin() {
                 )}
               </Button>
             </form>
+
+            {isEstudianteLogin && (
+              <div className="mt-6 pt-5 border-t border-border/70 text-center">
+                <p className="text-xs text-muted-foreground">
+                  ¿Tienes problemas para acceder a tus notas o aula virtual?
+                </p>
+                <a
+                  href={`${whatsappLink}&text=Hola%20Mesa%20de%20Ayuda%20FUNASF,%20necesito%20ayuda%20para%20ingresar%20a%20mi%20portal%20estudiantil`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-brand-green hover:text-brand-green-deep hover:underline"
+                >
+                  <LifeBuoy className="size-3.5" />
+                  <span>Contactar a Soporte Académico vía WhatsApp</span>
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
