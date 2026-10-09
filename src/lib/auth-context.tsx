@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
 import type { User } from "@supabase/supabase-js";
-import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
+
+export { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 export type UserRole = "admin" | "editor" | "docente" | "estudiante";
 
@@ -23,7 +24,7 @@ interface AuthContextType {
   isEstudiante: boolean;
   isLoading: boolean;
   isConfigured: boolean;
-  signIn: (email: string, password: string) => Promise<{ error?: string }>;
+  signIn: (email: string, password: string, roleHint?: UserRole) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -54,20 +55,6 @@ function setStoredAuth(user: User | null, profile: UserProfile | null) {
   }
 }
 
-export function isSupabaseConfigured(): boolean {
-  try {
-    const url =
-      import.meta.env["VITE_SUPABASE_URL"] ||
-      (typeof process !== "undefined" ? process.env?.["SUPABASE_URL"] : undefined);
-    const key =
-      import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
-      (typeof process !== "undefined" ? process.env?.["SUPABASE_PUBLISHABLE_KEY"] : undefined);
-    return Boolean(url && key);
-  } catch {
-    return false;
-  }
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(() => getStoredAuth()?.user ?? null);
   const [profile, setProfile] = useState<UserProfile | null>(
@@ -86,12 +73,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle();
 
         if (error || !data) {
-          // Si no existe perfil en la tabla pero está autenticado, asignamos editor o admin por defecto
+          // Principio de mínimo privilegio: por defecto rol estudiante, nunca admin
           const fallbackProfile: UserProfile = {
             id: userId,
             email: userEmail,
             nombre_completo: userEmail.split("@")[0] ?? "Usuario",
-            rol: "admin", // Primer usuario como admin
+            rol: "estudiante",
             avatar_url: null,
           };
           return fallbackProfile;
@@ -101,7 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: data.id,
           email: data.email,
           nombre_completo: data.nombre_completo,
-          rol: (data.rol as UserRole) || "editor",
+          rol: (data.rol as UserRole) || "estudiante",
           avatar_url: data.avatar_url,
         };
       } catch {
@@ -109,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: userId,
           email: userEmail,
           nombre_completo: userEmail.split("@")[0] ?? "Usuario",
-          rol: "admin",
+          rol: "estudiante",
           avatar_url: null,
         };
       }
@@ -181,7 +168,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [configured, fetchProfile]);
 
-  const signIn = async (email: string, password: string): Promise<{ error?: string }> => {
+  const signIn = async (
+    email: string,
+    password: string,
+    roleHint?: UserRole,
+  ): Promise<{ error?: string }> => {
     if (configured) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -189,40 +180,69 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           password,
         });
 
-        if (!error && data.user) {
+        if (error) {
+          return {
+            error:
+              error.message === "Invalid login credentials"
+                ? "Credenciales incorrectas. Verifica tu correo y contraseña."
+                : error.message,
+          };
+        }
+
+        if (data.user) {
           setUser(data.user);
           const p = await fetchProfile(data.user.id, data.user.email ?? "");
           setProfile(p);
           setStoredAuth(data.user, p);
           return {};
         }
-      } catch {
-        // Fallback a sesión local si Supabase Auth falla o requiere confirmación
+
+        return { error: "No se pudo obtener la sesión del usuario." };
+      } catch (err) {
+        return { error: (err as Error).message || "Error al conectar con el servidor de autenticación." };
       }
     }
 
-    // Modo de acceso administrativo resiliente (fallback)
-    const fallbackUser = {
-      id: "admin-session-id",
-      email,
-      app_metadata: {},
-      user_metadata: { nombre_completo: "Administrador FUNASF", rol: "admin" },
-      aud: "authenticated",
-      created_at: new Date().toISOString(),
-    } as User;
+    // Si Supabase NO está configurado:
+    // Solo permitir modo demostración en entorno local de desarrollo explícito (Vite DEV)
+    if (import.meta.env.DEV) {
+      const isEstudianteDemo =
+        roleHint === "estudiante" ||
+        email.toLowerCase().includes("estudiante") ||
+        email.toLowerCase().includes("alumno");
 
-    const fallbackProfile: UserProfile = {
-      id: "admin-session-id",
-      email,
-      nombre_completo: "Administrador FUNASF",
-      rol: "admin",
-      avatar_url: null,
+      const fallbackRole: UserRole = isEstudianteDemo ? "estudiante" : (roleHint ?? "admin");
+      const fallbackName = isEstudianteDemo ? "Estudiante FUNASF (Demo)" : "Administrador FUNASF (Demo)";
+      const fallbackId = isEstudianteDemo ? "demo-estudiante-id" : "admin-session-id";
+
+      const fallbackUser = {
+        id: fallbackId,
+        email,
+        app_metadata: {},
+        user_metadata: { nombre_completo: fallbackName, rol: fallbackRole },
+        aud: "authenticated",
+        created_at: new Date().toISOString(),
+      } as User;
+
+      const fallbackProfile: UserProfile = {
+        id: fallbackId,
+        email,
+        nombre_completo: fallbackName,
+        rol: fallbackRole,
+        avatar_url: null,
+      };
+
+      setUser(fallbackUser);
+      setProfile(fallbackProfile);
+      setStoredAuth(fallbackUser, fallbackProfile);
+      return {};
+    }
+
+    // En producción, bloquear acceso si Supabase no está configurado
+    return {
+      error:
+        "El servicio de autenticación no está disponible en este momento. Por favor contacta al administrador.",
     };
-
-    setUser(fallbackUser);
-    setProfile(fallbackProfile);
-    setStoredAuth(fallbackUser, fallbackProfile);
-    return {};
   };
 
   const signOut = async () => {

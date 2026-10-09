@@ -18,9 +18,5 @@ export default defineConfig({
       publicDir: "dist/public",
       serverDir: "dist/server",
     },
-    prerender: {
-      routes: ["/"],
-      crawlLinks: true,
-    },
   },
 });

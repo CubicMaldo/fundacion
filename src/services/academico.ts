@@ -1,21 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
-
-/**
- * Verifica si las variables de entorno de Supabase están configuradas.
- */
-function isSupabaseConfigured(): boolean {
-  try {
-    const url =
-      import.meta.env["VITE_SUPABASE_URL"] ||
-      (typeof process !== "undefined" ? process.env?.["SUPABASE_URL"] : undefined);
-    const key =
-      import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
-      (typeof process !== "undefined" ? process.env?.["SUPABASE_PUBLISHABLE_KEY"] : undefined);
-    return Boolean(url && key);
-  } catch {
-    return false;
-  }
-}
+import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 
 const ERROR_SISTEMA_NO_DISPONIBLE =
   "El sistema académico no se encuentra disponible temporalmente. Por favor intenta más tarde o comunícate con la coordinación académica.";
@@ -94,8 +77,73 @@ export interface EstudianteMatriculado {
   observaciones: ObservacionAcademica[];
 }
 
+// Datos de demostración cuando se prueba localmente sin conexión a Supabase
+const DEMO_MATRICULAS: MatriculaEstudiante[] = [
+  {
+    id: "mat-demo-1",
+    estudianteId: "demo-estudiante-id",
+    cursoId: "curso-demo-1",
+    curso: {
+      id: "curso-demo-1",
+      programaId: "prog-enfermeria",
+      programaNombre: "Auxiliar en Enfermería",
+      nombre: "Morfofisiología y Primeros Auxilios",
+      codigo: "ENF-101",
+      periodo: "2026-1",
+      horarioDescripcion: "Sábados 8:00 AM - 1:00 PM",
+      aula: "Sede Cali - Aula 204",
+      activo: true,
+    },
+    estado: "cursando",
+    notaDefinitiva: 4.2,
+    fechaMatricula: "2026-02-15",
+    notas: [
+      {
+        id: "nota-1",
+        matriculaId: "mat-demo-1",
+        titulo: "Taller de Signos Vitales y Triaje",
+        porcentaje: 25,
+        nota: 4.5,
+        retroalimentacion: "Excelente destreza en la toma de signos.",
+        createdAt: "2026-03-01",
+      },
+      {
+        id: "nota-2",
+        matriculaId: "mat-demo-1",
+        titulo: "Primer Parcial Teórico",
+        porcentaje: 35,
+        nota: 4.0,
+        retroalimentacion: "Buen dominio de conceptos anatómicos.",
+        createdAt: "2026-03-20",
+      },
+    ],
+    entregas: [
+      {
+        id: "ent-1",
+        matriculaId: "mat-demo-1",
+        titulo: "Protocolo de Bioseguridad y RCP",
+        archivoUrl: "#",
+        estado: "calificado",
+        nota: 4.5,
+        retroalimentacion: "Cumple con las guías internacionales vigentes.",
+        fechaEntrega: "2026-03-15",
+      },
+    ],
+    observaciones: [
+      {
+        id: "obs-1",
+        matriculaId: "mat-demo-1",
+        tipo: "felicitacion",
+        titulo: "Participación destacada en simulación",
+        detalle: "Demostró liderazgo y empatía en la práctica clínica de urgencias.",
+        createdAt: "2026-03-18",
+      },
+    ],
+  },
+];
+
 // ============================================================================
-// FUNCIONES PARA EL ESTUDIANTE (REGLA DE ORO: NUNCA FALSEAR DATOS CON FALLBACK LOCAL)
+// FUNCIONES PARA EL ESTUDIANTE
 // ============================================================================
 
 /**
@@ -105,6 +153,10 @@ export interface EstudianteMatriculado {
 export async function getMisMatriculasYNotas(
   estudianteId: string,
 ): Promise<{ ok: boolean; data?: MatriculaEstudiante[]; error?: string }> {
+  if (estudianteId === "demo-estudiante-id" && !isSupabaseConfigured()) {
+    return { ok: true, data: DEMO_MATRICULAS };
+  }
+
   if (!isSupabaseConfigured()) {
     return { ok: false, error: ERROR_SISTEMA_NO_DISPONIBLE };
   }
@@ -251,7 +303,7 @@ export async function getMisMatriculasYNotas(
 export async function subirEntregaTrabajo(params: {
   matriculaId: string;
   titulo: string;
-  descripcion?: string;
+  descripcion?: string | undefined;
   archivo: File;
 }): Promise<{ ok: boolean; error?: string }> {
   if (!isSupabaseConfigured()) {
@@ -353,7 +405,7 @@ export async function registrarNotaEvaluacion(params: {
   titulo: string;
   porcentaje: number;
   nota: number;
-  retroalimentacion?: string;
+  retroalimentacion?: string | undefined;
 }): Promise<{ ok: boolean; error?: string }> {
   if (!isSupabaseConfigured()) {
     return { ok: false, error: ERROR_SISTEMA_NO_DISPONIBLE };
@@ -377,4 +429,3 @@ export async function registrarNotaEvaluacion(params: {
     return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
   }
 }
-

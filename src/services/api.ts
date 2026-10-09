@@ -127,14 +127,14 @@ export async function getProgramaBySlug(slug: string): Promise<ProgramaAcademico
 // ============================================================================
 
 export interface InfoContactoPost {
-  activo?: boolean;
-  titulo?: string;
-  descripcion?: string;
-  whatsapp?: string;
-  mensajeWhatsapp?: string;
-  telefono?: string;
-  correo?: string;
-  enlacePostulacion?: string;
+  activo?: boolean | undefined;
+  titulo?: string | undefined;
+  descripcion?: string | undefined;
+  whatsapp?: string | undefined;
+  mensajeWhatsapp?: string | undefined;
+  telefono?: string | undefined;
+  correo?: string | undefined;
+  enlacePostulacion?: string | undefined;
 }
 
 export function parseContactoDeContenido(contenido: string | null | undefined): {
@@ -148,7 +148,7 @@ export function parseContactoDeContenido(contenido: string | null | undefined): 
   const regex = /<!--\s*FUNASF_CONTACT:\s*(\{[\s\S]*?\})\s*-->/;
   const match = contenido.match(regex);
 
-  if (!match) {
+  if (!match || !match[1]) {
     return { contenidoLimpio: contenido, contacto: null };
   }
 
@@ -200,14 +200,14 @@ export interface ArticuloBlog {
 export const ARTICULOS_DEFAULT: ArticuloBlog[] = [
   {
     id: "post-sst-beca-90",
-    slug: "becas-seguridad-salud-trabajo-diplomados",
-    titulo: "Beca del 90% en Seguridad y Salud en el Trabajo con Diplomados Especializados",
+    slug: "estudia-seguridad-y-salud-en-el-trabajo-beca-90",
+    titulo: "¡Transforma tu futuro! Beca del 90% en Seguridad y Salud en el Trabajo",
     resumen:
-      "FUNASF abre inscripciones para el programa técnico en Seguridad y Salud en el Trabajo con 90% de beca, sin costo de matrícula ni inscripción, e incluyendo tres diplomados certificados.",
+      "Asegura tu cupo en SST con beca del 90%, sin costo de matrícula ni inscripción, e incluye 3 diplomados de alta especialización.",
     contenido:
-      "La Fundación Internacional Amigos Sin Fronteras – FUNASF anuncia la apertura de su convocatoria institucional de becas para el programa de formación en Seguridad y Salud en el Trabajo (SST), dirigido a personas con vocación de proteger vidas y liderar entornos laborales seguros.\n\n### Beneficios del programa\n- **Beca de hasta el 90 %** otorgada por FUNASF.\n- **Sin costo de matrícula ni inscripción.**\n- **Tres diplomados complementarios incluidos:**\n  1. Manejo y Uso de Extintores.\n  2. Primeros Auxilios Básicos y Avanzados.\n  3. Trabajo Seguro en Alturas.\n\n### Perfil y campo de acción\nEl egresado en Seguridad y Salud en el Trabajo se capacita para:\n- Promover ambientes laborales seguros y saludables.\n- Identificar peligros, evaluar riesgos y ejecutar planes de prevención según la normatividad vigente.\n- Diseñar protocolos de emergencia y bienestar para empresas de cualquier sector productivo.\n\nPara mayor información y postulación inmediata a la beca, comunícate a nuestras líneas oficiales de atención WhatsApp: **+57 323 294 6184** o **+57 313 577 9384**.",
-    autorNombre: "Coordinación Académica FUNASF",
-    categoria: "Convocatorias",
+      "La Fundación Internacional Amigos Sin Fronteras (FUNASF) abre una oportunidad inigualable para tu crecimiento laboral. Si sueñas con formarte en **Seguridad y Salud en el Trabajo (SST)**, ahora puedes hacerlo con una **beca institucional del 90%**.\n\n### Beneficios destacados del programa\n- **Beca del 90%:** Alivio económico sustancial en tu proceso de formación.\n- **Cero matrícula y cero inscripción:** Sin cobros ocultos al iniciar.\n- **3 Diplomados incluidos:**\n  1. Primeros Auxilios Avanzados.\n  2. Sistema de Gestión de Seguridad y Salud en el Trabajo (SG-SST).\n  3. Trabajo Seguro en Alturas.\n- **Flexibilidad total:** Modalidades presenciales y virtuales con horarios adaptados a personas que trabajan.\n\n### Requisitos de postulación\n1. Copia del documento de identidad.\n2. Acta o diploma de bachiller (o certificado de 9° grado aprobado).\n3. Diligenciar el formulario oficial de solicitud de beca.\n\nNo dejes pasar esta oportunidad para ingresar a uno de los campos con mayor demanda de contratación en Colombia. Las empresas requieren profesionales capacitados para proteger la vida y la salud en entornos productivos.",
+    autorNombre: "Comité de Admisiones FUNASF",
+    categoria: "Becas",
     imagenPortada: "/blog/sst-beca-90-diplomados.jpeg",
     fechaPublicacion: "2026-10-02T07:30:00.000Z",
     contactoDirecto: {
@@ -652,14 +652,53 @@ export interface CrearInscripcionInput {
   ciudad: string;
   programaNombre: string;
   programaId?: string | undefined;
+  website_empresa?: string | undefined;
+}
+
+/**
+ * Endpoint de respaldo SMTP para Hostinger Shared Hosting
+ */
+async function notificarEndpointHostinger(
+  tipo: "inscripcion" | "contacto",
+  payload: Record<string, unknown>,
+): Promise<boolean> {
+  try {
+    if (typeof window === "undefined") return false;
+    const res = await fetch("/api/notificar.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo, ...payload }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 export async function crearInscripcion(
   input: CrearInscripcionInput,
 ): Promise<{ ok: boolean; error?: string }> {
-  if (!isSupabaseAvailable()) {
-    console.log("[API Local] Inscripción recibida en modo local:", input);
+  // Trampa Honeypot anti-spam
+  if (input.website_empresa) {
     return { ok: true };
+  }
+
+  // Notificación de respaldo asíncrona a Hostinger
+  notificarEndpointHostinger("inscripcion", input as unknown as Record<string, unknown>).catch(() => {});
+
+  if (!isSupabaseAvailable()) {
+    const backupEnviado = await notificarEndpointHostinger(
+      "inscripcion",
+      input as unknown as Record<string, unknown>,
+    );
+    if (backupEnviado) {
+      return { ok: true };
+    }
+    return {
+      ok: false,
+      error:
+        "No fue posible procesar tu inscripción en este momento. Por favor comunícate directamente con nuestros asesores por WhatsApp para registrar tu solicitud.",
+    };
   }
 
   try {
@@ -690,14 +729,33 @@ export interface EnviarMensajeInput {
   telefono?: string | undefined;
   asunto: string;
   mensaje: string;
+  website_empresa?: string | undefined;
 }
 
 export async function enviarMensajeContacto(
   input: EnviarMensajeInput,
 ): Promise<{ ok: boolean; error?: string }> {
-  if (!isSupabaseAvailable()) {
-    console.log("[API Local] Mensaje de contacto recibido en modo local:", input);
+  // Trampa Honeypot anti-spam
+  if (input.website_empresa) {
     return { ok: true };
+  }
+
+  // Notificación de respaldo asíncrona a Hostinger
+  notificarEndpointHostinger("contacto", input as unknown as Record<string, unknown>).catch(() => {});
+
+  if (!isSupabaseAvailable()) {
+    const backupEnviado = await notificarEndpointHostinger(
+      "contacto",
+      input as unknown as Record<string, unknown>,
+    );
+    if (backupEnviado) {
+      return { ok: true };
+    }
+    return {
+      ok: false,
+      error:
+        "No fue posible enviar tu mensaje en este momento. Por favor contáctanos directamente a través de nuestras líneas oficiales de WhatsApp.",
+    };
   }
 
   try {
@@ -728,6 +786,7 @@ export interface SiteContactoConfig {
   telefonos: string[];
   telefonoPrincipal: string;
   whatsappLink: string;
+  whatsappLlamadas?: string | undefined;
   correo: string;
   instagram: string;
   instagramUrl: string;
@@ -771,7 +830,7 @@ export function formatColPhone(phone: string): string {
 
 export function cleanPhoneDigits(phone: string): string {
   const digits = phone.replace(/\D/g, "");
-  return digits.startsWith("57") ? digits : `57${digits}`;
+  return digits.startsWith("57") ? digits : `57${digits}` || "573135779384";
 }
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {
@@ -780,6 +839,7 @@ export const DEFAULT_SITE_SETTINGS: SiteSettings = {
     telefonos: funasfData.org.telefonos.map(formatColPhone),
     telefonoPrincipal: formatColPhone(funasfData.org.telefonos[0] ?? "+57 313 577 9384"),
     whatsappLink: `https://wa.me/${cleanPhoneDigits(funasfData.org.telefonos[0] ?? "+57 313 577 9384")}`,
+    whatsappLlamadas: cleanPhoneDigits(funasfData.org.telefonos[2] ?? "573232946184"),
     correo: funasfData.org.correo,
     instagram: funasfData.org.instagram,
     instagramUrl: funasfData.org.instagramUrl,
@@ -808,9 +868,9 @@ export function sanitizeDomain(str: string): string {
 }
 
 export function saveLocalSiteSettingsOverride(partial: {
-  contacto?: Partial<SiteContactoConfig>;
-  institucional?: Partial<SiteInstitucionalConfig>;
-  becas?: Partial<typeof funasfData.becas>;
+  contacto?: Partial<SiteContactoConfig> | undefined;
+  institucional?: Partial<SiteInstitucionalConfig> | undefined;
+  becas?: Partial<typeof funasfData.becas> | undefined;
 }) {
   if (typeof window === "undefined") return;
   try {
@@ -828,9 +888,9 @@ export function saveLocalSiteSettingsOverride(partial: {
 }
 
 export function getLocalSiteSettingsOverride(): {
-  contacto?: Partial<SiteContactoConfig>;
-  institucional?: Partial<SiteInstitucionalConfig>;
-  becas?: Partial<typeof funasfData.becas>;
+  contacto?: Partial<SiteContactoConfig> | undefined;
+  institucional?: Partial<SiteInstitucionalConfig> | undefined;
+  becas?: Partial<typeof funasfData.becas> | undefined;
 } | null {
   if (typeof window === "undefined") return null;
   try {
@@ -907,6 +967,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
       telefonos,
       telefonoPrincipal,
       whatsappLink,
+      whatsappLlamadas:
+        (rawContacto["whatsappLlamadas"] as string) ||
+        DEFAULT_SITE_SETTINGS.contacto.whatsappLlamadas,
       correo,
       instagram: (rawContacto["instagram"] as string) || DEFAULT_SITE_SETTINGS.contacto.instagram,
       instagramUrl:
@@ -1032,7 +1095,7 @@ export function getCategorizedPrograms(programas: ProgramaAcademico[]): Categori
 
   // Retornar solo categorías que tengan al menos 1 programa
   const result = Array.from(map.values()).filter((cat) => cat.programas.length > 0);
-  return result.length > 0 ? result : (funasfData.categoriasProgramas as CategoriaProgramas[]);
+  return result.length > 0 ? (result as CategoriaProgramas[]) : (funasfData.categoriasProgramas as CategoriaProgramas[]);
 }
 
 export async function getOrganizationData(): Promise<Organization> {

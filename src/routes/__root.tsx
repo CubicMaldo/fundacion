@@ -9,11 +9,13 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { StudentPortalLayout } from "@/components/site/portal-estudiantil/StudentPortalLayout";
+import { isStudentSubdomain } from "@/lib/subdomain";
 import { AuthProvider } from "@/lib/auth-context";
 import { SiteSettingsProvider } from "@/lib/site-settings-context";
 import { Toaster } from "@/components/ui/sonner";
@@ -43,36 +45,30 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
-  const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportLovableError(error, { source: "root error boundary" });
   }, [error]);
 
   return (
     <div className="bg-background flex min-h-screen items-center justify-center px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-foreground text-xl font-semibold tracking-tight">
-          Esta página no se pudo cargar
-        </h1>
-        <p className="text-muted-foreground mt-2 text-sm">
-          Ocurrió un problema. Puedes intentar de nuevo o volver al inicio.
+        <h1 className="text-destructive font-display text-5xl">Error inesperado</h1>
+        <p className="text-muted-foreground mt-3 text-sm">
+          Ocurrió un problema al cargar esta sección. Por favor, intenta de nuevo.
         </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-6 flex justify-center gap-3">
           <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
+            onClick={() => reset()}
+            className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
           >
-            Intentar de nuevo
+            Reintentar
           </button>
-          <a
-            href="/"
-            className="border-input bg-background text-foreground hover:bg-accent inline-flex items-center justify-center rounded-full border px-5 py-2.5 text-sm font-medium transition-colors"
+          <Link
+            to="/"
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-full px-5 py-2.5 text-sm font-medium transition-colors"
           >
             Ir al inicio
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -123,8 +119,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/favicon-16x16.png", type: "image/png", sizes: "16x16" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
+      { rel: "shortcut icon", href: "/favicon.ico" },
     ],
     scripts: [
       {
@@ -143,6 +141,11 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="es">
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <HeadContent />
       </head>
       <body>
@@ -201,8 +204,16 @@ function ScrollToTop() {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isAdminRoute = pathname.startsWith("/admin");
+  const [isStudentSub, setIsStudentSub] = useState(false);
+
+  useEffect(() => {
+    const searchStr = typeof search === "object" ? new URLSearchParams(search as any).toString() : (search || "");
+    setIsStudentSub(isStudentSubdomain(undefined, searchStr));
+  }, [pathname, search]);
+
+  const isStudentPortal = pathname.startsWith("/portal-estudiantil") || isStudentSub;
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -212,9 +223,14 @@ function RootComponent() {
           <Toaster position="top-right" richColors />
           {isAdminRoute ? (
             <Outlet />
+          ) : isStudentPortal ? (
+            <StudentPortalLayout>
+              {/* Dedicated Academic Intranet Layout */}
+              <Outlet />
+            </StudentPortalLayout>
           ) : (
             <SiteLayout>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              {/* Public Foundation Website Layout */}
               <Outlet />
             </SiteLayout>
           )}

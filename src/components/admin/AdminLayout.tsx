@@ -12,17 +12,26 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
-  const { user, isLoading } = useAuth();
+  const { user, role, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
+    // Si el usuario autenticado tiene rol estudiante, no debe acceder al CMS administrativo
+    if (!isLoading && user && role === "estudiante") {
+      navigate({ to: "/portal-estudiantil" });
+      return;
+    }
+
     // Si no está cargando y no hay usuario, redirigir a login
     if (!isLoading && !user && location.pathname !== "/admin/login") {
-      navigate({ to: "/admin/login" });
+      navigate({
+        to: "/admin/login",
+        search: { redirect: location.pathname },
+      });
     }
-  }, [user, isLoading, location.pathname, navigate]);
+  }, [user, role, isLoading, location.pathname, navigate]);
 
   if (isLoading) {
     return (
@@ -44,38 +53,26 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
     );
   }
 
-  if (!user && location.pathname !== "/admin/login") {
+  // Si no hay usuario y ya terminó de cargar, no renderizar el CMS (esperando redirección)
+  if (!user || role === "estudiante") {
     return null;
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/20 text-foreground">
-      {/* Sidebar Escritorio */}
-      <div className="hidden md:flex md:w-64 md:shrink-0">
-        <div className="fixed inset-y-0 z-30 flex w-64 flex-col">
-          <AdminSidebar />
-        </div>
-      </div>
+    <div className="min-h-screen bg-muted/20 flex flex-col md:flex-row">
+      {/* Sidebar fijo en desktop, desplegable en móvil */}
+      <AdminSidebar mobileOpen={mobileOpen} onCloseMobile={() => setMobileOpen(false)} />
 
-      {/* Sidebar Móvil (Overlay / Drawer) */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-xs transition-opacity"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-          />
-          <div className="relative flex w-full max-w-xs flex-1 flex-col">
-            <AdminSidebar onCloseMobile={() => setMobileOpen(false)} />
-          </div>
-        </div>
-      )}
+      {/* Contenido principal */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <AdminHeader
+          title={title}
+          subtitle={subtitle}
+          onOpenMobile={() => setMobileOpen(true)}
+        />
 
-      {/* Contenido Principal */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        <AdminHeader onOpenMobile={() => setMobileOpen(true)} title={title} subtitle={subtitle} />
-        <main className="flex-1 p-4 md:p-8">
-          <div className="mx-auto max-w-7xl">{children}</div>
+        <main className="flex-1 p-4 md:p-8 max-w-7xl w-full mx-auto">
+          {children}
         </main>
       </div>
     </div>
