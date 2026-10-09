@@ -14,7 +14,6 @@ import {
   LogOut,
   MapPin,
   MessageSquare,
-  Sparkles,
   UploadCloud,
   User as UserIcon,
 } from "lucide-react";

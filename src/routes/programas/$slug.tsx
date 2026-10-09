@@ -11,7 +11,6 @@ import {
   HelpCircle,
   Phone,
   ShieldCheck,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/lib/site-settings-context";
@@ -281,9 +280,8 @@ function DetallePrograma() {
                   className="w-full bg-brand-green hover:bg-brand-green-deep text-primary-foreground font-semibold shadow-xs"
                 >
                   <Link to="/inscripcion" search={{ programa: programa.slug }}>
-                    <Sparkles className="size-4 mr-1.5 text-brand-gold" />
-                    Postularme a esta beca
-                    <ArrowRight className="size-4 ml-1.5" />
+                    <span>Postularme a esta beca</span>
+                    <ArrowRight className="size-4 ml-2" />
                   </Link>
                 </Button>
 

@@ -6,7 +6,7 @@ import {
   GraduationCap,
   Laptop,
   MessageCircle,
-  Sparkles,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,89 +24,117 @@ export function PlataformasEstudio() {
   return (
     <>
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Tarjeta 1: Aula Virtual */}
-        <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-xs flex flex-col justify-between hover:border-brand-green/40 transition-colors">
+        {/* Tarjeta 1: Aulas Virtuales / Moodle */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex size-12 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-4">
               <Laptop className="size-6" />
             </div>
-            <h3 className="text-lg font-bold font-display text-foreground">
-              Campus & Aula Virtual
+            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-green">
+              Campus Digital
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 mt-1">
+              Aulas Virtuales (Moodle / Q10)
             </h3>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-              Accede a tus clases grabadas, foros de debate, guías de estudio y talleres en plataforma Moodle institucional.
+            <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
+              Ingresa al espacio donde se encuentran tus foros de discusión, material de clase descargable, evaluaciones y tareas asignadas.
+            </p>
+          </div>
+
+          <div className="pt-6 space-y-2">
+            <Button
+              className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-medium text-xs shadow-xs"
+              onClick={() => setModalAulaOpen(true)}
+            >
+              <span>Acceder al Aula Virtual</span>
+              <ExternalLink className="size-3.5 ml-1.5" />
+            </Button>
+            <p className="text-[11px] text-center text-slate-400">
+              Usa tu documento de identidad como usuario
+            </p>
+          </div>
+        </div>
+
+        {/* Tarjeta 2: Bibliotecas Digitales y Recursos */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+          <div>
+            <div className="flex size-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700 mb-4">
+              <BookOpen className="size-6" />
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-brown">
+              Repositorio de Estudio
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 mt-1">
+              Biblioteca Virtual y Guías
+            </h3>
+            <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
+              Consulta libros electrónicos, normas técnicas colombianas (ICONTEC), artículos científicos y módulos de estudio oficiales.
             </p>
           </div>
 
           <div className="pt-6">
             <Button
-              onClick={() => setModalAulaOpen(true)}
-              className="w-full bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+              asChild
+              variant="outline"
+              className="w-full border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-medium"
             >
-              Ingresar al Aula Virtual
-              <ExternalLink className="size-3.5 ml-1.5" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Tarjeta 2: Calendario y Horarios */}
-        <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-xs flex flex-col justify-between hover:border-brand-green/40 transition-colors">
-          <div>
-            <div className="flex size-12 items-center justify-center rounded-xl bg-brand-gold/15 text-brand-gold-deep mb-4">
-              <Calendar className="size-6" />
-            </div>
-            <h3 className="text-lg font-bold font-display text-foreground">
-              Calendario Académico 2026
-            </h3>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-              Consulta las fechas de inicio de módulos, entrega de notas parciales, semanas de recuperación y ceremonias de grado.
-            </p>
-          </div>
-
-          <div className="pt-6">
-            <Button asChild variant="outline" className="w-full text-xs font-semibold">
-              <a href="#tramites">
-                Ver fechas y trámites
+              <a
+                href="https://openlibra.com"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center gap-1.5"
+              >
+                <span>Explorar Biblioteca Digital</span>
+                <ExternalLink className="size-3.5" />
               </a>
             </Button>
           </div>
         </div>
 
-        {/* Tarjeta 3: Biblioteca y Recursos */}
-        <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-xs flex flex-col justify-between hover:border-brand-green/40 transition-colors">
+        {/* Tarjeta 3: Horarios y Clases en Vivo (Google Meet / Zoom) */}
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
-            <div className="flex size-12 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-4">
-              <BookOpen className="size-6" />
+            <div className="flex size-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-700 mb-4">
+              <Calendar className="size-6" />
             </div>
-            <h3 className="text-lg font-bold font-display text-foreground">
-              Biblioteca y Guías de Apoyo
+            <span className="text-[11px] font-bold uppercase tracking-wider text-sky-800">
+              Sincrónico
+            </span>
+            <h3 className="text-lg font-bold text-slate-900 mt-1">
+              Clases en Vivo y Tutorías
             </h3>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-              Material bibliográfico, manuales técnicos de enfermería, primeros auxilios, veterinaria y sistemas en acceso abierto.
+            <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
+              Accede a las sesiones sincrónicas con tus docentes y asesorías vocacionales grupales programadas por la Fundación.
             </p>
           </div>
 
           <div className="pt-6">
-            <Button asChild variant="outline" className="w-full text-xs font-semibold">
+            <Button
+              asChild
+              variant="outline"
+              className="w-full border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-medium"
+            >
               <a
-                href={`${whatsappLink}?text=${encodeURIComponent("Hola FUNASF, solicito acceso al repositorio de guías y biblioteca digital.")}`}
+                href={`${whatsappLink}?text=${encodeURIComponent("Hola FUNASF, deseo consultar el enlace de mi clase sincrónica de hoy.")}`}
                 target="_blank"
                 rel="noreferrer"
+                className="flex items-center justify-center gap-1.5"
               >
-                Solicitar guías de estudio
+                <MessageCircle className="size-3.5 text-emerald-600" />
+                <span>Pedir Link de Tutoría</span>
               </a>
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Modal de Acceso al Aula Virtual */}
+      {/* Modal Instructivo para Aulas Virtuales */}
       <Dialog open={modalAulaOpen} onOpenChange={setModalAulaOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold font-display text-foreground flex items-center gap-2">
-              <Laptop className="size-5 text-brand-green" />
-              Acceso al Campus Virtual FUNASF
+            <DialogTitle className="flex items-center gap-2 text-base font-bold">
+              <GraduationCap className="size-5 text-brand-green" />
+              <span>Acceso a las Aulas Virtuales</span>
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
               Instrucciones de ingreso a las aulas de aprendizaje virtual.
@@ -116,7 +144,7 @@ export function PlataformasEstudio() {
           <div className="space-y-4 py-2 text-xs text-foreground/80 leading-relaxed">
             <div className="rounded-xl bg-brand-cream/50 border border-brand-gold/30 p-3.5 space-y-1.5">
               <div className="flex items-center gap-1.5 font-bold text-brand-gold-deep text-xs">
-                <Sparkles className="size-3.5" />
+                <ShieldCheck className="size-3.5" />
                 <span>Credenciales de ingreso a plataforma Moodle</span>
               </div>
               <p className="text-[11px] text-muted-foreground">
@@ -136,12 +164,16 @@ export function PlataformasEstudio() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <MessageCircle className="size-4 mr-2" />
-                  Soporte Técnico por WhatsApp
+                  <MessageCircle className="size-3.5 mr-1.5" />
+                  Escribir a Soporte Técnico
                 </a>
               </Button>
-              <Button variant="outline" onClick={() => setModalAulaOpen(false)} className="text-xs">
-                Entendido
+              <Button
+                variant="outline"
+                className="w-full text-xs"
+                onClick={() => setModalAulaOpen(false)}
+              >
+                Cerrar instructivo
               </Button>
             </div>
           </div>

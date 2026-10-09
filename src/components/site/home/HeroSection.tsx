@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { ArrowRight, GraduationCap, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { whatsappLink } from "@/data/funasf";
 
@@ -20,7 +20,7 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
       <div className="container-page relative grid gap-10 md:grid-cols-2 md:items-center">
         <div className="space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-3.5 py-1 text-xs font-semibold text-brand-gold-deep backdrop-blur-xs">
-            <Sparkles className="size-3.5 text-brand-gold" />
+            <GraduationCap className="size-3.5 text-brand-gold" />
             <span>Convocatoria de Becas Solidarias 2026</span>
           </div>
 
@@ -37,7 +37,7 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
             {quienesSomos.resumen}
           </p>
 
-          {/* Jerarquía de llamadas a la acción pulida: Acción principal + Canal directo WhatsApp */}
+          {/* Jerarquía de llamadas a la acción pulida */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <Button
               asChild

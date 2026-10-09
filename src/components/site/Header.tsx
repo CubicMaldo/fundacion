@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -276,7 +276,7 @@ export function Header() {
           })}
         </nav>
 
-        {/* 3. Acción comercial primaria única (sin saturar con botones redundantes) */}
+        {/* 3. Acción comercial primaria única */}
         <div className="flex items-center gap-3">
           <Button
             asChild
@@ -284,7 +284,6 @@ export function Header() {
             className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-full px-5 text-xs font-bold tracking-wide uppercase shadow-sm transition-all hover:shadow-md"
           >
             <Link to="/inscripcion">
-              <Sparkles className="size-3.5 mr-1.5 text-brand-gold" />
               Postularme a Beca
             </Link>
           </Button>
@@ -319,7 +318,7 @@ export function Header() {
                     className="flex items-center justify-between rounded-xl bg-brand-green p-3 text-white shadow-xs hover:bg-brand-green-deep transition-all"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Sparkles className="size-4 text-brand-gold shrink-0" />
+                      <GraduationCap className="size-4 text-brand-gold shrink-0" />
                       <div className="text-left">
                         <p className="text-xs font-bold leading-tight uppercase tracking-wider">
                           Postulación a Becas 90 %

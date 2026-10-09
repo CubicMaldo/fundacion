@@ -8,7 +8,7 @@ import {
   Phone,
   Mail,
   GraduationCap,
-  Sparkles,
+  Wand2,
   ShieldCheck,
   RotateCcw,
 } from "lucide-react";
@@ -422,7 +422,7 @@ export function ArticuloForm({ initialData, isEdit }: ArticuloFormProps) {
                       onClick={handleAutoGenerarMensajeWa}
                       className="h-7 text-[11px] text-brand-green hover:text-brand-green-deep p-1 gap-1"
                     >
-                      <Sparkles className="size-3" /> Auto-completar con título
+                      <Wand2 className="size-3" /> Auto-completar con título
                     </Button>
                   </div>
                   <Textarea

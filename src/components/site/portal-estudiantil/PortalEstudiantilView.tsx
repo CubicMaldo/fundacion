@@ -15,7 +15,7 @@ import {
   Mail,
   MessageCircle,
   ShieldCheck,
-  Sparkles,
+  Award,
   UserCheck,
 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
@@ -73,7 +73,7 @@ export function PortalEstudiantilView() {
         <div className="bg-emerald-50 border-b border-emerald-200/80 px-4 py-2.5 text-center text-xs text-emerald-900 transition-colors">
           <div className="container-page flex flex-col sm:flex-row items-center justify-center gap-2">
             <span className="font-medium">
-              💡 Ahora el portal cuenta con su propio subdominio dedicado:
+              Ahora el portal cuenta con su propio subdominio dedicado:
             </span>
             <a
               href={subdomainUrl}
@@ -200,7 +200,7 @@ export function PortalEstudiantilView() {
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:border-amber-300 transition-colors">
             <div>
               <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700 mb-3">
-                <Sparkles className="size-5" />
+                <Award className="size-5" />
               </div>
               <h4 className="font-bold text-base text-slate-900">Renovación de Beca</h4>
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
