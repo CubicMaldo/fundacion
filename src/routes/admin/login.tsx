@@ -12,6 +12,7 @@ import { whatsappLink } from "@/data/funasf";
 export interface AdminLoginSearch {
   portal?: string;
   redirect?: string;
+  reason?: string;
 }
 
 export const Route = createFileRoute("/admin/login")({
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/admin/login")({
     const res: AdminLoginSearch = {};
     if (typeof search["portal"] === "string") res.portal = search["portal"];
     if (typeof search["redirect"] === "string") res.redirect = search["redirect"];
+    if (typeof search["reason"] === "string") res.reason = search["reason"];
     return res;
   },
   head: () => ({
@@ -38,7 +40,7 @@ function AdminLogin() {
   const isEstudianteLogin =
     search.portal === "estudiante" || search.redirect === "/portal-estudiantil";
 
-  const { user, role, signIn, isLoading, isConfigured } = useAuth();
+  const { user, role, signIn, signOut, isLoading, isConfigured } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,11 +49,13 @@ function AdminLogin() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      if (role === "estudiante" || isEstudianteLogin) {
+      if (isEstudianteLogin) {
         navigate({ to: "/portal-estudiantil" });
-      } else {
+      } else if (role === "admin") {
         navigate({ to: "/admin" });
       }
+      // Si el rol es estudiante y la persona vino a /admin/login con la intención de acceder al panel admin,
+      // no la redirigimos automáticamente a /portal-estudiantil para evitar bloquearle el acceso.
     }
   }, [user, role, isEstudianteLogin, isLoading, navigate]);
 
@@ -64,10 +68,16 @@ function AdminLogin() {
       const result = await signIn(
         email,
         password,
-        isEstudianteLogin ? "estudiante" : undefined,
+        isEstudianteLogin ? "estudiante" : "admin",
       );
       if (result.error) {
         setErrorMessage(result.error);
+      } else {
+        if (isEstudianteLogin) {
+          navigate({ to: "/portal-estudiantil" });
+        } else {
+          navigate({ to: "/admin" });
+        }
       }
     } catch (err) {
       setErrorMessage((err as Error).message || "Error al iniciar sesión");
@@ -118,6 +128,44 @@ function AdminLogin() {
                 <p className="mt-1 text-emerald-850">
                   Ingresa con el correo electrónico registrado durante tu matrícula. Tu contraseña inicial es tu número de documento de identidad (a menos que la hayas actualizado).
                 </p>
+              </div>
+            )}
+
+            {user && role === "estudiante" && !isEstudianteLogin && (
+              <div className="mb-6 rounded-xl border border-amber-500/25 bg-amber-50/90 p-4 text-xs text-amber-950 dark:border-amber-500/30 dark:bg-amber-950/30 dark:text-amber-200">
+                <div className="flex items-start gap-2.5">
+                  <Shield className="size-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1.5 flex-1">
+                    <p className="font-semibold text-amber-900 dark:text-amber-100">
+                      Sesión activa como Estudiante ({user.email})
+                    </p>
+                    <p className="leading-relaxed text-amber-800/90 dark:text-amber-300/90">
+                      Para ingresar al Panel Administrativo, debes iniciar sesión con tus credenciales de administrador o cerrar la sesión actual de estudiante.
+                    </p>
+                    <div className="pt-2 flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={async () => {
+                          await signOut();
+                        }}
+                        className="h-7 text-xs bg-white hover:bg-amber-100/50 border-amber-300 text-amber-900 font-medium"
+                      >
+                        Cerrar sesión de estudiante
+                      </Button>
+                      <Button
+                        asChild
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        className="h-7 text-xs text-amber-800 hover:text-amber-950"
+                      >
+                        <Link to="/portal-estudiantil">Ir a Portal Estudiantil</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 

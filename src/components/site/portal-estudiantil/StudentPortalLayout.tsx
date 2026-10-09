@@ -217,7 +217,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
               <MessageCircle className="size-3" /> WhatsApp
             </a>
             <Link
-              to="/admin"
+              to="/admin/login"
               className="hover:text-brand-green flex items-center gap-1 text-slate-400 hover:text-slate-700 transition-colors"
               title="Panel Administrativo FUNASF"
             >
