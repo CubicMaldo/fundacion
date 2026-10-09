@@ -61,6 +61,7 @@ function Contacto() {
   const [telefono, setTelefono] = useState("");
   const [asunto, setAsunto] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [websiteEmpresa, setWebsiteEmpresa] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [enviadoExito, setEnviadoExito] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -76,6 +77,7 @@ function Contacto() {
       telefono: telefono || undefined,
       asunto,
       mensaje,
+      website_empresa: websiteEmpresa || undefined,
     });
 
     setEnviando(false);
@@ -86,6 +88,7 @@ function Contacto() {
       setTelefono("");
       setAsunto("");
       setMensaje("");
+      setWebsiteEmpresa("");
     } else {
       setErrorMsg(res.error || "No se pudo enviar el mensaje. Por favor intenta por WhatsApp.");
     }
@@ -176,6 +179,18 @@ function Contacto() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Honeypot anti-spam */}
+                <div className="hidden" aria-hidden="true" style={{ display: "none" }}>
+                  <input
+                    type="text"
+                    name="website_empresa"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={websiteEmpresa}
+                    onChange={(e) => setWebsiteEmpresa(e.target.value)}
+                  />
+                </div>
+
                 {errorMsg && (
                   <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
                     {errorMsg}

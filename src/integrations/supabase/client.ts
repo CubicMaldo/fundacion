@@ -3,6 +3,20 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
 import { brokeredPreviewStorage } from "./previewAuthStorage";
 
+export function isSupabaseConfigured(): boolean {
+  try {
+    const url =
+      import.meta.env["VITE_SUPABASE_URL"] ||
+      (typeof process !== "undefined" ? process.env?.["SUPABASE_URL"] : undefined);
+    const key =
+      import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] ||
+      (typeof process !== "undefined" ? process.env?.["SUPABASE_PUBLISHABLE_KEY"] : undefined);
+    return Boolean(url && key);
+  } catch {
+    return false;
+  }
+}
+
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith("sb_publishable_") || value.startsWith("sb_secret_");
 }

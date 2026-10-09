@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   BookOpen,
@@ -27,6 +28,8 @@ import { FaqSection } from "@/components/site/home/FaqSection";
 import { CtaSection } from "@/components/site/home/CtaSection";
 
 import { createSeoMeta, getFaqSchema } from "@/lib/seo";
+import { isStudentSubdomain } from "@/lib/subdomain";
+import { PortalEstudiantilView } from "@/components/site/portal-estudiantil/PortalEstudiantilView";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -58,7 +61,7 @@ const iconos: Record<string, LucideIcon> = {
   Briefcase,
 };
 
-function Inicio() {
+function MainWebsiteView({ data }: { data: any }) {
   const {
     org,
     quienesSomos,
@@ -72,7 +75,7 @@ function Inicio() {
     llamadoAccion,
     valores,
     articulos,
-  } = Route.useLoaderData();
+  } = data;
 
   return (
     <>
@@ -89,4 +92,19 @@ function Inicio() {
       <CtaSection llamadoAccion={llamadoAccion} org={org} />
     </>
   );
+}
+
+function Inicio() {
+  const data = Route.useLoaderData();
+  const [isStudentSub, setIsStudentSub] = useState(false);
+
+  useEffect(() => {
+    setIsStudentSub(isStudentSubdomain());
+  }, []);
+
+  if (isStudentSub) {
+    return <PortalEstudiantilView />;
+  }
+
+  return <MainWebsiteView data={data} />;
 }
