@@ -1,6 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
+if (process.env.VERCEL) {
+  console.log("[postbuild] Vercel environment detected. Skipping Hostinger postbuild.");
+  process.exit(0);
+}
+
 const rootDir = process.cwd();
 const distDir = path.join(rootDir, "dist");
 const publicDir = path.join(distDir, "public");
