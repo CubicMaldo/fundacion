@@ -34,3 +34,5 @@ dist-ssr
 
 .lovable/
 _downlove_errors.txt
+.vercel
+.env*
