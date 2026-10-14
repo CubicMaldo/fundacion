@@ -4,6 +4,8 @@ import { supabase, isSupabaseConfigured } from "@/integrations/supabase/client";
 
 export { isSupabaseConfigured } from "@/integrations/supabase/client";
 
+export const LOGIN_EMAIL_DOMAIN = "usuarios.edufunasf.org";
+
 export type UserRole = "admin" | "editor" | "docente" | "estudiante";
 
 export interface UserProfile {
@@ -12,6 +14,10 @@ export interface UserProfile {
   nombre_completo: string | null;
   rol: UserRole;
   avatar_url: string | null;
+  usuario?: string | null;
+  documento?: string | null;
+  telefono?: string | null;
+  activo: boolean;
 }
 
 interface AuthContextType {
@@ -24,7 +30,7 @@ interface AuthContextType {
   isEstudiante: boolean;
   isLoading: boolean;
   isConfigured: boolean;
-  signIn: (email: string, password: string, roleHint?: UserRole) => Promise<{ error?: string }>;
+  signIn: (identifier: string, password: string, roleHint?: UserRole) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -73,13 +79,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           .maybeSingle();
 
         if (error || !data) {
-          // Principio de mínimo privilegio: por defecto rol estudiante, nunca admin
+          // Principio de mínimo privilegio: por defecto rol estudiante
           const fallbackProfile: UserProfile = {
             id: userId,
             email: userEmail,
             nombre_completo: userEmail.split("@")[0] ?? "Usuario",
             rol: "estudiante",
             avatar_url: null,
+            usuario: userEmail.split("@")[0] ?? null,
+            activo: true,
           };
           return fallbackProfile;
         }
@@ -90,6 +98,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           nombre_completo: data.nombre_completo,
           rol: (data.rol as UserRole) || "estudiante",
           avatar_url: data.avatar_url,
+          usuario: data.usuario ?? null,
+          documento: data.documento ?? null,
+          telefono: data.telefono ?? null,
+          activo: data.activo ?? true,
         };
       } catch {
         return {
@@ -98,6 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           nombre_completo: userEmail.split("@")[0] ?? "Usuario",
           rol: "estudiante",
           avatar_url: null,
+          activo: true,
         };
       }
     },
@@ -128,9 +141,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(session.user);
           const p = await fetchProfile(session.user.id, session.user.email ?? "");
           if (isMounted) {
-            setProfile(p);
-            setStoredAuth(session.user, p);
+            if (p.activo === false) {
+              await supabase.auth.signOut();
+              setUser(null);
+              setProfile(null);
+              setStoredAuth(null, null);
+            } else {
+              setProfile(p);
+              setStoredAuth(session.user, p);
+            }
           }
+        } else if (isMounted) {
+          setUser(null);
+          setProfile(null);
+          setStoredAuth(null, null);
         }
       } catch (err) {
         console.warn("[Auth] No se pudo inicializar sesión:", err);
@@ -151,10 +175,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session.user);
         const p = await fetchProfile(session.user.id, session.user.email ?? "");
         if (isMounted) {
-          setProfile(p);
-          setStoredAuth(session.user, p);
+          if (p.activo === false) {
+            await supabase.auth.signOut();
+            setUser(null);
+            setProfile(null);
+            setStoredAuth(null, null);
+          } else {
+            setProfile(p);
+            setStoredAuth(session.user, p);
+          }
         }
-      } else if (event === "SIGNED_OUT") {
+      } else {
         setUser(null);
         setProfile(null);
         setStoredAuth(null, null);
@@ -169,29 +200,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [configured, fetchProfile]);
 
   const signIn = async (
-    email: string,
+    identifier: string,
     password: string,
     roleHint?: UserRole,
   ): Promise<{ error?: string }> => {
+    const raw = identifier.trim();
+    if (!raw) return { error: "Ingresa tu usuario o correo electrónico." };
+    if (!password) return { error: "Ingresa tu contraseña." };
+
+    // Si es un correo electrónico o nombre de usuario
+    const emailToUse = raw.includes("@") ? raw.toLowerCase() : `${raw.toLowerCase()}@${LOGIN_EMAIL_DOMAIN}`;
+
     if (configured) {
       try {
         const { data, error } = await supabase.auth.signInWithPassword({
-          email,
+          email: emailToUse,
           password,
         });
 
         if (error) {
+          // Si falló y no tenía @, intentar también si usaron su correo regular
           return {
             error:
               error.message === "Invalid login credentials"
-                ? "Credenciales incorrectas. Verifica tu correo y contraseña."
+                ? "Credenciales incorrectas. Verifica tu usuario/correo y contraseña."
                 : error.message,
           };
         }
 
         if (data.user) {
-          setUser(data.user);
           const p = await fetchProfile(data.user.id, data.user.email ?? "");
+          if (p.activo === false) {
+            await supabase.auth.signOut();
+            return { error: "Tu cuenta ha sido desactivada temporalmente. Contacta a coordinación académica." };
+          }
+          setUser(data.user);
           setProfile(p);
           setStoredAuth(data.user, p);
           return {};
@@ -203,21 +246,41 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Si Supabase NO está configurado:
-    // Solo permitir modo demostración en entorno local de desarrollo explícito (Vite DEV)
+    // Modo demostración en entorno local de desarrollo explícito (Vite DEV)
     if (import.meta.env.DEV) {
       const isEstudianteDemo =
         roleHint === "estudiante" ||
-        email.toLowerCase().includes("estudiante") ||
-        email.toLowerCase().includes("alumno");
+        raw.toLowerCase().includes("estudiante") ||
+        raw.toLowerCase().includes("alumno");
 
-      const fallbackRole: UserRole = isEstudianteDemo ? "estudiante" : (roleHint ?? "admin");
-      const fallbackName = isEstudianteDemo ? "Estudiante FUNASF (Demo)" : "Administrador FUNASF (Demo)";
-      const fallbackId = isEstudianteDemo ? "demo-estudiante-id" : "admin-session-id";
+      const isDocenteDemo =
+        roleHint === "docente" ||
+        raw.toLowerCase().includes("docente") ||
+        raw.toLowerCase().includes("profesor");
+
+      const fallbackRole: UserRole = isEstudianteDemo
+        ? "estudiante"
+        : isDocenteDemo
+          ? "docente"
+          : (roleHint ?? "admin");
+
+      const fallbackName =
+        fallbackRole === "estudiante"
+          ? "Estudiante FUNASF (Demo)"
+          : fallbackRole === "docente"
+            ? "Docente FUNASF (Demo)"
+            : "Administrador FUNASF (Demo)";
+
+      const fallbackId =
+        fallbackRole === "estudiante"
+          ? "demo-estudiante-id"
+          : fallbackRole === "docente"
+            ? "demo-docente-id"
+            : "admin-session-id";
 
       const fallbackUser = {
         id: fallbackId,
-        email,
+        email: emailToUse,
         app_metadata: {},
         user_metadata: { nombre_completo: fallbackName, rol: fallbackRole },
         aud: "authenticated",
@@ -226,10 +289,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const fallbackProfile: UserProfile = {
         id: fallbackId,
-        email,
+        email: emailToUse,
         nombre_completo: fallbackName,
         rol: fallbackRole,
         avatar_url: null,
+        usuario: (raw.includes("@") ? raw.split("@")[0] : raw) || null,
+        activo: true,
       };
 
       setUser(fallbackUser);
@@ -238,7 +303,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {};
     }
 
-    // En producción, bloquear acceso si Supabase no está configurado
     return {
       error:
         "El servicio de autenticación no está disponible en este momento. Por favor contacta al administrador.",

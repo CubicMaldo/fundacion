@@ -22,6 +22,7 @@ const columnas = [
       { label: "Becas de hasta 90 %", to: "/estudia", hash: "becas" },
       { label: "Requisitos y matrícula", to: "/estudia", hash: "matriculas" },
       { label: "Portal estudiantil", to: "/portal-estudiantil", hash: undefined },
+      { label: "Portal docente", to: "/docente", hash: undefined },
     ],
   },
   {

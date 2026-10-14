@@ -4,15 +4,22 @@
  * sin inventar información, basado en los datos institucionales oficiales.
  */
 
-import { org, faq } from "@/data/funasf";
+import { org, faq, mision } from "@/data/funasf";
 import type { ProgramaAcademico } from "@/data/programas";
 
 export const SITE_URL = "https://www.edufunasf.org";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
+export function toAbsoluteUrl(url?: string | null): string {
+  if (!url) return DEFAULT_OG_IMAGE;
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  const clean = url.startsWith("/") ? url : `/${url}`;
+  return `${SITE_URL}${clean}`;
+}
+
 export interface SeoOptions {
   title: string;
-  description: string;
+  description?: string;
   canonicalPath?: string;
   ogType?: "website" | "article";
   ogImage?: string;
@@ -26,7 +33,7 @@ export interface SeoOptions {
  */
 export function createSeoMeta({
   title,
-  description,
+  description = org.eslogan,
   canonicalPath = "/",
   ogType = "website",
   ogImage = DEFAULT_OG_IMAGE,
@@ -36,6 +43,7 @@ export function createSeoMeta({
 }: SeoOptions) {
   const normalizedPath = canonicalPath.startsWith("/") ? canonicalPath : `/${canonicalPath}`;
   const canonicalUrl = `${SITE_URL}${normalizedPath === "/" ? "" : normalizedPath}`;
+  const absoluteOgImage = toAbsoluteUrl(ogImage);
 
   const meta: Array<Record<string, string>> = [
     { title },
@@ -52,7 +60,7 @@ export function createSeoMeta({
     { property: "og:url", content: canonicalUrl },
     { property: "og:type", content: ogType },
     { property: "og:locale", content: "es_CO" },
-    { property: "og:image", content: ogImage },
+    { property: "og:image", content: absoluteOgImage },
     { property: "og:image:alt", content: `EduFUNASF — ${org.eslogan}` },
     { property: "og:image:width", content: "1200" },
     { property: "og:image:height", content: "630" },
@@ -60,7 +68,7 @@ export function createSeoMeta({
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
-    { name: "twitter:image", content: ogImage },
+    { name: "twitter:image", content: absoluteOgImage },
   ];
 
   if (keywords) {
@@ -98,11 +106,9 @@ export function getOrganizationSchema() {
     logo: `${SITE_URL}/images/logo.svg`,
     image: DEFAULT_OG_IMAGE,
     slogan: org.eslogan,
-    description:
-      "Portal educativo y de acción comunitaria oficial de FUNASF en Colombia. Programas de formación técnica y laboral en alianza, becas de hasta el 90 %, emprendimiento y desarrollo social en Cali, municipios del Atlántico y nuevos territorios.",
-    taxID: org.nit,
-    telephone: org.telefonos.map((t) => `+57${t.replace(/\s/g, "")}`),
+    description: mision[0],
     email: org.correo,
+    telephone: org.telefonos[0],
     address: {
       "@type": "PostalAddress",
       streetAddress: org.direccionPrincipal,
@@ -110,61 +116,50 @@ export function getOrganizationSchema() {
       addressRegion: "Valle del Cauca",
       addressCountry: "CO",
     },
-    areaServed: [
-      { "@type": "AdministrativeArea", name: "Cali, Valle del Cauca" },
-      { "@type": "AdministrativeArea", name: "Soledad, Atlántico" },
-      { "@type": "AdministrativeArea", name: "Santo Tomás, Atlántico" },
-      { "@type": "AdministrativeArea", name: "Ponedera, Atlántico" },
-      { "@type": "AdministrativeArea", name: "Sabanalarga, Atlántico" },
-      { "@type": "AdministrativeArea", name: "Valledupar, Cesar" },
-      { "@type": "Country", name: "Colombia" },
-      { "@type": "Country", name: "Panamá" },
-    ],
-    parentOrganization: {
-      "@type": "NGO",
-      name: "Fundación Internacional Amigos Sin Fronteras (Panamá)",
-      url: "https://www.edufunasf.org",
-    },
-    sameAs: [org.instagramUrl, "https://www.edufunasf.org"],
+    taxID: org.nit,
+    sameAs: [org.instagramUrl],
   };
 }
 
 /**
- * Esquema Schema.org FAQPage basado en las preguntas oficiales
+ * Esquema Schema.org FAQPage basado en las preguntas frecuentes institucionales oficiales
  */
-export function getFaqSchema(items = faq) {
+export function getFaqSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: items.map((f) => ({
+    mainEntity: faq.map((item) => ({
       "@type": "Question",
-      name: f.pregunta,
+      name: item.pregunta,
       acceptedAnswer: {
         "@type": "Answer",
-        text: f.respuesta,
+        text: item.respuesta,
       },
     })),
   };
 }
 
 /**
- * Esquema Schema.org BreadcrumbList
+ * Esquema Schema.org BreadcrumbList para mejorar la navegación en SERP
  */
-export function getBreadcrumbSchema(crumbs: Array<{ name: string; path: string }>) {
+export function getBreadcrumbSchema(items: Array<{ name: string; path: string }>) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    itemListElement: crumbs.map((crumb, idx) => ({
-      "@type": "ListItem",
-      position: idx + 1,
-      name: crumb.name,
-      item: `${SITE_URL}${crumb.path.startsWith("/") ? crumb.path : `/${crumb.path}`}`,
-    })),
+    itemListElement: items.map((item, index) => {
+      const normalizedPath = item.path.startsWith("/") ? item.path : `/${item.path}`;
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        item: `${SITE_URL}${normalizedPath === "/" ? "" : normalizedPath}`,
+      };
+    }),
   };
 }
 
 /**
- * Esquema Schema.org Course / EducationalOccupationalProgram para cada programa
+ * Esquema Schema.org Course para fichas de programas técnicos y de formación
  */
 export function getCourseSchema(programa: ProgramaAcademico) {
   return {
@@ -178,7 +173,9 @@ export function getCourseSchema(programa: ProgramaAcademico) {
       url: SITE_URL,
     },
     courseMode: programa.modalidades,
-    occupationalCategory: programa.perfilOcupacional,
+    occupationalCategory: Array.isArray(programa.perfilOcupacional)
+      ? programa.perfilOcupacional.join(", ")
+      : programa.perfilOcupacional,
     hasCourseInstance: programa.modalidades.map((m) => ({
       "@type": "CourseInstance",
       courseMode: m,
@@ -204,28 +201,34 @@ export function getArticleSchema(article: {
   resumen: string;
   slug: string;
   fechaPublicacion: string;
+  fechaModificacion?: string | null | undefined;
   autorNombre: string;
   imagenPortada?: string | null | undefined;
 }) {
   return {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
+    "@type": ["Article", "BlogPosting"],
     headline: article.titulo,
     description: article.resumen,
     url: `${SITE_URL}/blog/${article.slug}`,
     datePublished: article.fechaPublicacion,
+    dateModified: article.fechaModificacion || article.fechaPublicacion,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/blog/${article.slug}`,
+    },
     author: {
       "@type": "Person",
       name: article.autorNombre,
     },
     publisher: {
-      "@type": "Organization",
+      "@type": "EducationalOrganization",
       name: org.nombre,
       logo: {
         "@type": "ImageObject",
-        url: DEFAULT_OG_IMAGE,
+        url: `${SITE_URL}/images/logo.svg`,
       },
     },
-    image: article.imagenPortada ?? DEFAULT_OG_IMAGE,
+    image: toAbsoluteUrl(article.imagenPortada),
   };
 }

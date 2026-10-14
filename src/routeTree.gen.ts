@@ -25,12 +25,15 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as DocenteIndexRouteImport } from './routes/docente/index'
+import { Route as DocenteCursoIdRouteImport } from './routes/docente/$cursoId'
 import { Route as ProgramasIndexRouteImport } from './routes/programas/index'
 import { Route as ProgramasSlugRouteImport } from './routes/programas/$slug'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog/index'
 import { Route as AdminBlogIdRouteImport } from './routes/admin/blog/$id'
 import { Route as AdminBlogNuevoRouteImport } from './routes/admin/blog/nuevo'
 import { Route as AdminConfiguracionIndexRouteImport } from './routes/admin/configuracion/index'
+import { Route as AdminCursosIndexRouteImport } from './routes/admin/cursos/index'
 import { Route as AdminGaleriaIndexRouteImport } from './routes/admin/galeria/index'
 import { Route as AdminInscripcionesIndexRouteImport } from './routes/admin/inscripciones/index'
 import { Route as AdminMensajesIndexRouteImport } from './routes/admin/mensajes/index'
@@ -119,6 +122,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocenteIndexRoute = DocenteIndexRouteImport.update({
+  id: '/docente/',
+  path: '/docente/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocenteCursoIdRoute = DocenteCursoIdRouteImport.update({
+  id: '/docente/$cursoId',
+  path: '/docente/$cursoId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProgramasIndexRoute = ProgramasIndexRouteImport.update({
   id: '/programas/',
   path: '/programas/',
@@ -147,6 +160,11 @@ const AdminBlogNuevoRoute = AdminBlogNuevoRouteImport.update({
 const AdminConfiguracionIndexRoute = AdminConfiguracionIndexRouteImport.update({
   id: '/admin/configuracion/',
   path: '/admin/configuracion/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCursosIndexRoute = AdminCursosIndexRouteImport.update({
+  id: '/admin/cursos/',
+  path: '/admin/cursos/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminGaleriaIndexRoute = AdminGaleriaIndexRouteImport.update({
@@ -200,9 +218,11 @@ export interface FileRoutesByFullPath {
   '/tratamiento-datos': typeof TratamientoDatosRoute
   '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/docente/$cursoId': typeof DocenteCursoIdRoute
   '/programas/$slug': typeof ProgramasSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/docente/': typeof DocenteIndexRoute
   '/programas/': typeof ProgramasIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
@@ -210,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/configuracion/': typeof AdminConfiguracionIndexRoute
+  '/admin/cursos/': typeof AdminCursosIndexRoute
   '/admin/galeria/': typeof AdminGaleriaIndexRoute
   '/admin/inscripciones/': typeof AdminInscripcionesIndexRoute
   '/admin/mensajes/': typeof AdminMensajesIndexRoute
@@ -231,9 +252,11 @@ export interface FileRoutesByTo {
   '/tratamiento-datos': typeof TratamientoDatosRoute
   '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/docente/$cursoId': typeof DocenteCursoIdRoute
   '/programas/$slug': typeof ProgramasSlugRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
+  '/docente': typeof DocenteIndexRoute
   '/programas': typeof ProgramasIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
@@ -241,6 +264,7 @@ export interface FileRoutesByTo {
   '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/configuracion': typeof AdminConfiguracionIndexRoute
+  '/admin/cursos': typeof AdminCursosIndexRoute
   '/admin/galeria': typeof AdminGaleriaIndexRoute
   '/admin/inscripciones': typeof AdminInscripcionesIndexRoute
   '/admin/mensajes': typeof AdminMensajesIndexRoute
@@ -263,9 +287,11 @@ export interface FileRoutesById {
   '/tratamiento-datos': typeof TratamientoDatosRoute
   '/admin/login': typeof AdminLoginRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/docente/$cursoId': typeof DocenteCursoIdRoute
   '/programas/$slug': typeof ProgramasSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
+  '/docente/': typeof DocenteIndexRoute
   '/programas/': typeof ProgramasIndexRoute
   '/admin/blog/$id': typeof AdminBlogIdRoute
   '/admin/blog/nuevo': typeof AdminBlogNuevoRoute
@@ -273,6 +299,7 @@ export interface FileRoutesById {
   '/admin/programas/nuevo': typeof AdminProgramasNuevoRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/configuracion/': typeof AdminConfiguracionIndexRoute
+  '/admin/cursos/': typeof AdminCursosIndexRoute
   '/admin/galeria/': typeof AdminGaleriaIndexRoute
   '/admin/inscripciones/': typeof AdminInscripcionesIndexRoute
   '/admin/mensajes/': typeof AdminMensajesIndexRoute
@@ -296,9 +323,11 @@ export interface FileRouteTypes {
     | '/tratamiento-datos'
     | '/admin/login'
     | '/blog/$slug'
+    | '/docente/$cursoId'
     | '/programas/$slug'
     | '/admin/'
     | '/blog/'
+    | '/docente/'
     | '/programas/'
     | '/admin/blog/$id'
     | '/admin/blog/nuevo'
@@ -306,6 +335,7 @@ export interface FileRouteTypes {
     | '/admin/programas/nuevo'
     | '/admin/blog/'
     | '/admin/configuracion/'
+    | '/admin/cursos/'
     | '/admin/galeria/'
     | '/admin/inscripciones/'
     | '/admin/mensajes/'
@@ -327,9 +357,11 @@ export interface FileRouteTypes {
     | '/tratamiento-datos'
     | '/admin/login'
     | '/blog/$slug'
+    | '/docente/$cursoId'
     | '/programas/$slug'
     | '/admin'
     | '/blog'
+    | '/docente'
     | '/programas'
     | '/admin/blog/$id'
     | '/admin/blog/nuevo'
@@ -337,6 +369,7 @@ export interface FileRouteTypes {
     | '/admin/programas/nuevo'
     | '/admin/blog'
     | '/admin/configuracion'
+    | '/admin/cursos'
     | '/admin/galeria'
     | '/admin/inscripciones'
     | '/admin/mensajes'
@@ -358,9 +391,11 @@ export interface FileRouteTypes {
     | '/tratamiento-datos'
     | '/admin/login'
     | '/blog/$slug'
+    | '/docente/$cursoId'
     | '/programas/$slug'
     | '/admin/'
     | '/blog/'
+    | '/docente/'
     | '/programas/'
     | '/admin/blog/$id'
     | '/admin/blog/nuevo'
@@ -368,6 +403,7 @@ export interface FileRouteTypes {
     | '/admin/programas/nuevo'
     | '/admin/blog/'
     | '/admin/configuracion/'
+    | '/admin/cursos/'
     | '/admin/galeria/'
     | '/admin/inscripciones/'
     | '/admin/mensajes/'
@@ -390,9 +426,11 @@ export interface RootRouteChildren {
   TratamientoDatosRoute: typeof TratamientoDatosRoute
   AdminLoginRoute: typeof AdminLoginRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  DocenteCursoIdRoute: typeof DocenteCursoIdRoute
   ProgramasSlugRoute: typeof ProgramasSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  DocenteIndexRoute: typeof DocenteIndexRoute
   ProgramasIndexRoute: typeof ProgramasIndexRoute
   AdminBlogIdRoute: typeof AdminBlogIdRoute
   AdminBlogNuevoRoute: typeof AdminBlogNuevoRoute
@@ -400,6 +438,7 @@ export interface RootRouteChildren {
   AdminProgramasNuevoRoute: typeof AdminProgramasNuevoRoute
   AdminBlogIndexRoute: typeof AdminBlogIndexRoute
   AdminConfiguracionIndexRoute: typeof AdminConfiguracionIndexRoute
+  AdminCursosIndexRoute: typeof AdminCursosIndexRoute
   AdminGaleriaIndexRoute: typeof AdminGaleriaIndexRoute
   AdminInscripcionesIndexRoute: typeof AdminInscripcionesIndexRoute
   AdminMensajesIndexRoute: typeof AdminMensajesIndexRoute
@@ -521,6 +560,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/docente/': {
+      id: '/docente/'
+      path: '/docente'
+      fullPath: '/docente/'
+      preLoaderRoute: typeof DocenteIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docente/$cursoId': {
+      id: '/docente/$cursoId'
+      path: '/docente/$cursoId'
+      fullPath: '/docente/$cursoId'
+      preLoaderRoute: typeof DocenteCursoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/programas/': {
       id: '/programas/'
       path: '/programas'
@@ -561,6 +614,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/configuracion'
       fullPath: '/admin/configuracion/'
       preLoaderRoute: typeof AdminConfiguracionIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/cursos/': {
+      id: '/admin/cursos/'
+      path: '/admin/cursos'
+      fullPath: '/admin/cursos/'
+      preLoaderRoute: typeof AdminCursosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/galeria/': {
@@ -630,9 +690,11 @@ const rootRouteChildren: RootRouteChildren = {
   TratamientoDatosRoute: TratamientoDatosRoute,
   AdminLoginRoute: AdminLoginRoute,
   BlogSlugRoute: BlogSlugRoute,
+  DocenteCursoIdRoute: DocenteCursoIdRoute,
   ProgramasSlugRoute: ProgramasSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
+  DocenteIndexRoute: DocenteIndexRoute,
   ProgramasIndexRoute: ProgramasIndexRoute,
   AdminBlogIdRoute: AdminBlogIdRoute,
   AdminBlogNuevoRoute: AdminBlogNuevoRoute,
@@ -640,6 +702,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminProgramasNuevoRoute: AdminProgramasNuevoRoute,
   AdminBlogIndexRoute: AdminBlogIndexRoute,
   AdminConfiguracionIndexRoute: AdminConfiguracionIndexRoute,
+  AdminCursosIndexRoute: AdminCursosIndexRoute,
   AdminGaleriaIndexRoute: AdminGaleriaIndexRoute,
   AdminInscripcionesIndexRoute: AdminInscripcionesIndexRoute,
   AdminMensajesIndexRoute: AdminMensajesIndexRoute,

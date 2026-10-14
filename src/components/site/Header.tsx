@@ -145,19 +145,35 @@ export function Header() {
             <span className="text-primary-foreground/30" aria-hidden="true">
               |
             </span>
-            {/* Acceso discreto para estudiantes activos (no satura al visitante nuevo) */}
-            <Link
-              to="/portal-estudiantil"
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 font-medium transition-colors",
-                pathname === "/portal-estudiantil"
-                  ? "bg-white/15 text-white font-semibold"
-                  : "text-white/80 hover:bg-white/10 hover:text-white",
-              )}
-            >
-              <GraduationCap aria-hidden className="size-3 text-brand-gold" />
-              <span>Soy estudiante activo</span>
-            </Link>
+            {/* Accesos a portales educativos */}
+            <div className="flex items-center gap-1.5">
+              <Link
+                to="/portal-estudiantil"
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-medium transition-colors",
+                  pathname === "/portal-estudiantil"
+                    ? "bg-white/20 text-white font-semibold"
+                    : "text-white/80 hover:bg-white/10 hover:text-white",
+                )}
+              >
+                <GraduationCap aria-hidden className="size-3 text-brand-gold" />
+                <span>Portal Estudiantil</span>
+              </Link>
+              <span className="text-primary-foreground/30" aria-hidden="true">
+                ·
+              </span>
+              <Link
+                to="/docente"
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-medium transition-colors",
+                  pathname.startsWith("/docente")
+                    ? "bg-white/20 text-white font-semibold"
+                    : "text-white/80 hover:bg-white/10 hover:text-white",
+                )}
+              >
+                <span>Portal Docente</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -384,17 +400,29 @@ export function Header() {
 
               {/* Pie del menú móvil con soporte y enlace a portal */}
               <div className="border-t border-border/80 bg-muted/30 p-4 space-y-3">
-                <Link
-                  to="/portal-estudiantil"
-                  onClick={() => setAbierto(false)}
-                  className="flex items-center justify-between rounded-lg border border-border/80 bg-card px-3 py-2.5 text-xs font-medium text-foreground hover:bg-muted transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <GraduationCap className="size-4 text-brand-green" />
-                    <span>Portal para Estudiantes Activos</span>
-                  </div>
-                  <ArrowRight className="size-3.5 text-muted-foreground" />
-                </Link>
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/portal-estudiantil"
+                    onClick={() => setAbierto(false)}
+                    className="flex items-center justify-between rounded-lg border border-border/80 bg-card px-3 py-2.5 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                  >
+                    <div className="flex items-center gap-1.5 truncate">
+                      <GraduationCap className="size-3.5 text-brand-green shrink-0" />
+                      <span className="truncate">Estudiantes</span>
+                    </div>
+                  </Link>
+
+                  <Link
+                    to="/docente"
+                    onClick={() => setAbierto(false)}
+                    className="flex items-center justify-between rounded-lg border border-border/80 bg-card px-3 py-2.5 text-xs font-medium text-foreground hover:bg-muted transition-colors"
+                  >
+                    <div className="flex items-center gap-1.5 truncate">
+                      <GraduationCap className="size-3.5 text-brand-gold-deep shrink-0" />
+                      <span className="truncate">Docentes</span>
+                    </div>
+                  </Link>
+                </div>
 
                 <div className="pt-1 flex items-center justify-between text-[11px] text-muted-foreground">
                   <a href={phoneHref} className="hover:text-foreground flex items-center gap-1">

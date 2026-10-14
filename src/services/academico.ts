@@ -19,16 +19,35 @@ export interface Curso {
   horarioDescripcion?: string | null;
   aula?: string | null;
   activo: boolean;
+  notaMinimaAprobacion: number;
+  descripcion?: string | null;
 }
 
-export interface EvaluacionNota {
+export interface ComponenteEvaluacion {
   id: string;
-  matriculaId: string;
-  titulo: string;
+  cursoId: string;
+  nombre: string;
+  descripcion?: string | null;
   porcentaje: number;
+  orden: number;
+}
+
+export interface Calificacion {
+  id: string;
+  componenteId: string;
+  matriculaId: string;
   nota: number;
   retroalimentacion?: string | null;
-  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface NotaDesglosada {
+  componenteId: string;
+  nombre: string;
+  porcentaje: number;
+  nota: number | null;
+  retroalimentacion?: string | null;
+  aportePonderado: number; // (nota * porcentaje) / 100
 }
 
 export interface EntregaTrabajo {
@@ -61,7 +80,9 @@ export interface MatriculaEstudiante {
   estado: "cursando" | "aprobado" | "reprobado" | "retirado";
   notaDefinitiva?: number | null;
   fechaMatricula: string;
-  notas: EvaluacionNota[];
+  malla: ComponenteEvaluacion[];
+  calificaciones: Calificacion[];
+  desglose: NotaDesglosada[];
   entregas: EntregaTrabajo[];
   observaciones: ObservacionAcademica[];
 }
@@ -71,13 +92,32 @@ export interface EstudianteMatriculado {
   estudianteId: string;
   nombreCompleto: string;
   email: string;
+  documento?: string | null;
+  telefono?: string | null;
   estado: "cursando" | "aprobado" | "reprobado" | "retirado";
   notaDefinitiva?: number | null;
-  notas: EvaluacionNota[];
+  calificaciones: Record<string, Calificacion>; // componenteId -> Calificacion
   observaciones: ObservacionAcademica[];
+  entregas: EntregaTrabajo[];
 }
 
-// Datos de demostración cuando se prueba localmente sin conexión a Supabase
+export interface CursoDetalleDocente {
+  curso: Curso;
+  componentes: ComponenteEvaluacion[];
+  sumaPorcentajes: number;
+  estudiantes: EstudianteMatriculado[];
+}
+
+// ============================================================================
+// DATOS DEMO (para desarrollo offline o vista previa)
+// ============================================================================
+
+const DEMO_MALLA: ComponenteEvaluacion[] = [
+  { id: "comp-1", cursoId: "curso-demo-1", nombre: "Primer Parcial Teórico", porcentaje: 30, orden: 1 },
+  { id: "comp-2", cursoId: "curso-demo-1", nombre: "Talleres y Guías de Laboratorio", porcentaje: 30, orden: 2 },
+  { id: "comp-3", cursoId: "curso-demo-1", nombre: "Evaluación Práctica Final", porcentaje: 40, orden: 3 },
+];
+
 const DEMO_MATRICULAS: MatriculaEstudiante[] = [
   {
     id: "mat-demo-1",
@@ -93,29 +133,22 @@ const DEMO_MATRICULAS: MatriculaEstudiante[] = [
       horarioDescripcion: "Sábados 8:00 AM - 1:00 PM",
       aula: "Sede Cali - Aula 204",
       activo: true,
+      notaMinimaAprobacion: 3.0,
+      descripcion: "Fundamentos morfológicos, sistemas corporales y respuesta a emergencias.",
     },
     estado: "cursando",
-    notaDefinitiva: 4.2,
+    notaDefinitiva: 4.15,
     fechaMatricula: "2026-02-15",
-    notas: [
-      {
-        id: "nota-1",
-        matriculaId: "mat-demo-1",
-        titulo: "Taller de Signos Vitales y Triaje",
-        porcentaje: 25,
-        nota: 4.5,
-        retroalimentacion: "Excelente destreza en la toma de signos.",
-        createdAt: "2026-03-01",
-      },
-      {
-        id: "nota-2",
-        matriculaId: "mat-demo-1",
-        titulo: "Primer Parcial Teórico",
-        porcentaje: 35,
-        nota: 4.0,
-        retroalimentacion: "Buen dominio de conceptos anatómicos.",
-        createdAt: "2026-03-20",
-      },
+    malla: DEMO_MALLA,
+    calificaciones: [
+      { id: "cal-1", componenteId: "comp-1", matriculaId: "mat-demo-1", nota: 4.5, retroalimentacion: "Excelente dominio." },
+      { id: "cal-2", componenteId: "comp-2", matriculaId: "mat-demo-1", nota: 4.0, retroalimentacion: "Muy buenas evidencias." },
+      { id: "cal-3", componenteId: "comp-3", matriculaId: "mat-demo-1", nota: 4.0, retroalimentacion: "Buena técnica." },
+    ],
+    desglose: [
+      { componenteId: "comp-1", nombre: "Primer Parcial Teórico", porcentaje: 30, nota: 4.5, aportePonderado: 1.35, retroalimentacion: "Excelente dominio." },
+      { componenteId: "comp-2", nombre: "Talleres y Guías de Laboratorio", porcentaje: 30, nota: 4.0, aportePonderado: 1.2, retroalimentacion: "Muy buenas evidencias." },
+      { componenteId: "comp-3", nombre: "Evaluación Práctica Final", porcentaje: 40, nota: 4.0, aportePonderado: 1.6, retroalimentacion: "Buena técnica." },
     ],
     entregas: [
       {
@@ -125,7 +158,7 @@ const DEMO_MATRICULAS: MatriculaEstudiante[] = [
         archivoUrl: "#",
         estado: "calificado",
         nota: 4.5,
-        retroalimentacion: "Cumple con las guías internacionales vigentes.",
+        retroalimentacion: "Cumple con las guías vigentes.",
         fechaEntrega: "2026-03-15",
       },
     ],
@@ -146,10 +179,6 @@ const DEMO_MATRICULAS: MatriculaEstudiante[] = [
 // FUNCIONES PARA EL ESTUDIANTE
 // ============================================================================
 
-/**
- * Consulta todas las asignaturas matriculadas por el estudiante autenticado,
- * junto con sus calificaciones parciales, entregas y observaciones.
- */
 export async function getMisMatriculasYNotas(
   estudianteId: string,
 ): Promise<{ ok: boolean; data?: MatriculaEstudiante[]; error?: string }> {
@@ -162,9 +191,8 @@ export async function getMisMatriculasYNotas(
   }
 
   try {
-    // 1. Consultar matrículas del estudiante con información del curso
     const { data: matriculasData, error: matriculasErr } = await supabase
-      .from("matriculas" as any)
+      .from("matriculas")
       .select(
         `
         id,
@@ -183,6 +211,8 @@ export async function getMisMatriculasYNotas(
           horario_descripcion,
           aula,
           activo,
+          nota_minima_aprobacion,
+          descripcion,
           programas ( nombre )
         )
       `,
@@ -199,31 +229,36 @@ export async function getMisMatriculasYNotas(
     }
 
     const matriculaIds = matriculasData.map((m: any) => m.id);
+    const cursoIds = Array.from(new Set(matriculasData.map((m: any) => m.curso_id)));
 
-    // 2. Consultar notas, entregas y observaciones asociadas
-    const [notasRes, entregasRes, obsRes] = await Promise.all([
+    // Consultar componentes_evaluacion de esos cursos, calificaciones, entregas y observaciones
+    const [componentesRes, calificacionesRes, entregasRes, obsRes] = await Promise.all([
       supabase
-        .from("evaluaciones_notas" as any)
+        .from("componentes_evaluacion")
         .select("*")
-        .in("matricula_id", matriculaIds)
-        .order("created_at", { ascending: true }),
+        .in("curso_id", cursoIds)
+        .order("orden", { ascending: true }),
       supabase
-        .from("entregas_trabajos" as any)
+        .from("calificaciones")
+        .select("*")
+        .in("matricula_id", matriculaIds),
+      supabase
+        .from("entregas_trabajos")
         .select("*")
         .in("matricula_id", matriculaIds)
         .order("fecha_entrega", { ascending: false }),
       supabase
-        .from("observaciones_academicas" as any)
+        .from("observaciones_academicas")
         .select("*")
         .in("matricula_id", matriculaIds)
         .order("created_at", { ascending: false }),
     ]);
 
-    const todasLasNotas = (notasRes.data || []) as any[];
-    const todasLasEntregas = (entregasRes.data || []) as any[];
-    const todasLasObservaciones = (obsRes.data || []) as any[];
+    const componentes = (componentesRes.data || []) as any[];
+    const calificaciones = (calificacionesRes.data || []) as any[];
+    const entregas = (entregasRes.data || []) as any[];
+    const observaciones = (obsRes.data || []) as any[];
 
-    // 3. Ensamblar modelo completo
     const resultado: MatriculaEstudiante[] = matriculasData.map((m: any) => {
       const c = m.cursos || {};
       const cursoObj: Curso = {
@@ -237,21 +272,47 @@ export async function getMisMatriculasYNotas(
         horarioDescripcion: c.horario_descripcion,
         aula: c.aula,
         activo: c.activo ?? true,
+        notaMinimaAprobacion: Number(c.nota_minima_aprobacion ?? 3.0),
+        descripcion: c.descripcion,
       };
 
-      const notas = todasLasNotas
-        .filter((n) => n.matricula_id === m.id)
-        .map((n) => ({
-          id: n.id,
-          matriculaId: n.matricula_id,
-          titulo: n.titulo,
-          porcentaje: n.porcentaje,
-          nota: Number(n.nota),
-          retroalimentacion: n.retroalimentacion,
-          createdAt: n.created_at,
+      const cursoMalla: ComponenteEvaluacion[] = componentes
+        .filter((comp) => comp.curso_id === cursoObj.id)
+        .map((comp) => ({
+          id: comp.id,
+          cursoId: comp.curso_id,
+          nombre: comp.nombre,
+          descripcion: comp.descripcion,
+          porcentaje: Number(comp.porcentaje),
+          orden: comp.orden,
         }));
 
-      const entregas = todasLasEntregas
+      const misCalificaciones: Calificacion[] = calificaciones
+        .filter((cal) => cal.matricula_id === m.id)
+        .map((cal) => ({
+          id: cal.id,
+          componenteId: cal.componente_id,
+          matriculaId: cal.matricula_id,
+          nota: Number(cal.nota),
+          retroalimentacion: cal.retroalimentacion,
+          updatedAt: cal.updated_at,
+        }));
+
+      const desglose: NotaDesglosada[] = cursoMalla.map((comp) => {
+        const cal = misCalificaciones.find((cl) => cl.componenteId === comp.id);
+        const nota = cal ? cal.nota : null;
+        const aportePonderado = nota !== null ? Number(((nota * comp.porcentaje) / 100).toFixed(2)) : 0;
+        return {
+          componenteId: comp.id,
+          nombre: comp.nombre,
+          porcentaje: comp.porcentaje,
+          nota,
+          retroalimentacion: cal?.retroalimentacion ?? null,
+          aportePonderado,
+        };
+      });
+
+      const misEntregas: EntregaTrabajo[] = entregas
         .filter((e) => e.matricula_id === m.id)
         .map((e) => ({
           id: e.id,
@@ -265,7 +326,7 @@ export async function getMisMatriculasYNotas(
           fechaEntrega: e.fecha_entrega,
         }));
 
-      const observaciones = todasLasObservaciones
+      const misObs: ObservacionAcademica[] = observaciones
         .filter((o) => o.matricula_id === m.id)
         .map((o) => ({
           id: o.id,
@@ -284,9 +345,11 @@ export async function getMisMatriculasYNotas(
         estado: m.estado,
         notaDefinitiva: m.nota_definitiva != null ? Number(m.nota_definitiva) : null,
         fechaMatricula: m.fecha_matricula,
-        notas,
-        entregas,
-        observaciones,
+        malla: cursoMalla,
+        calificaciones: misCalificaciones,
+        desglose,
+        entregas: misEntregas,
+        observaciones: misObs,
       };
     });
 
@@ -297,9 +360,6 @@ export async function getMisMatriculasYNotas(
   }
 }
 
-/**
- * Permite al estudiante subir un archivo de evidencia o trabajo práctico.
- */
 export async function subirEntregaTrabajo(params: {
   matriculaId: string;
   titulo: string;
@@ -311,7 +371,13 @@ export async function subirEntregaTrabajo(params: {
   }
 
   try {
-    const fileExt = params.archivo.name.split(".").pop() || "pdf";
+    const MAX_SIZE_BYTES = 15 * 1024 * 1024;
+    if (params.archivo.size > MAX_SIZE_BYTES) {
+      return { ok: false, error: "El archivo excede el tamaño máximo permitido de 15 MB." };
+    }
+
+    const rawExt = params.archivo.name.split(".").pop() || "pdf";
+    const fileExt = rawExt.toLowerCase().replace(/[^a-z0-9]/g, "").substring(0, 5) || "pdf";
     const cleanName = params.archivo.name
       .substring(0, params.archivo.name.lastIndexOf("."))
       .toLowerCase()
@@ -334,7 +400,7 @@ export async function subirEntregaTrabajo(params: {
 
     const archivoUrl = publicUrlData?.publicUrl || filePath;
 
-    const { error: insertError } = await supabase.from("entregas_trabajos" as any).insert({
+    const { error: insertError } = await supabase.from("entregas_trabajos").insert({
       matricula_id: params.matriculaId,
       titulo: params.titulo,
       descripcion: params.descripcion || null,
@@ -356,19 +422,34 @@ export async function subirEntregaTrabajo(params: {
 // FUNCIONES PARA EL DOCENTE
 // ============================================================================
 
-/**
- * Consulta los cursos asignados al docente autenticado.
- */
 export async function getCursosDocente(
   docenteId: string,
 ): Promise<{ ok: boolean; data?: Curso[]; error?: string }> {
   if (!isSupabaseConfigured()) {
-    return { ok: false, error: ERROR_SISTEMA_NO_DISPONIBLE };
+    return {
+      ok: true,
+      data: [
+        {
+          id: "curso-demo-1",
+          programaId: "prog-enfermeria",
+          programaNombre: "Auxiliar en Enfermería",
+          docenteId,
+          nombre: "Morfofisiología y Primeros Auxilios",
+          codigo: "ENF-101",
+          periodo: "2026-1",
+          horarioDescripcion: "Sábados 8:00 AM - 1:00 PM",
+          aula: "Sede Cali - Aula 204",
+          activo: true,
+          notaMinimaAprobacion: 3.0,
+          descripcion: "Fundamentos morfológicos, sistemas corporales y respuesta a emergencias.",
+        },
+      ],
+    };
   }
 
   try {
     const { data, error } = await supabase
-      .from("cursos" as any)
+      .from("cursos")
       .select("*, programas(nombre)")
       .eq("docente_id", docenteId)
       .eq("activo", true)
@@ -389,6 +470,8 @@ export async function getCursosDocente(
       horarioDescripcion: c.horario_descripcion,
       aula: c.aula,
       activo: c.activo,
+      notaMinimaAprobacion: Number(c.nota_minima_aprobacion ?? 3.0),
+      descripcion: c.descripcion,
     }));
 
     return { ok: true, data: cursos };
@@ -397,34 +480,366 @@ export async function getCursosDocente(
   }
 }
 
-/**
- * Registra una calificación parcial para un estudiante en una matrícula.
- */
-export async function registrarNotaEvaluacion(params: {
-  matriculaId: string;
-  titulo: string;
-  porcentaje: number;
-  nota: number;
-  retroalimentacion?: string | undefined;
-}): Promise<{ ok: boolean; error?: string }> {
+export async function getCursoDetalleDocente(
+  cursoId: string,
+): Promise<{ ok: boolean; data?: CursoDetalleDocente; error?: string }> {
   if (!isSupabaseConfigured()) {
-    return { ok: false, error: ERROR_SISTEMA_NO_DISPONIBLE };
+    return {
+      ok: true,
+      data: {
+        curso: DEMO_MATRICULAS[0]!.curso,
+        componentes: DEMO_MALLA,
+        sumaPorcentajes: 100,
+        estudiantes: [
+          {
+            matriculaId: "mat-demo-1",
+            estudianteId: "demo-estudiante-id",
+            nombreCompleto: "Camila Rodríguez Torres",
+            email: "camila.rodriguez@ejemplo.edu.co",
+            documento: "1005847291",
+            telefono: "3154829102",
+            estado: "cursando",
+            notaDefinitiva: 4.15,
+            calificaciones: {
+              "comp-1": { id: "cal-1", componenteId: "comp-1", matriculaId: "mat-demo-1", nota: 4.5, retroalimentacion: "Excelente dominio." },
+              "comp-2": { id: "cal-2", componenteId: "comp-2", matriculaId: "mat-demo-1", nota: 4.0, retroalimentacion: "Muy buenas evidencias." },
+              "comp-3": { id: "cal-3", componenteId: "comp-3", matriculaId: "mat-demo-1", nota: 4.0, retroalimentacion: "Buena técnica." },
+            },
+            observaciones: DEMO_MATRICULAS[0]!.observaciones,
+            entregas: DEMO_MATRICULAS[0]!.entregas,
+          },
+        ],
+      },
+    };
   }
 
   try {
-    const { error } = await supabase.from("evaluaciones_notas" as any).insert({
-      matricula_id: params.matriculaId,
-      titulo: params.titulo,
-      porcentaje: params.porcentaje,
-      nota: params.nota,
-      retroalimentacion: params.retroalimentacion || null,
-    });
+    // 1. Obtener curso
+    const { data: cursoData, error: cursoErr } = await supabase
+      .from("cursos")
+      .select("*, programas(nombre)")
+      .eq("id", cursoId)
+      .maybeSingle();
 
-    if (error) {
-      return { ok: false, error: error.message };
+    if (cursoErr || !cursoData) {
+      return { ok: false, error: cursoErr?.message || "Curso no encontrado." };
     }
 
+    const curso: Curso = {
+      id: cursoData.id,
+      programaId: cursoData.programa_id,
+      programaNombre: (cursoData as any).programas?.nombre || "Programa Técnico",
+      docenteId: cursoData.docente_id,
+      nombre: cursoData.nombre,
+      codigo: cursoData.codigo,
+      periodo: cursoData.periodo,
+      horarioDescripcion: cursoData.horario_descripcion,
+      aula: cursoData.aula,
+      activo: cursoData.activo,
+      notaMinimaAprobacion: Number(cursoData.nota_minima_aprobacion ?? 3.0),
+      descripcion: cursoData.descripcion,
+    };
+
+    // 2. Componentes de evaluación (malla)
+    const { data: compData, error: compErr } = await supabase
+      .from("componentes_evaluacion")
+      .select("*")
+      .eq("curso_id", cursoId)
+      .order("orden", { ascending: true });
+
+    if (compErr) {
+      return { ok: false, error: compErr.message };
+    }
+
+    const componentes: ComponenteEvaluacion[] = (compData || []).map((c: any) => ({
+      id: c.id,
+      cursoId: c.curso_id,
+      nombre: c.nombre,
+      descripcion: c.descripcion,
+      porcentaje: Number(c.porcentaje),
+      orden: c.orden,
+    }));
+
+    const sumaPorcentajes = componentes.reduce((acc, c) => acc + c.porcentaje, 0);
+
+    // 3. Estudiantes matriculados
+    const { data: matData, error: matErr } = await supabase
+      .from("matriculas")
+      .select(
+        `
+        id,
+        estudiante_id,
+        estado,
+        nota_definitiva,
+        fecha_matricula,
+        perfiles:estudiante_id (
+          id,
+          nombre_completo,
+          email,
+          documento,
+          telefono
+        )
+      `,
+      )
+      .eq("curso_id", cursoId)
+      .order("created_at", { ascending: true });
+
+    if (matErr) {
+      return { ok: false, error: matErr.message };
+    }
+
+    const matriculaIds = (matData || []).map((m: any) => m.id);
+
+    // 4. Calificaciones, entregas y observaciones de estos estudiantes
+    let todasCal: any[] = [];
+    let todasObs: any[] = [];
+    let todasEntregas: any[] = [];
+
+    if (matriculaIds.length > 0) {
+      const [calRes, obsRes, entRes] = await Promise.all([
+        supabase.from("calificaciones").select("*").in("matricula_id", matriculaIds),
+        supabase.from("observaciones_academicas").select("*").in("matricula_id", matriculaIds).order("created_at", { ascending: false }),
+        supabase.from("entregas_trabajos").select("*").in("matricula_id", matriculaIds).order("fecha_entrega", { ascending: false }),
+      ]);
+      todasCal = calRes.data || [];
+      todasObs = obsRes.data || [];
+      todasEntregas = entRes.data || [];
+    }
+
+    const estudiantes: EstudianteMatriculado[] = (matData || []).map((m: any) => {
+      const perf = m.perfiles || {};
+      const calMap: Record<string, Calificacion> = {};
+      todasCal
+        .filter((c) => c.matricula_id === m.id)
+        .forEach((c) => {
+          calMap[c.componente_id] = {
+            id: c.id,
+            componenteId: c.componente_id,
+            matriculaId: c.matricula_id,
+            nota: Number(c.nota),
+            retroalimentacion: c.retroalimentacion,
+            updatedAt: c.updated_at,
+          };
+        });
+
+      return {
+        matriculaId: m.id,
+        estudianteId: m.estudiante_id,
+        nombreCompleto: perf.nombre_completo || "Estudiante",
+        email: perf.email || "",
+        documento: perf.documento,
+        telefono: perf.telefono,
+        estado: m.estado,
+        notaDefinitiva: m.nota_definitiva != null ? Number(m.nota_definitiva) : null,
+        calificaciones: calMap,
+        observaciones: todasObs.filter((o) => o.matricula_id === m.id).map((o) => ({
+          id: o.id,
+          matriculaId: o.matricula_id,
+          tipo: o.tipo,
+          titulo: o.titulo,
+          detalle: o.detalle,
+          createdAt: o.created_at,
+        })),
+        entregas: todasEntregas.filter((e) => e.matricula_id === m.id).map((e) => ({
+          id: e.id,
+          matriculaId: e.matricula_id,
+          titulo: e.titulo,
+          descripcion: e.descripcion,
+          archivoUrl: e.archivo_url,
+          estado: e.estado,
+          nota: e.nota != null ? Number(e.nota) : null,
+          retroalimentacion: e.retroalimentacion,
+          fechaEntrega: e.fecha_entrega,
+        })),
+      };
+    });
+
+    return {
+      ok: true,
+      data: {
+        curso,
+        componentes,
+        sumaPorcentajes,
+        estudiantes,
+      },
+    };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+// ---------------- Malla de Evaluación (Docente) ----------------
+
+export async function crearComponenteEvaluacion(params: {
+  cursoId: string;
+  nombre: string;
+  porcentaje: number;
+  descripcion?: string | undefined;
+  orden?: number | undefined;
+}): Promise<{ ok: boolean; data?: ComponenteEvaluacion; error?: string }> {
+  if (!isSupabaseConfigured()) {
+    return { ok: true, data: { id: `comp-${Date.now()}`, cursoId: params.cursoId, nombre: params.nombre, porcentaje: params.porcentaje, orden: params.orden ?? 1 } };
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from("componentes_evaluacion")
+      .insert({
+        curso_id: params.cursoId,
+        nombre: params.nombre.trim(),
+        porcentaje: params.porcentaje,
+        descripcion: params.descripcion?.trim() || null,
+        orden: params.orden ?? 0,
+      })
+      .select()
+      .single();
+
+    if (error) return { ok: false, error: error.message };
+    return {
+      ok: true,
+      data: {
+        id: data.id,
+        cursoId: data.curso_id,
+        nombre: data.nombre,
+        descripcion: data.descripcion,
+        porcentaje: Number(data.porcentaje),
+        orden: data.orden,
+      },
+    };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function actualizarComponenteEvaluacion(params: {
+  id: string;
+  nombre?: string;
+  porcentaje?: number;
+  descripcion?: string | null;
+  orden?: number;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const updateObj: any = {};
+    if (params.nombre !== undefined) updateObj.nombre = params.nombre.trim();
+    if (params.porcentaje !== undefined) updateObj.porcentaje = params.porcentaje;
+    if (params.descripcion !== undefined) updateObj.descripcion = params.descripcion?.trim() || null;
+    if (params.orden !== undefined) updateObj.orden = params.orden;
+
+    const { error } = await supabase
+      .from("componentes_evaluacion")
+      .update(updateObj)
+      .eq("id", params.id);
+
+    if (error) return { ok: false, error: error.message };
     return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function eliminarComponenteEvaluacion(id: string): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase.from("componentes_evaluacion").delete().eq("id", id);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+// ---------------- Calificaciones (Docente) ----------------
+
+export async function guardarCalificacion(params: {
+  componenteId: string;
+  matriculaId: string;
+  nota: number;
+  retroalimentacion?: string | null;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (params.nota < 0 || params.nota > 5) {
+    return { ok: false, error: "La nota debe estar entre 0.0 y 5.0" };
+  }
+
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase.from("calificaciones").upsert(
+      {
+        componente_id: params.componenteId,
+        matricula_id: params.matriculaId,
+        nota: params.nota,
+        retroalimentacion: params.retroalimentacion?.trim() || null,
+      },
+      { onConflict: "componente_id,matricula_id" },
+    );
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function calificarEntrega(params: {
+  entregaId: string;
+  nota: number;
+  retroalimentacion?: string | null;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (params.nota < 0 || params.nota > 5) {
+    return { ok: false, error: "La nota debe estar entre 0.0 y 5.0" };
+  }
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase
+      .from("entregas_trabajos")
+      .update({
+        nota: params.nota,
+        retroalimentacion: params.retroalimentacion?.trim() || null,
+        estado: "calificado",
+      })
+      .eq("id", params.entregaId);
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function crearObservacionAcademica(params: {
+  matriculaId: string;
+  tipo: "felicitacion" | "alerta_academica" | "asistencia" | "seguimiento";
+  titulo: string;
+  detalle: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase.from("observaciones_academicas").insert({
+      matricula_id: params.matriculaId,
+      tipo: params.tipo,
+      titulo: params.titulo.trim(),
+      detalle: params.detalle.trim(),
+    });
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function cerrarCursoDocente(cursoId: string): Promise<{ ok: boolean; filasAfectadas?: number; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true, filasAfectadas: 1 };
+
+  try {
+    const { data, error } = await supabase.rpc("cerrar_curso" as any, { p_curso: cursoId });
+    if (error) return { ok: false, error: error.message };
+    return { ok: true, filasAfectadas: Number(data) };
   } catch (err: any) {
     return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
   }

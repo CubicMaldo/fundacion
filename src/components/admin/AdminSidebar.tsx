@@ -1,5 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import {
+  BookOpen,
   ClipboardList,
   ExternalLink,
   GraduationCap,
@@ -28,6 +29,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: "Dashboard", to: "/admin", icon: LayoutDashboard },
   { label: "Programas", to: "/admin/programas", icon: GraduationCap },
+  { label: "Cursos y Matrículas", to: "/admin/cursos", icon: BookOpen },
   { label: "Blog", to: "/admin/blog", icon: Newspaper },
   { label: "Galería", to: "/admin/galeria", icon: ImageIcon },
   { label: "Inscripciones", to: "/admin/inscripciones", icon: ClipboardList },

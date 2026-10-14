@@ -2,5 +2,10 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /admin
+Disallow: /docente/
+Disallow: /docente
+Disallow: /portal-estudiantil/
+Disallow: /portal-estudiantil
+Disallow: /api/
 
 Sitemap: https://www.edufunasf.org/sitemap.xml

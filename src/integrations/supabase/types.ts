@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -70,6 +70,102 @@ export type Database = {
           },
         ]
       }
+      calificaciones: {
+        Row: {
+          calificado_por: string | null
+          componente_id: string
+          created_at: string
+          id: string
+          matricula_id: string
+          nota: number
+          retroalimentacion: string | null
+          updated_at: string
+        }
+        Insert: {
+          calificado_por?: string | null
+          componente_id: string
+          created_at?: string
+          id?: string
+          matricula_id: string
+          nota: number
+          retroalimentacion?: string | null
+          updated_at?: string
+        }
+        Update: {
+          calificado_por?: string | null
+          componente_id?: string
+          created_at?: string
+          id?: string
+          matricula_id?: string
+          nota?: number
+          retroalimentacion?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calificaciones_calificado_por_fkey"
+            columns: ["calificado_por"]
+            isOneToOne: false
+            referencedRelation: "perfiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_componente_id_fkey"
+            columns: ["componente_id"]
+            isOneToOne: false
+            referencedRelation: "componentes_evaluacion"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calificaciones_matricula_id_fkey"
+            columns: ["matricula_id"]
+            isOneToOne: false
+            referencedRelation: "matriculas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      componentes_evaluacion: {
+        Row: {
+          created_at: string
+          curso_id: string
+          descripcion: string | null
+          id: string
+          nombre: string
+          orden: number
+          porcentaje: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          curso_id: string
+          descripcion?: string | null
+          id?: string
+          nombre: string
+          orden?: number
+          porcentaje: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          curso_id?: string
+          descripcion?: string | null
+          id?: string
+          nombre?: string
+          orden?: number
+          porcentaje?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "componentes_evaluacion_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "cursos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       configuracion: {
         Row: {
           clave: string
@@ -105,10 +201,12 @@ export type Database = {
           aula: string | null
           codigo: string
           created_at: string
+          descripcion: string | null
           docente_id: string | null
           horario_descripcion: string | null
           id: string
           nombre: string
+          nota_minima_aprobacion: number
           periodo: string
           programa_id: string
           updated_at: string
@@ -118,10 +216,12 @@ export type Database = {
           aula?: string | null
           codigo: string
           created_at?: string
+          descripcion?: string | null
           docente_id?: string | null
           horario_descripcion?: string | null
           id?: string
           nombre: string
+          nota_minima_aprobacion?: number
           periodo?: string
           programa_id: string
           updated_at?: string
@@ -131,10 +231,12 @@ export type Database = {
           aula?: string | null
           codigo?: string
           created_at?: string
+          descripcion?: string | null
           docente_id?: string | null
           horario_descripcion?: string | null
           id?: string
           nombre?: string
+          nota_minima_aprobacion?: number
           periodo?: string
           programa_id?: string
           updated_at?: string
@@ -206,47 +308,6 @@ export type Database = {
           },
         ]
       }
-      evaluaciones_notas: {
-        Row: {
-          created_at: string
-          id: string
-          matricula_id: string
-          nota: number
-          porcentaje: number
-          retroalimentacion: string | null
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          matricula_id: string
-          nota: number
-          porcentaje: number
-          retroalimentacion?: string | null
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          matricula_id?: string
-          nota?: number
-          porcentaje?: number
-          retroalimentacion?: string | null
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "evaluaciones_notas_matricula_id_fkey"
-            columns: ["matricula_id"]
-            isOneToOne: false
-            referencedRelation: "matriculas"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       galeria: {
         Row: {
           activo: boolean
@@ -288,6 +349,7 @@ export type Database = {
       }
       inscripciones: {
         Row: {
+          acepta_tratamiento_datos: boolean
           ciudad: string
           correo: string
           created_at: string
@@ -295,14 +357,18 @@ export type Database = {
           documento_tipo: string
           estado: Database["public"]["Enums"]["inscripcion_estado"]
           id: string
+          mensaje: string | null
+          modalidad: string | null
           nombre_completo: string
           notas_internas: string | null
+          notificado_at: string | null
           programa_id: string | null
           programa_nombre: string
           telefono: string
           updated_at: string
         }
         Insert: {
+          acepta_tratamiento_datos?: boolean
           ciudad: string
           correo: string
           created_at?: string
@@ -310,14 +376,18 @@ export type Database = {
           documento_tipo?: string
           estado?: Database["public"]["Enums"]["inscripcion_estado"]
           id?: string
+          mensaje?: string | null
+          modalidad?: string | null
           nombre_completo: string
           notas_internas?: string | null
+          notificado_at?: string | null
           programa_id?: string | null
           programa_nombre: string
           telefono: string
           updated_at?: string
         }
         Update: {
+          acepta_tratamiento_datos?: boolean
           ciudad?: string
           correo?: string
           created_at?: string
@@ -325,8 +395,11 @@ export type Database = {
           documento_tipo?: string
           estado?: Database["public"]["Enums"]["inscripcion_estado"]
           id?: string
+          mensaje?: string | null
+          modalidad?: string | null
           nombre_completo?: string
           notas_internas?: string | null
+          notificado_at?: string | null
           programa_id?: string | null
           programa_nombre?: string
           telefono?: string
@@ -400,6 +473,7 @@ export type Database = {
           leido: boolean
           mensaje: string
           nombre: string
+          notificado_at: string | null
           telefono: string | null
         }
         Insert: {
@@ -411,6 +485,7 @@ export type Database = {
           leido?: boolean
           mensaje: string
           nombre: string
+          notificado_at?: string | null
           telefono?: string | null
         }
         Update: {
@@ -422,6 +497,7 @@ export type Database = {
           leido?: boolean
           mensaje?: string
           nombre?: string
+          notificado_at?: string | null
           telefono?: string | null
         }
         Relationships: []
@@ -473,31 +549,43 @@ export type Database = {
       }
       perfiles: {
         Row: {
+          activo: boolean
           avatar_url: string | null
           created_at: string
+          documento: string | null
           email: string
           id: string
           nombre_completo: string | null
           rol: Database["public"]["Enums"]["app_role"]
+          telefono: string | null
           updated_at: string
+          usuario: string | null
         }
         Insert: {
+          activo?: boolean
           avatar_url?: string | null
           created_at?: string
+          documento?: string | null
           email: string
           id: string
           nombre_completo?: string | null
           rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
           updated_at?: string
+          usuario?: string | null
         }
         Update: {
+          activo?: boolean
           avatar_url?: string | null
           created_at?: string
+          documento?: string | null
           email?: string
           id?: string
           nombre_completo?: string | null
           rol?: Database["public"]["Enums"]["app_role"]
+          telefono?: string | null
           updated_at?: string
+          usuario?: string | null
         }
         Relationships: []
       }
@@ -566,8 +654,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cerrar_curso: { Args: { p_curso: string }; Returns: number }
+      comparte_curso: { Args: { p_perfil: string }; Returns: boolean }
+      es_docente_de_curso: { Args: { p_curso: string }; Returns: boolean }
+      es_docente_de_matricula: {
+        Args: { p_matricula: string }
+        Returns: boolean
+      }
+      es_mi_matricula: { Args: { p_matricula: string }; Returns: boolean }
+      esta_matriculado: { Args: { p_curso: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
       is_editor_or_admin: { Args: never; Returns: boolean }
+      recalcular_nota_definitiva: {
+        Args: { p_matricula: string }
+        Returns: undefined
+      }
+      ruta_evidencia_matricula: { Args: { p_name: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "editor" | "docente" | "estudiante"
@@ -719,3 +821,4 @@ export const Constants = {
     },
   },
 } as const
+

@@ -16,6 +16,9 @@ import {
 import { getHomeData } from "@/services/api";
 
 import { HeroSection } from "@/components/site/home/HeroSection";
+import { AuthorityMetrics } from "@/components/site/home/AuthorityMetrics";
+import { PortalesHubSection } from "@/components/site/home/PortalesHubSection";
+import { TestimoniosVideoSection } from "@/components/site/home/TestimoniosVideoSection";
 import { QuienesSomosSection } from "@/components/site/home/QuienesSomosSection";
 import { PropositoSection } from "@/components/site/home/PropositoSection";
 import { ProgramasSection } from "@/components/site/home/ProgramasSection";
@@ -80,8 +83,11 @@ function MainWebsiteView({ data }: { data: any }) {
   return (
     <>
       <HeroSection org={org} quienesSomos={quienesSomos} />
+      <AuthorityMetrics />
+      <PortalesHubSection />
       <ProgramasSection categoriasProgramas={categoriasProgramas} programas={programas} />
       <BecasSection becas={becas} />
+      <TestimoniosVideoSection />
       <AlcanceSection alcance={alcance} />
       <QuienesSomosSection quienesSomos={quienesSomos} />
       <PropositoSection proposito={proposito} iconos={iconos} />

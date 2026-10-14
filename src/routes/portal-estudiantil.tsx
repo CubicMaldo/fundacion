@@ -9,6 +9,7 @@ export const Route = createFileRoute("/portal-estudiantil")({
       description:
         "Espacio de acceso académico para estudiantes de FUNASF: consulta de notas, asignaturas matriculadas, plataformas virtuales y trámites de certificados.",
       canonicalPath: "/portal-estudiantil",
+      noindex: true,
       keywords:
         "portal estudiantil FUNASF, notas FUNASF, campus virtual FUNASF, certificados FUNASF, atencion estudiantes",
       jsonLd: getBreadcrumbSchema([

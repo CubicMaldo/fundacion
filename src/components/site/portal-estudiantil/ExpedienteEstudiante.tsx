@@ -42,7 +42,6 @@ import { useAuth } from "@/lib/auth-context";
 import {
   subirEntregaTrabajo,
   type MatriculaEstudiante,
-  type EvaluacionNota,
   type ObservacionAcademica,
 } from "@/services/academico";
 
@@ -197,16 +196,21 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                   </div>
                 </div>
 
-                {/* Tabla de Evaluaciones Parciales */}
+                {/* Tabla de Evaluaciones Parciales y Malla Curricular */}
                 <div className="rounded-2xl border border-border/80 bg-card overflow-hidden shadow-xs">
-                  <div className="border-b border-border/80 px-6 py-4 flex items-center justify-between">
+                  <div className="border-b border-border/80 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
-                      <h4 className="text-sm font-bold text-foreground">Calificaciones y Parciales</h4>
-                      <p className="text-[11px] text-muted-foreground">Registro de valoraciones oficiales</p>
+                      <h4 className="text-sm font-bold text-foreground">Malla Evaluativa y Calificaciones</h4>
+                      <p className="text-[11px] text-muted-foreground">Ponderación de notas oficiales y aportes a la definitiva</p>
                     </div>
+                    {matriculaActiva.desglose && matriculaActiva.desglose.length > 0 && (
+                      <span className="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                        {matriculaActiva.desglose.reduce((acc, d) => acc + d.porcentaje, 0)}% Malla Configurada
+                      </span>
+                    )}
                   </div>
 
-                  {matriculaActiva.notas.length === 0 ? (
+                  {!matriculaActiva.desglose || matriculaActiva.desglose.length === 0 ? (
                     <div className="p-8 text-center text-xs text-muted-foreground">
                       Aún no se han registrado notas evaluativas para este módulo.
                     </div>
@@ -214,34 +218,42 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead className="text-xs">Actividad / Evaluación</TableHead>
+                          <TableHead className="text-xs">Componente / Evaluación</TableHead>
                           <TableHead className="text-xs text-center w-24">Peso (%)</TableHead>
                           <TableHead className="text-xs text-center w-24">Calificación</TableHead>
-                          <TableHead className="text-xs">Retroalimentación docente</TableHead>
+                          <TableHead className="text-xs text-center w-28">Aporte Definitiva</TableHead>
+                          <TableHead className="text-xs">Retroalimentación Docente</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {matriculaActiva.notas.map((nota) => (
-                          <TableRow key={nota.id}>
+                        {matriculaActiva.desglose.map((item) => (
+                          <TableRow key={item.componenteId}>
                             <TableCell className="text-xs font-medium text-foreground">
-                              {nota.titulo}
+                              {item.nombre}
                             </TableCell>
-                            <TableCell className="text-xs text-center text-muted-foreground">
-                              {nota.porcentaje}%
+                            <TableCell className="text-xs text-center text-muted-foreground font-mono">
+                              {item.porcentaje}%
                             </TableCell>
                             <TableCell className="text-xs text-center font-bold">
-                              <span
-                                className={`inline-block rounded-md px-2 py-0.5 ${
-                                  nota.nota >= 3.0
-                                    ? "bg-emerald-500/10 text-emerald-600 font-semibold"
-                                    : "bg-destructive/10 text-destructive font-semibold"
-                                }`}
-                              >
-                                {nota.nota.toFixed(1)}
-                              </span>
+                              {item.nota !== null ? (
+                                <span
+                                  className={`inline-block rounded-md px-2 py-0.5 font-mono ${
+                                    item.nota >= (matriculaActiva.curso.notaMinimaAprobacion || 3.0)
+                                      ? "bg-emerald-500/10 text-emerald-600 font-semibold"
+                                      : "bg-destructive/10 text-destructive font-semibold"
+                                  }`}
+                                >
+                                  {item.nota.toFixed(1)}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground text-[11px] italic">Pendiente</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-xs text-center font-mono font-medium text-slate-700">
+                              {item.nota !== null ? `+${item.aportePonderado.toFixed(2)} pts` : "—"}
                             </TableCell>
                             <TableCell className="text-xs text-muted-foreground">
-                              {nota.retroalimentacion || "Sin comentarios adicionales"}
+                              {item.retroalimentacion || "Sin observaciones adicionales"}
                             </TableCell>
                           </TableRow>
                         ))}

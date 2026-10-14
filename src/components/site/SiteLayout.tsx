@@ -3,6 +3,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { MobileStickyBar } from "./MobileStickyBar";
+import { FloatingWhatsApp } from "./FloatingWhatsApp";
 import { cn } from "@/lib/utils";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
@@ -13,6 +14,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     pathname !== "/inscripcion" &&
     pathname !== "/contacto" &&
     !pathname.startsWith("/portal-estudiantil") &&
+    !pathname.startsWith("/docente") &&
     !pathname.startsWith("/admin");
 
   return (
@@ -29,6 +31,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       </main>
       <Footer />
       <MobileStickyBar />
+      <FloatingWhatsApp />
     </div>
   );
 }

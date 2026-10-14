@@ -702,21 +702,34 @@ export async function crearInscripcion(
   }
 
   try {
-    const { error } = await supabase.from("inscripciones").insert({
-      nombre_completo: input.nombreCompleto,
-      documento_tipo: input.documentoTipo,
-      documento_numero: input.documentoNumero,
-      telefono: input.telefono,
-      correo: input.correo,
-      ciudad: input.ciudad,
-      programa_nombre: input.programaNombre,
-      programa_id: input.programaId || null,
-      estado: "nuevo",
-    });
+    const { data: inserted, error } = await supabase
+      .from("inscripciones")
+      .insert({
+        nombre_completo: input.nombreCompleto,
+        documento_tipo: input.documentoTipo,
+        documento_numero: input.documentoNumero,
+        telefono: input.telefono,
+        correo: input.correo,
+        ciudad: input.ciudad,
+        programa_nombre: input.programaNombre,
+        programa_id: input.programaId || null,
+        estado: "nuevo",
+      })
+      .select("id")
+      .single();
 
     if (error) {
       return { ok: false, error: error.message };
     }
+
+    if (inserted?.id) {
+      supabase.functions
+        .invoke("notificar", {
+          body: { tipo: "inscripcion", id: inserted.id },
+        })
+        .catch((e) => console.warn("[Notificar] Edge function:", e));
+    }
+
     return { ok: true };
   } catch (err) {
     return { ok: false, error: (err as Error).message };
@@ -759,19 +772,32 @@ export async function enviarMensajeContacto(
   }
 
   try {
-    const { error } = await supabase.from("mensajes_contacto").insert({
-      nombre: input.nombre,
-      correo: input.correo,
-      telefono: input.telefono || null,
-      asunto: input.asunto,
-      mensaje: input.mensaje,
-      leido: false,
-      estado: "nuevo",
-    });
+    const { data: inserted, error } = await supabase
+      .from("mensajes_contacto")
+      .insert({
+        nombre: input.nombre,
+        correo: input.correo,
+        telefono: input.telefono || null,
+        asunto: input.asunto,
+        mensaje: input.mensaje,
+        leido: false,
+        estado: "nuevo",
+      })
+      .select("id")
+      .single();
 
     if (error) {
       return { ok: false, error: error.message };
     }
+
+    if (inserted?.id) {
+      supabase.functions
+        .invoke("notificar", {
+          body: { tipo: "contacto", id: inserted.id },
+        })
+        .catch((e) => console.warn("[Notificar] Edge function:", e));
+    }
+
     return { ok: true };
   } catch (err) {
     return { ok: false, error: (err as Error).message };
