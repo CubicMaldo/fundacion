@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   CheckCircle2,
   Clock,
@@ -491,20 +491,30 @@ function AdminInscripcionesPage() {
               </div>
             </div>
 
-            <DialogFooter className="mt-4 flex sm:justify-between items-center gap-2">
-              {(() => {
-                const digits = selectedItem.telefono.replace(/\D/g, "");
-                const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
-                return (
-                  <Button asChild size="sm" variant="outline" className="text-xs">
-                    <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer">
-                      <MessageCircle className="size-3.5 mr-1 text-emerald-600" /> WhatsApp
-                    </a>
-                  </Button>
-                );
-              })()}
+            <DialogFooter className="mt-4 flex flex-col sm:flex-row sm:justify-between items-stretch sm:items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                {(() => {
+                  const digits = selectedItem.telefono.replace(/\D/g, "");
+                  const waNumber = digits.startsWith("57") ? digits : `57${digits}`;
+                  return (
+                    <Button asChild size="sm" variant="outline" className="text-xs">
+                      <a href={`https://wa.me/${waNumber}`} target="_blank" rel="noreferrer">
+                        <MessageCircle className="size-3.5 mr-1 text-emerald-600" /> WhatsApp
+                      </a>
+                    </Button>
+                  );
+                })()}
 
-              <div className="flex gap-2">
+                {(selectedItem.estado === "admitido" || editEstado === "admitido") && (
+                  <Button asChild size="sm" variant="outline" className="text-xs border-brand-green/40 text-brand-green hover:bg-emerald-50 font-semibold">
+                    <Link to="/admin/cursos">
+                      <GraduationCap className="size-3.5 mr-1 text-brand-green" /> Matricular en Cursos
+                    </Link>
+                  </Button>
+                )}
+              </div>
+
+              <div className="flex gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={() => setSelectedItem(null)}>
                   Cerrar
                 </Button>

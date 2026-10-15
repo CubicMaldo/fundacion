@@ -1,36 +1,36 @@
-import { BookOpen, Clock, GraduationCap, Percent } from "lucide-react";
+import { BookOpen, Building2, MapPin, Percent } from "lucide-react";
 
 interface MetricItem {
   valor: string;
   etiqueta: string;
   detalle: string;
-  icono: typeof GraduationCap;
+  icono: typeof BookOpen;
 }
 
 const metricas: MetricItem[] = [
   {
-    valor: "+12.000",
-    etiqueta: "Egresados formados",
-    detalle: "Técnicos laborales impulsando el desarrollo regional",
-    icono: GraduationCap,
-  },
-  {
-    valor: "17+ Años",
-    etiqueta: "Trayectoria y compromiso",
-    detalle: "Cumpliendo metas educativas y labor social continua",
-    icono: Clock,
+    valor: "19 Programas",
+    etiqueta: "Oferta técnico-laboral",
+    detalle: "Salud, administración, SST, educación y áreas productivas",
+    icono: BookOpen,
   },
   {
     valor: "Hasta 90%",
     etiqueta: "Beca solidaria",
-    detalle: "Subsidios educativos directos para estratos 1, 2 y 3",
+    detalle: "Subsidios educativos directos en convenio institucional",
     icono: Percent,
   },
   {
-    valor: "19 Programas",
-    etiqueta: "Técnicos y laborales",
-    detalle: "En salud, sistemas, administración, agro y bienestar",
-    icono: BookOpen,
+    valor: "Presencia Regional",
+    etiqueta: "Valle y Costa Atlántica",
+    detalle: "Sedes y convenios en Cali, Jamundí, Barranquilla y municipios",
+    icono: MapPin,
+  },
+  {
+    valor: "NIT 901964394-1",
+    etiqueta: "Entidad formal sin ánimo de lucro",
+    detalle: "Personería jurídica y registro oficial en Colombia",
+    icono: Building2,
   },
 ];
 

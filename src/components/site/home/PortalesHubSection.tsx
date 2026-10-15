@@ -126,21 +126,21 @@ export function PortalesHubSection() {
               Admisiones y Becas
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Postúlate en línea al subsidio solidario de hasta el 90% en tu programa técnico laboral. Notificación inmediata a tu correo y confirmación con la oficina de admisiones.
+              Postúlate en línea al subsidio solidario de hasta el 90% en tu programa técnico laboral. Registro ágil y acompañamiento personalizado con la coordinación de admisiones.
             </p>
 
             <ul className="space-y-2.5 text-xs text-foreground/80 mb-6">
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Formulario en línea con respuesta prioritaria</span>
+                <span>Formulario en línea con respuesta y asesoría directa</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Validación socioeconómica para estratos 1, 2 y 3</span>
+                <span>Subsidio educativo en convenio institucional</span>
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Homologación y flexibilidad de horarios</span>
+                <span>Acompañamiento pedagógico y tutoría continua</span>
               </li>
             </ul>
           </div>

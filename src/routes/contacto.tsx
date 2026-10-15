@@ -13,6 +13,7 @@ import {
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -61,12 +62,18 @@ function Contacto() {
   const [asunto, setAsunto] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [websiteEmpresa, setWebsiteEmpresa] = useState("");
+  const [aceptaHabeasData, setAceptaHabeasData] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [enviadoExito, setEnviadoExito] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!aceptaHabeasData) {
+      setErrorMsg("Debes autorizar el tratamiento de datos personales conforme a la Ley 1581 de 2012 para enviar tu consulta.");
+      return;
+    }
+
     setEnviando(true);
     setErrorMsg(null);
 
@@ -88,6 +95,7 @@ function Contacto() {
       setAsunto("");
       setMensaje("");
       setWebsiteEmpresa("");
+      setAceptaHabeasData(false);
     } else {
       setErrorMsg(res.error || "No se pudo enviar el mensaje. Por favor intenta por WhatsApp.");
     }
@@ -253,6 +261,28 @@ function Contacto() {
                     rows={4}
                     required
                   />
+                </div>
+
+                <div className="flex items-start space-x-2 pt-2">
+                  <Checkbox
+                    id="habeas-data-contacto"
+                    checked={aceptaHabeasData}
+                    onCheckedChange={(checked) => setAceptaHabeasData(checked === true)}
+                  />
+                  <label
+                    htmlFor="habeas-data-contacto"
+                    className="text-xs text-muted-foreground leading-snug cursor-pointer select-none"
+                  >
+                    Autorizo a FUNASF el tratamiento de mis datos personales para responder a mi consulta conforme a la{" "}
+                    <Link
+                      to="/tratamiento-datos"
+                      target="_blank"
+                      className="text-brand-green font-semibold underline hover:text-brand-green-deep"
+                    >
+                      Ley 1581 de 2012 y la Política de Privacidad
+                    </Link>
+                    . *
+                  </label>
                 </div>
 
                 <div className="pt-2 flex justify-end">

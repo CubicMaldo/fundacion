@@ -6,6 +6,7 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
+  ExternalLink,
   FileCheck,
   FileText,
   FileUp,
@@ -14,6 +15,7 @@ import {
   LogOut,
   MapPin,
   MessageSquare,
+  Printer,
   UploadCloud,
   User as UserIcon,
 } from "lucide-react";
@@ -41,9 +43,11 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import {
   subirEntregaTrabajo,
+  obtenerUrlDescargaEvidencia,
   type MatriculaEstudiante,
   type ObservacionAcademica,
 } from "@/services/academico";
+import { toast } from "sonner";
 
 interface ExpedienteEstudianteProps {
   matriculas: MatriculaEstudiante[];
@@ -55,6 +59,16 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
   const [matriculaSeleccionadaId, setMatriculaSeleccionadaId] = useState<string>(
     matriculas[0]?.id || "",
   );
+  const [boletinModalOpen, setBoletinModalOpen] = useState(false);
+
+  const handleAbrirArchivo = async (url: string) => {
+    try {
+      const signed = await obtenerUrlDescargaEvidencia(url);
+      window.open(signed, "_blank", "noopener,noreferrer");
+    } catch {
+      toast.error("No se pudo obtener el enlace de descarga de la evidencia.");
+    }
+  };
 
   const matriculaActiva =
     matriculas.find((m) => m.id === matriculaSeleccionadaId) || matriculas[0];
@@ -99,6 +113,18 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 <span className="text-[10px] uppercase font-semibold text-muted-foreground">Aprobados</span>
               </div>
             </div>
+
+            {matriculas.length > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setBoletinModalOpen(true)}
+                className="text-xs font-semibold border-brand-green/30 text-brand-green hover:bg-brand-green/10"
+              >
+                <Printer className="size-3.5 mr-1.5" />
+                Boletín Oficial
+              </Button>
+            )}
 
             <Button
               variant="outline"
@@ -307,7 +333,16 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                             </span>
                           </div>
 
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleAbrirArchivo(entrega.archivoUrl)}
+                              className="text-xs h-7 px-2 text-brand-green hover:text-brand-green-deep hover:bg-brand-green/10"
+                            >
+                              <ExternalLink className="size-3 mr-1" />
+                              Ver archivo
+                            </Button>
                             <Badge
                               variant="outline"
                               className={`text-[10px] uppercase font-semibold ${
@@ -379,6 +414,147 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
           )}
         </div>
       )}
+
+      {/* DIÁLOGO: BOLETÍN OFICIAL DE CALIFICACIONES */}
+      <Dialog open={boletinModalOpen} onOpenChange={setBoletinModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 sm:p-0">
+          <div className="p-6 sm:p-8 space-y-6 bg-white text-slate-900 print:p-0" id="boletin-oficial-print">
+            {/* Membrete Institucional Oficial FUNASF */}
+            <div className="border-b-2 border-slate-800 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div>
+                <h2 className="text-base sm:text-lg font-black tracking-wider uppercase text-slate-900 font-display">
+                  Fundación Internacional Amigos Sin Fronteras — FUNASF
+                </h2>
+                <p className="text-xs font-semibold text-slate-700">
+                  NIT: 901964394-1 &bull; Personería Jurídica Vigente &bull; Institución de Educación y Desarrollo Humano
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Sede Principal: Carrera 24C # 3-10, Cali, Valle del Cauca &bull; Tel: +57 313 577 9384
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-300 p-2 text-center bg-slate-50 shrink-0">
+                <span className="block text-[10px] uppercase font-bold text-slate-500">Documento</span>
+                <span className="block text-xs font-mono font-bold text-emerald-800">BOLETÍN OFICIAL</span>
+              </div>
+            </div>
+
+            {/* Datos del Estudiante */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Estudiante</span>
+                <span className="font-bold text-slate-900">{profile?.nombre_completo || "Estudiante FUNASF"}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Documento / ID</span>
+                <span className="font-mono font-bold text-slate-900">{profile?.documento || profile?.id?.slice(0, 8).toUpperCase() || "N/A"}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Fecha de Emisión</span>
+                <span className="font-semibold text-slate-900">{new Date().toLocaleDateString("es-CO")}</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Sede y Registro</span>
+                <span className="font-semibold text-slate-900">Valle del Cauca / Atlántico</span>
+              </div>
+            </div>
+
+            {/* Planilla de Asignaturas y Calificaciones */}
+            <div className="space-y-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                Registro de Módulos Académicos Cursados
+              </h3>
+              <div className="rounded-xl border border-slate-200 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-100 text-slate-800">
+                      <TableHead className="text-xs font-bold text-slate-900">Código & Módulo</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-900 text-center">Periodo</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-900 text-center">Definitiva (0.0 - 5.0)</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-900 text-center">Nivel de Desempeño</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-900 text-center">Estado</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {matriculas.map((mat) => {
+                      const def = mat.notaDefinitiva;
+                      const desempeno =
+                        def === null || def === undefined
+                          ? "En Proceso"
+                          : def >= 4.6
+                            ? "Excelente"
+                            : def >= 4.0
+                              ? "Alto"
+                              : def >= 3.0
+                                ? "Básico"
+                                : "Bajo";
+
+                      return (
+                        <TableRow key={mat.id} className="text-xs">
+                          <TableCell>
+                            <div className="font-bold text-slate-900">{mat.curso.nombre}</div>
+                            <div className="text-[11px] text-slate-500 font-mono">{mat.curso.codigo} &bull; {mat.curso.programaNombre}</div>
+                          </TableCell>
+                          <TableCell className="text-center font-mono text-slate-700">{mat.curso.periodo}</TableCell>
+                          <TableCell className="text-center font-mono font-bold text-base text-slate-900">
+                            {def !== null && def !== undefined ? def.toFixed(1) : "—"}
+                          </TableCell>
+                          <TableCell className="text-center font-semibold text-slate-700">{desempeno}</TableCell>
+                          <TableCell className="text-center">
+                            <Badge
+                              variant="outline"
+                              className={`text-[10px] uppercase font-bold ${
+                                mat.estado === "aprobado"
+                                  ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                                  : mat.estado === "reprobado"
+                                    ? "bg-rose-50 text-rose-800 border-rose-300"
+                                    : "bg-amber-50 text-amber-800 border-amber-300"
+                              }`}
+                            >
+                              {mat.estado}
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+
+            {/* Firmas de Autoridad Académica */}
+            <div className="pt-10 grid grid-cols-2 gap-8 text-center text-xs">
+              <div className="border-t border-slate-400 pt-2">
+                <span className="block font-bold text-slate-800">Coordinación Académica</span>
+                <span className="text-[11px] text-slate-500">FUNASF Colombia</span>
+              </div>
+              <div className="border-t border-slate-400 pt-2">
+                <span className="block font-bold text-slate-800">Secretaría General y Registro</span>
+                <span className="text-[11px] text-slate-500">NIT 901964394-1</span>
+              </div>
+            </div>
+
+            {/* Botones de Acción (no imprimibles) */}
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 print:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setBoletinModalOpen(false)}
+                className="text-xs"
+              >
+                Cerrar
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => window.print()}
+                className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+              >
+                <Printer className="size-3.5 mr-1.5" />
+                Imprimir / Guardar como PDF
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

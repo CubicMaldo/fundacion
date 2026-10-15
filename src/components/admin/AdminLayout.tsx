@@ -12,30 +12,31 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
-  const { user, role, isLoading } = useAuth();
+  const { user, isAdmin, isEditor, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    // Si el usuario autenticado tiene rol estudiante, no debe acceder al CMS administrativo.
-    // Redirigir a login con aviso para permitir cambiar a credenciales de administrador.
-    if (!isLoading && user && role === "estudiante") {
-      navigate({
-        to: "/admin/login",
-        search: { redirect: location.pathname, reason: "requiere_admin" },
-      });
-      return;
-    }
-
     // Si no está cargando y no hay usuario, redirigir a login
     if (!isLoading && !user && location.pathname !== "/admin/login") {
       navigate({
         to: "/admin/login",
         search: { redirect: location.pathname },
       });
+      return;
     }
-  }, [user, role, isLoading, location.pathname, navigate]);
+
+    // Solo admin y editor pueden acceder al CMS administrativo.
+    // Docentes y estudiantes deben ser redirigidos.
+    if (!isLoading && user && !isAdmin && !isEditor) {
+      navigate({
+        to: "/admin/login",
+        search: { redirect: location.pathname, reason: "requiere_admin" },
+      });
+      return;
+    }
+  }, [user, isAdmin, isEditor, isLoading, location.pathname, navigate]);
 
   if (isLoading) {
     return (
@@ -57,8 +58,8 @@ export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
     );
   }
 
-  // Si no hay usuario autenticado o tiene rol estudiante, no renderizar el CMS (esperar redirección)
-  if (!user || role === "estudiante") {
+  // Si no hay usuario autenticado o no es admin/editor, no renderizar el CMS (esperar redirección)
+  if (!user || (!isAdmin && !isEditor)) {
     return null;
   }
 

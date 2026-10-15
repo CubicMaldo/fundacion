@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { CheckCircle2, ExternalLink, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { org, whatsappLink } from "@/data/funasf";
@@ -35,6 +37,7 @@ export function InscripcionForm({
   const [ciudad, setCiudad] = useState("");
   const [modalidadDeseada, setModalidadDeseada] = useState("Virtual");
   const [honeypot, setHoneypot] = useState(""); // Anti-bot honeypot
+  const [aceptaHabeasData, setAceptaHabeasData] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [enviadoExito, setEnviadoExito] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -46,6 +49,11 @@ export function InscripcionForm({
     if (honeypot) {
       // Detección de bot silenciosa
       setEnviadoExito(true);
+      return;
+    }
+
+    if (!aceptaHabeasData) {
+      setErrorMsg("Debes autorizar el tratamiento de datos personales conforme a la Ley 1581 de 2012.");
       return;
     }
 
@@ -81,6 +89,7 @@ export function InscripcionForm({
     setCorreo("");
     setCiudad("");
     setHoneypot("");
+    setAceptaHabeasData(false);
     onReset?.();
   };
 
@@ -286,6 +295,28 @@ export function InscripcionForm({
             <option value="Flexible">Horario flexible / Fines de semana</option>
           </select>
         </div>
+      </div>
+
+      <div className="flex items-start space-x-2 pt-2">
+        <Checkbox
+          id="habeas-data-inscripcion"
+          checked={aceptaHabeasData}
+          onCheckedChange={(checked) => setAceptaHabeasData(checked === true)}
+        />
+        <label
+          htmlFor="habeas-data-inscripcion"
+          className="text-xs text-muted-foreground leading-snug cursor-pointer select-none"
+        >
+          Autorizo a FUNASF el tratamiento de mis datos personales para fines de admisión y orientación conforme a la{" "}
+          <Link
+            to="/tratamiento-datos"
+            target="_blank"
+            className="text-brand-green font-semibold underline hover:text-brand-green-deep"
+          >
+            Ley 1581 de 2012 y la Política Institucional
+          </Link>
+          . *
+        </label>
       </div>
 
       <div className="pt-2 space-y-3">

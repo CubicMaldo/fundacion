@@ -15,6 +15,10 @@ import {
   MessageSquare,
   Lock,
   AlertCircle,
+  Download,
+  FileCheck,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 import { createSeoMeta } from "@/lib/seo";
 import { DocenteLayout } from "@/components/docente/DocenteLayout";
@@ -24,11 +28,14 @@ import {
   actualizarComponenteEvaluacion,
   eliminarComponenteEvaluacion,
   guardarCalificacion,
+  calificarEntrega,
+  obtenerUrlDescargaEvidencia,
   crearObservacionAcademica,
   cerrarCursoDocente,
   type CursoDetalleDocente,
   type ComponenteEvaluacion,
   type EstudianteMatriculado,
+  type EntregaTrabajo,
 } from "@/services/academico";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -111,6 +118,16 @@ function DocenteCursoDetallePage() {
 
   // Estado para cierre de curso
   const [cerrandoCurso, setCerrandoCurso] = useState(false);
+
+  // Estados para calificar entrega de trabajo
+  const [modalCalificarEntrega, setModalCalificarEntrega] = useState<{
+    entregaId: string;
+    estudianteNombre: string;
+    titulo: string;
+    notaActual: number | "";
+    retro: string;
+  } | null>(null);
+  const [guardandoNotaEntrega, setGuardandoNotaEntrega] = useState(false);
 
   const cargar = useCallback(async () => {
     setLoading(true);
@@ -260,6 +277,86 @@ function DocenteCursoDetallePage() {
     }
   };
 
+  const handleAbrirEvidencia = async (url: string) => {
+    try {
+      const signed = await obtenerUrlDescargaEvidencia(url);
+      window.open(signed, "_blank", "noopener,noreferrer");
+    } catch {
+      toast.error("No fue posible abrir el archivo de la evidencia.");
+    }
+  };
+
+  const handleGuardarNotaEntrega = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!modalCalificarEntrega) return;
+    const notaNum = Number(modalCalificarEntrega.notaActual);
+    if (isNaN(notaNum) || notaNum < 0 || notaNum > 5) {
+      toast.error("La calificación debe estar entre 0.0 y 5.0");
+      return;
+    }
+
+    setGuardandoNotaEntrega(true);
+    const res = await calificarEntrega({
+      entregaId: modalCalificarEntrega.entregaId,
+      nota: notaNum,
+      retroalimentacion: modalCalificarEntrega.retro,
+    });
+    setGuardandoNotaEntrega(false);
+
+    if (res.ok) {
+      toast.success("Entrega calificada exitosamente.");
+      setModalCalificarEntrega(null);
+      await cargar();
+    } else {
+      toast.error(res.error || "No se pudo asentar la nota de la entrega.");
+    }
+  };
+
+  const exportarPlanillaCSV = () => {
+    if (!data) return;
+    const { curso, componentes, estudiantes } = data;
+
+    const headers = [
+      "ID Matricula",
+      "Estudiante",
+      "Documento",
+      "Correo",
+      "Estado",
+      ...componentes.map((c) => `"${c.nombre.replace(/"/g, '""')} (${c.porcentaje}%)"`),
+      "Definitiva",
+    ];
+
+    const rows = estudiantes.map((e) => {
+      const rowNotas = componentes.map((c) => {
+        const cal = e.calificaciones[c.id];
+        return cal?.nota !== undefined && cal.nota !== null ? cal.nota.toFixed(1) : "";
+      });
+
+      return [
+        `"${e.matriculaId}"`,
+        `"${e.nombreCompleto.replace(/"/g, '""')}"`,
+        `"${(e.documento || "").replace(/"/g, '""')}"`,
+        `"${(e.email || "").replace(/"/g, '""')}"`,
+        `"${e.estado}"`,
+        ...rowNotas,
+        `"${e.notaDefinitiva !== null && e.notaDefinitiva !== undefined ? e.notaDefinitiva.toFixed(1) : ""}"`,
+      ].join(",");
+    });
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    const safeCode = (curso.codigo || "curso").replace(/[^a-z0-9_-]/gi, "_");
+    link.download = `Planilla_${safeCode}_${curso.periodo || "2026"}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    toast.success("Planilla de calificaciones descargada en formato CSV.");
+  };
+
   if (loading) {
     return (
       <DocenteLayout title="Cargando Curso...">
@@ -293,6 +390,14 @@ function DocenteCursoDetallePage() {
 
   const { curso, componentes, sumaPorcentajes, estudiantes } = data;
   const mallaCompleta = sumaPorcentajes === 100;
+  const todasLasEntregas = estudiantes.flatMap((est) =>
+    (est.entregas || []).map((ent) => ({
+      ...ent,
+      estudianteNombre: est.nombreCompleto,
+      estudianteEmail: est.email,
+      documento: est.documento,
+    })),
+  );
 
   return (
     <DocenteLayout
@@ -337,6 +442,17 @@ function DocenteCursoDetallePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={estudiantes.length === 0}
+              onClick={exportarPlanillaCSV}
+              className="text-xs font-semibold border-slate-200 hover:bg-slate-50"
+            >
+              <Download className="size-3.5 mr-1 text-slate-600" />
+              Exportar Planilla CSV
+            </Button>
+
             <Button
               size="sm"
               variant="outline"
@@ -402,6 +518,10 @@ function DocenteCursoDetallePage() {
           <TabsTrigger value="malla" className="text-xs font-semibold rounded-lg">
             <Sparkles className="size-3.5 mr-1.5" />
             Malla y Porcentajes ({componentes.length})
+          </TabsTrigger>
+          <TabsTrigger value="entregas" className="text-xs font-semibold rounded-lg">
+            <FileCheck className="size-3.5 mr-1.5" />
+            Entregas y Trabajos ({todasLasEntregas.length})
           </TabsTrigger>
           <TabsTrigger value="observaciones" className="text-xs font-semibold rounded-lg">
             <MessageSquare className="size-3.5 mr-1.5" />
@@ -720,6 +840,123 @@ function DocenteCursoDetallePage() {
             )}
           </div>
         </TabsContent>
+
+        {/* TAB 4: ENTREGAS Y TRABAJOS DE ESTUDIANTES */}
+        <TabsContent value="entregas" className="space-y-4">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+              <div>
+                <h3 className="font-bold text-base text-slate-900">
+                  Evidencias y Trabajos Entregados por Estudiantes
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Revisa los archivos adjuntos en el repositorio seguro, califica y envía retroalimentación al estudiante.
+                </p>
+              </div>
+              <Badge variant="outline" className="bg-slate-100 text-slate-700 font-mono text-xs w-fit">
+                {todasLasEntregas.length} entrega{todasLasEntregas.length === 1 ? "" : "s"}
+              </Badge>
+            </div>
+
+            {todasLasEntregas.length === 0 ? (
+              <div className="p-12 text-center text-slate-500 text-xs">
+                <FileText className="size-8 mx-auto text-slate-300 mb-2" />
+                <p className="font-semibold text-slate-700">Sin evidencias entregadas</p>
+                <p className="text-slate-400 mt-1">Los estudiantes matriculados aún no han cargado tareas o talleres en este módulo.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-slate-50/80">
+                      <TableHead className="text-xs font-bold text-slate-800">Estudiante</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800">Trabajo / Evidencia</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800 text-center">Fecha Entrega</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800 text-center">Archivo Adjunto</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800 text-center">Estado</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800 text-center">Nota</TableHead>
+                      <TableHead className="text-xs font-bold text-slate-800 text-right">Acción</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {todasLasEntregas.map((entrega) => (
+                      <TableRow key={entrega.id} className="hover:bg-slate-50/70 text-xs">
+                        <TableCell>
+                          <div className="font-semibold text-slate-900">{entrega.estudianteNombre}</div>
+                          <div className="text-[11px] text-slate-500 font-mono">
+                            {entrega.documento || entrega.estudianteEmail}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="font-semibold text-slate-800">{entrega.titulo}</div>
+                          {entrega.descripcion && (
+                            <p className="text-[11px] text-slate-500 line-clamp-2 max-w-sm">
+                              {entrega.descripcion}
+                            </p>
+                          )}
+                          {entrega.retroalimentacion && (
+                            <p className="text-[10px] text-emerald-800 bg-emerald-50 rounded px-1.5 py-0.5 mt-1 border border-emerald-200 w-fit">
+                              Retro: {entrega.retroalimentacion}
+                            </p>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center font-mono text-[11px] text-slate-500">
+                          {new Date(entrega.fechaEntrega).toLocaleDateString("es-CO")}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleAbrirEvidencia(entrega.archivoUrl)}
+                            className="text-xs text-brand-green hover:text-brand-green-deep hover:bg-emerald-50 h-8 px-2"
+                          >
+                            <ExternalLink className="size-3.5 mr-1" />
+                            Ver Archivo
+                          </Button>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Badge
+                            variant="outline"
+                            className={`text-[10px] uppercase font-semibold ${
+                              entrega.estado === "calificado"
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                : "bg-amber-50 text-amber-700 border-amber-200"
+                            }`}
+                          >
+                            {entrega.estado}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center font-mono font-bold text-slate-900">
+                          {entrega.nota !== null && entrega.nota !== undefined
+                            ? entrega.nota.toFixed(1)
+                            : "—"}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              setModalCalificarEntrega({
+                                entregaId: entrega.id,
+                                estudianteNombre: entrega.estudianteNombre,
+                                titulo: entrega.titulo,
+                                notaActual: entrega.nota !== null && entrega.nota !== undefined ? entrega.nota : "",
+                                retro: entrega.retroalimentacion || "",
+                              })
+                            }
+                            className="text-xs font-semibold h-8"
+                          >
+                            {entrega.estado === "calificado" ? "Modificar Nota" : "Calificar"}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* DIÁLOGO: CREAR / EDITAR COMPONENTE DE LA MALLA */}
@@ -953,6 +1190,93 @@ function DocenteCursoDetallePage() {
                 >
                   {guardandoObs ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Save className="size-3.5 mr-1" />}
                   Guardar Observación
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* DIÁLOGO: CALIFICAR ENTREGA DE TRABAJO */}
+      <Dialog
+        open={Boolean(modalCalificarEntrega)}
+        onOpenChange={(open) => !open && setModalCalificarEntrega(null)}
+      >
+        <DialogContent className="rounded-2xl max-w-md">
+          {modalCalificarEntrega && (
+            <form onSubmit={handleGuardarNotaEntrega} className="space-y-4">
+              <DialogHeader>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 w-fit mb-1 border border-emerald-200">
+                  <FileCheck className="size-3 text-emerald-600" />
+                  <span>Calificación de Entrega</span>
+                </div>
+                <DialogTitle className="text-base font-bold text-slate-900">
+                  {modalCalificarEntrega.estudianteNombre}
+                </DialogTitle>
+                <DialogDescription className="text-xs text-slate-500">
+                  Trabajo: <strong>{modalCalificarEntrega.titulo}</strong>
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Calificación Obtenida (0.0 - 5.0) *</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="5"
+                  step="0.1"
+                  autoFocus
+                  value={modalCalificarEntrega.notaActual}
+                  onChange={(e) =>
+                    setModalCalificarEntrega({
+                      ...modalCalificarEntrega,
+                      notaActual: e.target.value === "" ? "" : Number(e.target.value),
+                    })
+                  }
+                  required
+                  placeholder="Ej. 4.5"
+                  className="text-lg font-mono font-bold"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Retroalimentación / Comentarios para el Estudiante</Label>
+                <Textarea
+                  placeholder="Comentarios pedagógicos sobre el trabajo presentado..."
+                  value={modalCalificarEntrega.retro}
+                  onChange={(e) =>
+                    setModalCalificarEntrega({
+                      ...modalCalificarEntrega,
+                      retro: e.target.value,
+                    })
+                  }
+                  rows={3}
+                  className="text-xs"
+                />
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setModalCalificarEntrega(null)}
+                  className="text-xs"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={guardandoNotaEntrega}
+                  className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+                >
+                  {guardandoNotaEntrega ? (
+                    <Loader2 className="size-3.5 animate-spin mr-1" />
+                  ) : (
+                    <Save className="size-3.5 mr-1" />
+                  )}
+                  Guardar Calificación
                 </Button>
               </DialogFooter>
             </form>

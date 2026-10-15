@@ -109,6 +109,63 @@ export interface CursoDetalleDocente {
 }
 
 // ============================================================================
+// FUNCIONES PURAS DE CÁLCULO Y VALIDACIÓN
+// ============================================================================
+
+export function validarRangoNota(nota: number): boolean {
+  return typeof nota === "number" && !isNaN(nota) && nota >= 0 && nota <= 5.0;
+}
+
+export function validarMallaPorcentajes(componentes: Array<{ porcentaje: number }>): {
+  suma: number;
+  esValida: boolean;
+  falta: number;
+} {
+  const suma = Number(
+    componentes.reduce((acc, c) => acc + (Number(c.porcentaje) || 0), 0).toFixed(2),
+  );
+  return {
+    suma,
+    esValida: Math.abs(suma - 100) < 0.001,
+    falta: Number((100 - suma).toFixed(2)),
+  };
+}
+
+export function calcularNotaDefinitiva(
+  componentes: ComponenteEvaluacion[],
+  calificaciones: Record<string, number | { nota: number } | null | undefined>,
+): {
+  definitiva: number;
+  porcentajeEvaluado: number;
+  esCompleto: boolean;
+} {
+  let acumulado = 0;
+  let porcentajeEvaluado = 0;
+
+  for (const comp of componentes) {
+    const raw = calificaciones[comp.id];
+    const nota =
+      typeof raw === "object" && raw !== null
+        ? raw.nota
+        : typeof raw === "number"
+          ? raw
+          : null;
+
+    if (nota !== null && !isNaN(nota) && validarRangoNota(nota)) {
+      acumulado += (nota * comp.porcentaje) / 100;
+      porcentajeEvaluado += comp.porcentaje;
+    }
+  }
+
+  const definitiva = Number(acumulado.toFixed(2));
+  return {
+    definitiva,
+    porcentajeEvaluado: Number(porcentajeEvaluado.toFixed(2)),
+    esCompleto: Math.abs(porcentajeEvaluado - 100) < 0.001,
+  };
+}
+
+// ============================================================================
 // DATOS DEMO (para desarrollo offline o vista previa)
 // ============================================================================
 
@@ -394,17 +451,11 @@ export async function subirEntregaTrabajo(params: {
       return { ok: false, error: "No se pudo subir el archivo de la evidencia." };
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from("evidencias-academicas")
-      .getPublicUrl(filePath);
-
-    const archivoUrl = publicUrlData?.publicUrl || filePath;
-
     const { error: insertError } = await supabase.from("entregas_trabajos").insert({
       matricula_id: params.matriculaId,
-      titulo: params.titulo,
-      descripcion: params.descripcion || null,
-      archivo_url: archivoUrl,
+      titulo: params.titulo.trim(),
+      descripcion: params.descripcion?.trim() || null,
+      archivo_url: filePath,
       estado: "entregado",
     });
 
@@ -415,6 +466,48 @@ export async function subirEntregaTrabajo(params: {
     return { ok: true };
   } catch (err: any) {
     return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+/**
+ * Obtiene una URL firmada (Signed URL) temporal de 1 hora para visualizar
+ * o descargar de forma segura un archivo del bucket privado 'evidencias-academicas'.
+ */
+export async function obtenerUrlDescargaEvidencia(archivoUrlOrPath: string): Promise<string> {
+  if (!isSupabaseConfigured() || !archivoUrlOrPath) {
+    return archivoUrlOrPath || "#";
+  }
+
+  try {
+    if (archivoUrlOrPath.startsWith("blob:") || archivoUrlOrPath.startsWith("data:")) {
+      return archivoUrlOrPath;
+    }
+
+    let cleanPath = archivoUrlOrPath;
+    if (archivoUrlOrPath.includes("evidencias-academicas/")) {
+      const parts = archivoUrlOrPath.split("evidencias-academicas/");
+      const lastPart = parts[parts.length - 1] ?? "";
+      cleanPath = lastPart.split("?")[0] ?? "";
+    } else if (archivoUrlOrPath.startsWith("http://") || archivoUrlOrPath.startsWith("https://")) {
+      // Si ya es una URL externa
+      return archivoUrlOrPath;
+    }
+
+    cleanPath = cleanPath.replace(/^\/+/, "");
+
+    const { data, error } = await supabase.storage
+      .from("evidencias-academicas")
+      .createSignedUrl(cleanPath, 3600);
+
+    if (error || !data?.signedUrl) {
+      console.warn("[Académico] No se pudo generar signedUrl:", error?.message);
+      return archivoUrlOrPath;
+    }
+
+    return data.signedUrl;
+  } catch (err) {
+    console.error("[Académico] Excepción obteniendo URL firmada:", err);
+    return archivoUrlOrPath;
   }
 }
 

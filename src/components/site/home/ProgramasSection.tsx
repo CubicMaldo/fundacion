@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, Briefcase, HeartPulse, Laptop, Sparkles, Stethoscope, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Briefcase, HeartPulse, ShieldCheck, Sparkles, Stethoscope, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/site/Section";
 import {
@@ -22,26 +22,26 @@ const areasDestacadas = [
     color: "emerald",
     bg: "bg-emerald-500/10 text-emerald-700",
     badge: "Alta demanda",
-    descripcion: "Auxiliar en Enfermería, Salud Pública, Farmacia y cuidado integral con prácticas clínicas hospitalarias.",
-    ruta: "/programas/auxiliar-en-enfermeria",
-  },
-  {
-    titulo: "Tecnología e Informática",
-    icono: Laptop,
-    color: "blue",
-    bg: "bg-blue-500/10 text-blue-700",
-    badge: "Modalidad flexible",
-    descripcion: "Sistemas, Redes, Soporte Técnico, herramientas digitales y competencias laborales modernas.",
-    ruta: "/programas/sistemas-e-informatica",
+    descripcion: "Auxiliar de Enfermería, Servicios Farmacéuticos y Administración en Salud con prácticas asistenciales.",
+    ruta: "/programas/auxiliar-de-enfermeria",
   },
   {
     titulo: "Administración y Empresa",
     icono: Briefcase,
     color: "amber",
     bg: "bg-amber-500/10 text-amber-700",
-    badge: "Rápida inserción",
-    descripcion: "Gestión Administrativa, Asistencia Contable, Mercadeo, Ventas y creación de emprendimientos.",
-    ruta: "/programas/asistente-administrativo",
+    badge: "Inserción laboral",
+    descripcion: "Auxiliar Administrativo y Contable, Mercadeo y Ventas, Logística y Secretariado Ejecutivo.",
+    ruta: "/programas/auxiliar-administrativo-y-contable",
+  },
+  {
+    titulo: "Seguridad y Salud en el Trabajo",
+    icono: ShieldCheck,
+    color: "blue",
+    bg: "bg-blue-500/10 text-blue-700",
+    badge: "Normatividad legal",
+    descripcion: "Prevención de riesgos laborales, protocolos SST y capacitación en seguridad y vigilancia.",
+    ruta: "/programas/seguridad-y-salud-en-el-trabajo",
   },
   {
     titulo: "Educación y Comunidad",
@@ -49,8 +49,8 @@ const areasDestacadas = [
     color: "purple",
     bg: "bg-purple-500/10 text-purple-700",
     badge: "Labor social",
-    descripcion: "Atención Integral a la Primera Infancia, formación comunitaria y desarrollo social.",
-    ruta: "/programas/atencion-integral-a-la-primera-infancia",
+    descripcion: "Atención a la Primera Infancia, Belleza Integral, Mecánica de Motos y Validación de Bachillerato.",
+    ruta: "/programas/primera-infancia",
   },
 ];
 

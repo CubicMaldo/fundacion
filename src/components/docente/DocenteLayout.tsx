@@ -37,14 +37,14 @@ export function DocenteLayout({ children, title, subtitle, breadcrumbs }: Docent
           to: "/admin/login",
           search: { redirect: location.pathname, reason: "requiere_docente" },
         });
-      } else if (!isDocente) {
+      } else if (!isDocente && !isAdmin) {
         navigate({
           to: "/admin/login",
           search: { redirect: location.pathname, reason: "requiere_docente" },
         });
       }
     }
-  }, [user, isDocente, isLoading, location.pathname, navigate]);
+  }, [user, isDocente, isAdmin, isLoading, location.pathname, navigate]);
 
   if (isLoading) {
     return (
@@ -59,7 +59,7 @@ export function DocenteLayout({ children, title, subtitle, breadcrumbs }: Docent
     );
   }
 
-  if (!user || !isDocente) {
+  if (!user || (!isDocente && !isAdmin)) {
     return null;
   }
 
