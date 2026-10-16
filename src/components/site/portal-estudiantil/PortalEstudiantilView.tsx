@@ -266,60 +266,60 @@ export function PortalEstudiantilView() {
       </Section>
 
       {/* SECCIÓN 4: CALENDARIO ACADÉMICO */}
-      <Section id="calendario" className="py-12 md:py-16 bg-slate-50 border-b border-slate-200/80">
+      <Section id="calendario" className="py-12 md:py-16 bg-muted/40 border-b border-border/80">
         <SectionHeading
-          eyebrow="Cronograma Institucional"
-          title="Calendario Académico 2026-II"
-          description="Fechas clave de parciales, entregas de evidencias, recesos y cierre de actas."
+          eyebrow="Proceso Formativo"
+          title="Etapas del Ciclo Académico"
+          description="El seguimiento académico se desarrolla de acuerdo con la programación de cada programa técnico laboral y la institución educativa aliada."
         />
 
         <div className="mx-auto max-w-4xl">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
               <div className="flex items-center gap-2 text-brand-green text-xs font-bold uppercase tracking-wider mb-2">
                 <Calendar className="size-4" />
-                <span>Ciclo Inicial</span>
+                <span>Fase 1</span>
               </div>
-              <p className="text-base font-bold text-slate-900">Inicio de Clases</p>
-              <p className="text-xs text-slate-500 mt-1">15 de Febrero, 2026</p>
+              <p className="text-base font-bold text-foreground">Matrícula e Inducción</p>
+              <p className="text-xs text-muted-foreground mt-1">Según convocatoria vigente</p>
               <p className="text-[11px] text-emerald-700 font-medium mt-2 bg-emerald-50 rounded-md px-2 py-1">
-                Inducción a plataformas LMS
+                Orientación e ingreso al campus
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
               <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider mb-2">
                 <Clock className="size-4" />
-                <span>Primer Corte</span>
+                <span>Fase 2</span>
               </div>
-              <p className="text-base font-bold text-slate-900">Evaluación Parcial 1</p>
-              <p className="text-xs text-slate-500 mt-1">20 al 28 de Abril, 2026</p>
+              <p className="text-base font-bold text-foreground">Cortes Evaluativos</p>
+              <p className="text-xs text-muted-foreground mt-1">Evaluación por competencias</p>
               <p className="text-[11px] text-amber-800 font-medium mt-2 bg-amber-50 rounded-md px-2 py-1">
-                Ponderación 35% del módulo
+                Según malla definida por el docente
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
               <div className="flex items-center gap-2 text-blue-600 text-xs font-bold uppercase tracking-wider mb-2">
                 <Clock className="size-4" />
-                <span>Segundo Corte</span>
+                <span>Fase 3</span>
               </div>
-              <p className="text-base font-bold text-slate-900">Evaluación Parcial 2</p>
-              <p className="text-xs text-slate-500 mt-1">10 al 18 de Junio, 2026</p>
+              <p className="text-base font-bold text-foreground">Componente Práctico</p>
+              <p className="text-xs text-muted-foreground mt-1">Talleres y prácticas</p>
               <p className="text-[11px] text-blue-800 font-medium mt-2 bg-blue-50 rounded-md px-2 py-1">
-                Ponderación 35% del módulo
+                En articulación con el instituto aliado
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
               <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold uppercase tracking-wider mb-2">
                 <CheckCircle2 className="size-4" />
-                <span>Cierre de Ciclo</span>
+                <span>Fase 4</span>
               </div>
-              <p className="text-base font-bold text-slate-900">Cierre de Actas</p>
-              <p className="text-xs text-slate-500 mt-1">30 de Junio, 2026</p>
-              <p className="text-[11px] text-slate-700 font-medium mt-2 bg-slate-100 rounded-md px-2 py-1">
-                Publicación de notas definitivas
+              <p className="text-base font-bold text-foreground">Cierre de Periodo</p>
+              <p className="text-xs text-muted-foreground mt-1">Consolidación de actas</p>
+              <p className="text-[11px] text-foreground/80 font-medium mt-2 bg-muted rounded-md px-2 py-1">
+                Publicación de nota definitiva
               </p>
             </div>
           </div>
@@ -327,26 +327,26 @@ export function PortalEstudiantilView() {
       </Section>
 
       {/* SECCIÓN 5: MESA DE AYUDA Y ATENCIÓN DIRECTA */}
-      <Section id="soporte" className="py-12 md:py-16 bg-white">
-        <div className="mx-auto max-w-4xl rounded-3xl border border-slate-200/90 bg-linear-to-br from-slate-50 via-white to-emerald-50/50 p-8 md:p-10 shadow-xs">
+      <Section id="soporte" className="py-12 md:py-16 bg-background">
+        <div className="mx-auto max-w-4xl rounded-3xl border border-border/90 bg-linear-to-br from-muted/50 via-card to-emerald-50/40 p-8 md:p-10 shadow-xs">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-green">
                 <ShieldCheck className="size-4" />
                 Bienestar y Permanencia Estudiantil
               </span>
-              <h3 className="text-2xl font-bold font-display text-slate-900">
+              <h3 className="text-2xl font-bold font-display text-foreground">
                 ¿Requieres orientación o soporte con tu portal?
               </h3>
-              <p className="text-xs text-slate-600 max-w-lg leading-relaxed">
-                El equipo de coordinación y mesa de ayuda técnica está disponible de lunes a viernes de 8:00 AM a 5:00 PM y sábados de 8:00 AM a 1:00 PM para acompañarte.
+              <p className="text-xs text-muted-foreground max-w-lg leading-relaxed">
+                El equipo de coordinación y orientación estudiantil de FUNASF está disponible a través de nuestros canales oficiales para acompañarte en tu proceso formativo.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Button asChild className="bg-brand-green hover:bg-brand-green-deep text-white font-semibold text-xs shadow-xs">
                 <a
-                  href={`https://wa.me/${contacto.whatsappLlamadas || "573232946184"}?text=Hola%20Mesa%20de%20Ayuda%20FUNASF,%20necesito%20asistencia%20con%20mi%20portal%20estudiantil`}
+                  href={`https://wa.me/${contacto.whatsappLlamadas || "573135779384"}?text=Hola%20FUNASF,%20necesito%20asistencia%20con%20mi%20portal%20estudiantil`}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -354,8 +354,8 @@ export function PortalEstudiantilView() {
                   WhatsApp Estudiantil
                 </a>
               </Button>
-              <Button asChild variant="outline" className="text-xs border-slate-200 text-slate-700 hover:bg-slate-100">
-                <a href={`mailto:${contacto.correo || "academico@edufunasf.org"}`}>
+              <Button asChild variant="outline" className="text-xs border-border text-foreground hover:bg-muted">
+                <a href={`mailto:${contacto.correo || "info@edufunasf.org"}`}>
                   <Mail className="size-4 mr-1.5" />
                   Escribir a Coordinación
                 </a>

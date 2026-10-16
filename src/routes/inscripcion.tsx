@@ -133,15 +133,15 @@ function InscripcionPage() {
             <div className="bg-card border border-border/80 rounded-2xl p-6 shadow-2xs">
               <div className="flex items-center gap-2 text-brand-green mb-3 font-semibold text-sm">
                 <ShieldCheck className="size-4" />
-                <span>Documentos para formalizar</span>
+                <span>Requisitos de ingreso según el programa</span>
               </div>
               <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                Una vez aprobada tu solicitud preliminar, se te solicitará:
+                De acuerdo con los requisitos oficiales de cada programa en convenio:
               </p>
               <ul className="space-y-2 text-xs text-foreground/75 list-disc list-inside">
-                <li>Fotocopia de tu documento de identidad vigente (C.C., T.I., C.E., PPT).</li>
-                <li>Certificado de 9° grado aprobado o fotocopia de acta/diploma de bachiller.</li>
-                <li>Certificado de afiliación a salud (EPS o SISBÉN activo).</li>
+                <li>Documento de identidad vigente (C.C., T.I., C.E. o PPT).</li>
+                <li>Certificado de 9.° grado aprobado o título de bachiller (según el programa elegido).</li>
+                <li>Disposición para el aprendizaje práctico y trabajo comunitario.</li>
               </ul>
             </div>
 

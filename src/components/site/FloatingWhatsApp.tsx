@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
 import { MessageCircle, X } from "lucide-react";
 import { whatsappLink } from "@/data/funasf";
@@ -6,6 +6,25 @@ import { whatsappLink } from "@/data/funasf";
 export function FloatingWhatsApp() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [closed, setClosed] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem("funasf_wa_closed") === "true") {
+        setClosed(true);
+      }
+    } catch {
+      // Manejar entornos con almacenamiento deshabilitado o modo incógnito restringido
+    }
+  }, []);
+
+  const handleClose = () => {
+    setClosed(true);
+    try {
+      sessionStorage.setItem("funasf_wa_closed", "true");
+    } catch {
+      // Ignorar excepciones si sessionStorage no está disponible o está restringido
+    }
+  };
 
   // No mostrar en áreas privadas ni donde ya hay formulario activo
   if (
@@ -21,13 +40,15 @@ export function FloatingWhatsApp() {
     "Hola FUNASF, deseo recibir asesoría sobre las becas solidarias y los programas técnicos laborales.",
   )}`;
 
+  const shouldShowTooltip = !closed && pathname !== "/contacto";
+
   return (
     <div
       className="fixed bottom-6 right-6 z-40 hidden sm:flex flex-col items-end gap-2"
       aria-label="Atención directa por WhatsApp"
     >
       {/* Tooltip flotante con llamada a la acción */}
-      {!closed && (
+      {shouldShowTooltip && (
         <div className="flex items-center gap-2 rounded-2xl bg-card border border-border/80 px-4 py-2.5 shadow-xl shadow-black/10 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex flex-col text-left">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
@@ -41,8 +62,8 @@ export function FloatingWhatsApp() {
 
           <button
             type="button"
-            onClick={() => setClosed(true)}
-            className="text-muted-foreground/60 hover:text-muted-foreground p-1 rounded-md transition-colors"
+            onClick={handleClose}
+            className="text-muted-foreground/60 hover:text-muted-foreground p-2 -mr-1 rounded-md transition-colors cursor-pointer"
             aria-label="Cerrar mensaje de WhatsApp"
           >
             <X className="size-3.5" />
@@ -55,7 +76,7 @@ export function FloatingWhatsApp() {
         href={defaultWaUrl}
         target="_blank"
         rel="noreferrer"
-        className="group relative flex size-14 items-center justify-center rounded-full bg-emerald-600 text-white shadow-xl shadow-emerald-900/25 transition-all duration-300 hover:scale-110 hover:bg-emerald-500 active:scale-95"
+        className="group relative flex size-14 items-center justify-center rounded-full bg-emerald-600 text-white shadow-xl shadow-emerald-900/25 transition-[transform,background-color,box-shadow] duration-200 hover:scale-105 hover:bg-emerald-500 active:scale-95"
         aria-label="Contactar a admisiones de FUNASF por WhatsApp"
       >
         <span className="absolute -top-1 -right-1 flex size-3.5">

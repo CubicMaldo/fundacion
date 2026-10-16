@@ -42,6 +42,10 @@ interface DashboardStats {
   inscripcionesNuevas: number;
   mensajesNoLeidos: number;
   articulosCount: number;
+  cursosActivosCount: number;
+  estudiantesCount: number;
+  docentesCount: number;
+  entregasPendientesCount: number;
 }
 
 interface RecentInscripcion {
@@ -69,6 +73,10 @@ function AdminDashboard() {
     inscripcionesNuevas: 0,
     mensajesNoLeidos: 0,
     articulosCount: 2,
+    cursosActivosCount: 0,
+    estudiantesCount: 0,
+    docentesCount: 0,
+    entregasPendientesCount: 0,
   });
   const [recentInscripciones, setRecentInscripciones] = useState<RecentInscripcion[]>([]);
   const [recentMensajes, setRecentMensajes] = useState<RecentMensaje[]>([]);
@@ -77,7 +85,6 @@ function AdminDashboard() {
   useEffect(() => {
     async function loadDashboardData() {
       if (!isConfigured) {
-        // Datos de ejemplo para modo local
         setRecentInscripciones([
           {
             id: "1",
@@ -111,13 +118,28 @@ function AdminDashboard() {
           inscripcionesNuevas: 1,
           mensajesNoLeidos: 1,
           articulosCount: 2,
+          cursosActivosCount: 1,
+          estudiantesCount: 2,
+          docentesCount: 1,
+          entregasPendientesCount: 0,
         });
         setLoading(false);
         return;
       }
 
       try {
-        const [progRes, inscRes, msgRes, artRes, recentInscRes, recentMsgRes] = await Promise.all([
+        const [
+          progRes,
+          inscRes,
+          msgRes,
+          artRes,
+          curRes,
+          estRes,
+          docRes,
+          entRes,
+          recentInscRes,
+          recentMsgRes,
+        ] = await Promise.all([
           supabase.from("programas").select("id", { count: "exact", head: true }),
           supabase
             .from("inscripciones")
@@ -128,6 +150,24 @@ function AdminDashboard() {
             .select("id", { count: "exact", head: true })
             .eq("leido", false),
           supabase.from("articulos").select("id", { count: "exact", head: true }),
+          supabase
+            .from("cursos")
+            .select("id", { count: "exact", head: true })
+            .eq("activo", true),
+          supabase
+            .from("perfiles")
+            .select("id", { count: "exact", head: true })
+            .eq("rol", "estudiante")
+            .eq("activo", true),
+          supabase
+            .from("perfiles")
+            .select("id", { count: "exact", head: true })
+            .eq("rol", "docente")
+            .eq("activo", true),
+          supabase
+            .from("entregas_trabajos")
+            .select("id", { count: "exact", head: true })
+            .eq("estado", "entregado"),
           supabase
             .from("inscripciones")
             .select("id, nombre_completo, programa_nombre, telefono, estado, created_at")
@@ -145,6 +185,10 @@ function AdminDashboard() {
           inscripcionesNuevas: inscRes.count ?? 0,
           mensajesNoLeidos: msgRes.count ?? 0,
           articulosCount: artRes.count ?? 0,
+          cursosActivosCount: curRes.count ?? 0,
+          estudiantesCount: estRes.count ?? 0,
+          docentesCount: docRes.count ?? 0,
+          entregasPendientesCount: entRes.count ?? 0,
         });
 
         if (recentInscRes.data) {
@@ -296,6 +340,48 @@ function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Resumen del Sistema Académico (Portal Estudiantil & Docente) */}
+      <div className="mt-6 rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <BookOpen className="size-4 text-brand-green" />
+              Estado del Sistema Académico (Estudiantes & Docentes)
+            </h2>
+            <p className="text-xs text-slate-600">
+              Indicadores en vivo de asignaturas abiertas, cuentas activas y entregas en plataforma.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button asChild size="sm" variant="outline" className="h-8 text-xs bg-white">
+              <Link to="/admin/cursos">Cursos y Matrículas</Link>
+            </Button>
+            <Button asChild size="sm" className="h-8 text-xs bg-brand-green hover:bg-brand-green-deep text-white">
+              <Link to="/admin/usuarios">Cuentas y Roles</Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="rounded-xl bg-white border border-slate-200/80 p-3.5">
+            <span className="text-[11px] font-semibold text-slate-500 block">Cursos Activos</span>
+            <span className="text-xl font-bold text-slate-900">{stats.cursosActivosCount}</span>
+          </div>
+          <div className="rounded-xl bg-white border border-slate-200/80 p-3.5">
+            <span className="text-[11px] font-semibold text-slate-500 block">Estudiantes Activos</span>
+            <span className="text-xl font-bold text-emerald-700">{stats.estudiantesCount}</span>
+          </div>
+          <div className="rounded-xl bg-white border border-slate-200/80 p-3.5">
+            <span className="text-[11px] font-semibold text-slate-500 block">Docentes Titulares</span>
+            <span className="text-xl font-bold text-blue-700">{stats.docentesCount}</span>
+          </div>
+          <div className="rounded-xl bg-white border border-slate-200/80 p-3.5">
+            <span className="text-[11px] font-semibold text-slate-500 block">Entregas por Calificar</span>
+            <span className="text-xl font-bold text-amber-700">{stats.entregasPendientesCount}</span>
+          </div>
+        </div>
       </div>
 
       {/* Acciones Rápidas */}

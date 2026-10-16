@@ -109,4 +109,35 @@ describe("Validación y Cálculos del Sistema Académico FUNASF", () => {
       expect(res.esCompleto).toBe(false);
     });
   });
+
+  describe("Validaciones de frontera en servicios de calificación", () => {
+    it("guardarCalificacion rechaza notas fuera de rango antes de tocar red", async () => {
+      const { guardarCalificacion } = await import("./academico");
+      const resNeg = await guardarCalificacion({
+        componenteId: "comp-1",
+        matriculaId: "mat-1",
+        nota: -0.5,
+      });
+      expect(resNeg.ok).toBe(false);
+      expect(resNeg.error).toContain("0.0 y 5.0");
+
+      const resMayor = await guardarCalificacion({
+        componenteId: "comp-1",
+        matriculaId: "mat-1",
+        nota: 5.5,
+      });
+      expect(resMayor.ok).toBe(false);
+      expect(resMayor.error).toContain("0.0 y 5.0");
+    });
+
+    it("calificarEntrega rechaza notas fuera de rango antes de tocar red", async () => {
+      const { calificarEntrega } = await import("./academico");
+      const res = await calificarEntrega({
+        entregaId: "ent-1",
+        nota: 6.0,
+      });
+      expect(res.ok).toBe(false);
+      expect(res.error).toContain("0.0 y 5.0");
+    });
+  });
 });

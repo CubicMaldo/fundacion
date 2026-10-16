@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Image as ImageIcon, Maximize2, X } from "lucide-react";
+import { Image as ImageIcon, Maximize2 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { getGaleriaActiva, type ItemGaleria } from "@/services/api";
 import { createSeoMeta, getBreadcrumbSchema } from "@/lib/seo";
 
@@ -96,28 +95,30 @@ function GaleriaPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filtrados.map((foto) => (
-              <div
+              <button
                 key={foto.id}
+                type="button"
                 onClick={() => setSelectedItem(foto)}
-                className="group relative cursor-pointer overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
+                aria-label={`Ampliar fotografía: ${foto.titulo}`}
+                className="group relative text-left cursor-pointer overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-[border-color,box-shadow] duration-200 hover:border-brand-green/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <div className="relative aspect-4/3 overflow-hidden bg-muted">
                   <img
                     src={foto.imagenUrl}
                     alt={foto.altText || foto.titulo}
-                    className="size-full object-cover"
+                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
-                  {/* Overlay en hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 flex flex-col justify-end p-4 text-white">
+                  {/* Overlay en hover / focus */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 flex flex-col justify-end p-4 text-white">
                     <span className="text-[11px] font-semibold uppercase tracking-wider text-brand-gold">
                       {foto.categoria}
                     </span>
-                    <h3 className="font-semibold text-sm leading-snug mt-0.5 line-clamp-2">
+                    <h3 className="font-semibold text-sm leading-snug mt-0.5 line-clamp-2 text-white">
                       {foto.titulo}
                     </h3>
                     <div className="mt-2 flex items-center gap-1 text-[11px] text-white/80">
-                      <Maximize2 className="size-3" /> Ver en grande
+                      <Maximize2 className="size-3" aria-hidden="true" /> Ver en grande
                     </div>
                   </div>
                 </div>
@@ -130,7 +131,7 @@ function GaleriaPage() {
                     {foto.titulo}
                   </p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
@@ -155,9 +156,9 @@ function GaleriaPage() {
                     {selectedItem.categoria}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold font-display text-foreground">
+                <DialogTitle className="text-xl font-bold font-display text-foreground">
                   {selectedItem.titulo}
-                </h3>
+                </DialogTitle>
                 {selectedItem.descripcion && (
                   <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                     {selectedItem.descripcion}

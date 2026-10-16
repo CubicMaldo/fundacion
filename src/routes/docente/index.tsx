@@ -59,7 +59,7 @@ function DocenteCursosPage() {
       breadcrumbs={[{ label: "Mis Asignaturas" }]}
     >
       {/* Banner de Bienvenida y Atajos */}
-      <div className="mb-8 rounded-3xl border border-emerald-800/10 bg-linear-to-br from-emerald-900 via-emerald-850 to-emerald-950 p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+      <div className="mb-8 rounded-3xl border border-emerald-800/10 bg-linear-to-br from-brand-green-deep via-emerald-900 to-emerald-950 p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-200 mb-3 backdrop-blur-xs">
             <Sparkles className="size-3.5 text-brand-gold" />
@@ -98,7 +98,7 @@ function DocenteCursosPage() {
             Tu cuenta docente está activa, pero aún no se te han vinculado cursos para este periodo. Comunícate con la Coordinación Académica para programar tu carga horaria.
           </p>
           <Button asChild variant="outline" className="mt-5 text-xs font-semibold">
-            <a href="mailto:academico@edufunasf.org">Contactar a Coordinación Académica</a>
+            <a href="mailto:info@edufunasf.org">Contactar a Coordinación Académica</a>
           </Button>
         </div>
       ) : (
@@ -106,7 +106,7 @@ function DocenteCursosPage() {
           {cursos.map((c) => (
             <Card
               key={c.id}
-              className="rounded-2xl border-slate-200/90 hover:border-emerald-500/50 hover:shadow-md transition-all flex flex-col justify-between overflow-hidden group bg-white"
+              className="rounded-2xl border-slate-200/90 hover:border-emerald-500/50 hover:shadow-md transition-[border-color,box-shadow] duration-200 flex flex-col justify-between overflow-hidden group bg-white"
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-2 mb-1">

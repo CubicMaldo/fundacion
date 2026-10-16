@@ -75,8 +75,12 @@ function BlogPage() {
         {/* Barra de Filtros y Búsqueda */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-6">
           <div className="relative min-w-[260px] flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <label htmlFor="blog-search" className="sr-only">
+              Buscar artículos en el blog
+            </label>
+            <Search aria-hidden="true" className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
+              id="blog-search"
               type="search"
               placeholder="Buscar en el blog..."
               value={busqueda}
@@ -85,11 +89,12 @@ function BlogPage() {
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2" aria-label="Filtrar por categoría">
+          <div role="group" className="flex flex-wrap items-center gap-2" aria-label="Filtrar por categoría">
             <Button
               type="button"
               size="sm"
               variant={categoria === "todas" ? "default" : "outline"}
+              aria-pressed={categoria === "todas"}
               onClick={() => setCategoria("todas")}
               className="text-xs"
             >
@@ -101,6 +106,7 @@ function BlogPage() {
                 type="button"
                 size="sm"
                 variant={categoria === cat ? "default" : "outline"}
+                aria-pressed={categoria === cat}
                 onClick={() => setCategoria(cat)}
                 className="text-xs"
               >
@@ -127,7 +133,7 @@ function BlogPage() {
                 className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
               >
                 {/* Imagen de Portada */}
-                <div className="relative aspect-16/10 overflow-hidden bg-muted">
+                <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   {articulo.imagenPortada ? (
                     <picture>
                       <source
@@ -137,9 +143,11 @@ function BlogPage() {
                       <img
                         src={articulo.imagenPortada}
                         alt={articulo.titulo}
-                        className="size-full object-cover"
+                        className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                         loading="lazy"
                         decoding="async"
+                        width={600}
+                        height={375}
                       />
                     </picture>
                   ) : (
@@ -188,7 +196,11 @@ function BlogPage() {
                       size="sm"
                       className="p-0 h-auto text-xs font-semibold text-brand-green"
                     >
-                      <Link to="/blog/$slug" params={{ slug: articulo.slug }}>
+                      <Link
+                        to="/blog/$slug"
+                        params={{ slug: articulo.slug }}
+                        aria-label={`Leer artículo: ${articulo.titulo}`}
+                      >
                         Leer artículo <ArrowRight className="size-3.5 ml-1" />
                       </Link>
                     </Button>

@@ -31,8 +31,8 @@ export function QuienesSomosSection({ quienesSomos }: QuienesSomosSectionProps) 
         </div>
         <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
           <img
-            src="https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=800&q=80"
-            alt="Acción comunitaria y trabajo solidario en FUNASF"
+            src="/images/sedes/sede-atlantico-soledad.jpg"
+            alt="Sede comunitaria y formativa de FUNASF en el Atlántico — Municipio de Soledad"
             className="size-full object-cover transition-transform duration-500 hover:scale-105"
             loading="lazy"
             decoding="async"

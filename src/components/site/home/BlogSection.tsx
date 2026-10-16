@@ -51,7 +51,7 @@ export function BlogSection({ articulos }: BlogSectionProps) {
             className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-colors hover:border-brand-green/45"
           >
             {/* Imagen de Portada */}
-            <div className="relative aspect-16/10 overflow-hidden bg-muted">
+            <div className="relative aspect-[16/10] overflow-hidden bg-muted">
               {articulo.imagenPortada ? (
                 <picture>
                   <source
@@ -61,9 +61,11 @@ export function BlogSection({ articulos }: BlogSectionProps) {
                   <img
                     src={articulo.imagenPortada}
                     alt={articulo.titulo}
-                    className="size-full object-cover"
+                    className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
+                    width={600}
+                    height={375}
                   />
                 </picture>
               ) : (
@@ -112,7 +114,11 @@ export function BlogSection({ articulos }: BlogSectionProps) {
                   size="sm"
                   className="p-0 h-auto text-xs font-semibold text-brand-green"
                 >
-                  <Link to="/blog/$slug" params={{ slug: articulo.slug }}>
+                  <Link
+                    to="/blog/$slug"
+                    params={{ slug: articulo.slug }}
+                    aria-label={`Leer artículo: ${articulo.titulo}`}
+                  >
                     Leer más <ArrowRight className="size-3 ml-1" />
                   </Link>
                 </Button>

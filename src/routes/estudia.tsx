@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { formacionAcademica, modeloAlianzas, faq } from "@/data/funasf";
+import { formacionAcademica, educacionSinFronteras, modeloAlianzas, faq } from "@/data/funasf";
 import { getProgramasAcademicos, getSiteSettings, getCategorizedPrograms } from "@/services/api";
 import { useSiteSettings } from "@/lib/site-settings-context";
 import { createSeoMeta, getBreadcrumbSchema, getFaqSchema } from "@/lib/seo";
@@ -105,7 +105,7 @@ function Estudia() {
                                 className="font-semibold text-foreground hover:text-brand-green flex items-center gap-1.5 transition-colors group"
                               >
                                 <span>{matchProg.nombre}</span>
-                                <ArrowRight className="size-3.5 opacity-60 group-hover:translate-x-1 group-hover:opacity-100 transition-all text-brand-green" />
+                                <ArrowRight className="size-3.5 opacity-60 group-hover:translate-x-1 group-hover:opacity-100 transition-[opacity,transform] text-brand-green" />
                               </Link>
                             ) : (
                               <span className="font-semibold text-foreground">{p}</span>
@@ -124,30 +124,40 @@ function Estudia() {
 
       <Section id="matriculas" tone="surface">
         <SectionHeading
-          eyebrow="Requisitos y matrícula"
-          title="El camino hacia tu título técnico laboral"
-          description={formacionAcademica.parrafos[2]}
+          eyebrow="Educación sin fronteras"
+          title="Oportunidades de formación para la comunidad"
+          description={educacionSinFronteras.intro}
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <div className="card-institucional">
-            <h3 className="text-brand-green-deep text-lg">Requisitos de ingreso</h3>
-            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-              Copia de documento de identidad, certificado de estudios (grado 9° o bachiller según el
-              programa), 2 fotos 3x4 y diligenciamiento del formulario institucional de beca.
-            </p>
+            <h3 className="text-brand-green-deep text-lg">Características del modelo</h3>
+            <ul className="text-muted-foreground mt-3 space-y-2 text-sm leading-relaxed">
+              {educacionSinFronteras.items.slice(0, 5).map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span aria-hidden className="bg-brand-gold mt-1.5 size-1.5 shrink-0 rounded-full" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="card-institucional">
-            <h3 className="text-brand-green-deep text-lg">Flexibilidad horaria</h3>
-            <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-              Jornadas diurnas, nocturnas y sabatinas diseñadas para personas que trabajan o tienen
-              responsabilidades familiares, con acompañamiento permanente de tutores.
-            </p>
+            <h3 className="text-brand-green-deep text-lg">Metodología y seguimiento</h3>
+            <ul className="text-muted-foreground mt-3 space-y-2 text-sm leading-relaxed">
+              {educacionSinFronteras.items.slice(5).map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span aria-hidden className="bg-brand-gold mt-1.5 size-1.5 shrink-0 rounded-full" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="card-institucional">
-            <h3 className="text-brand-green-deep text-lg">Doble certificación</h3>
+            <h3 className="text-brand-green-deep text-lg">Formación y certificación</h3>
             <p className="text-muted-foreground mt-3 text-sm leading-relaxed">
-              Formación técnica por competencias laborales certificada por institutos autorizados y
-              diploma de participación comunitaria expedido por FUNASF.
+              {formacionAcademica.comoFunciona[0]}
+            </p>
+            <p className="text-muted-foreground mt-2 text-xs leading-relaxed">
+              {formacionAcademica.comoFunciona[1]}
             </p>
           </div>
         </div>
@@ -189,15 +199,13 @@ function Estudia() {
           description={modeloAlianzas.intro}
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {modeloAlianzas.objetivos.map((obj, i) => (
+          {modeloAlianzas.objetivos.map((obj) => (
             <div
               key={obj}
-              className="bg-card rounded-2xl border border-border p-6 shadow-xs flex flex-col justify-between"
+              className="bg-card rounded-2xl border border-border p-6 shadow-xs flex items-start gap-3.5"
             >
-              <span className="text-brand-gold font-display text-2xl font-bold">
-                0{i + 1}
-              </span>
-              <p className="text-foreground mt-4 font-semibold leading-snug">{obj}</p>
+              <CheckCircle2 className="size-5 text-brand-green shrink-0 mt-0.5" aria-hidden="true" />
+              <p className="text-foreground font-semibold leading-snug">{obj}</p>
             </div>
           ))}
         </div>

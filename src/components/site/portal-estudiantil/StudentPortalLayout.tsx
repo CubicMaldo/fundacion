@@ -23,9 +23,9 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
   const mainSiteUrl = "/";
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-800">
+    <div className="min-h-screen flex flex-col bg-background font-sans text-foreground">
       {/* 1. Header Superior Específico del Portal de Estudiantes */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-2xs">
+      <header className="sticky top-0 z-40 bg-card border-b border-border/90 shadow-2xs">
         <div className="container-page flex h-16 items-center justify-between gap-4">
           {/* Identidad de Marca Institucional */}
           <div className="flex items-center gap-3">
@@ -38,14 +38,14 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
-                  <span className="font-display font-bold text-sm text-slate-900 tracking-tight">
+                  <span className="font-display font-bold text-sm text-foreground tracking-tight">
                     EduFUNASF
                   </span>
                   <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-green ring-1 ring-emerald-500/20">
                     Estudiantes
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-500 -mt-0.5">
+                <span className="text-[10px] text-muted-foreground -mt-0.5">
                   Fundación Amigos Sin Fronteras
                 </span>
               </div>
@@ -58,7 +58,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
               asChild
               variant="ghost"
               size="sm"
-              className="hidden lg:inline-flex text-xs text-slate-600 hover:text-brand-green"
+              className="hidden lg:inline-flex text-xs text-muted-foreground hover:text-brand-green"
             >
               <a href={mainSiteUrl}>← Volver a FUNASF</a>
             </Button>
@@ -66,10 +66,10 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
             {user ? (
               <div className="flex items-center gap-2">
                 <div className="hidden sm:flex flex-col text-right">
-                  <span className="text-xs font-semibold text-slate-800 leading-tight">
+                  <span className="text-xs font-semibold text-foreground leading-tight">
                     {profile?.nombre_completo || "Estudiante"}
                   </span>
-                  <span className="text-[10px] text-slate-500 leading-tight">
+                  <span className="text-[10px] text-muted-foreground leading-tight">
                     {user.email}
                   </span>
                 </div>
@@ -77,7 +77,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
                   variant="outline"
                   size="sm"
                   onClick={() => signOut()}
-                  className="text-xs text-slate-600 hover:text-red-600 hover:border-red-200 h-8 px-2.5"
+                  className="text-xs text-muted-foreground hover:text-red-600 hover:border-red-200 h-8 px-2.5"
                 >
                   <LogOut className="size-3.5 sm:mr-1.5" />
                   <span className="hidden sm:inline">Cerrar sesión</span>
@@ -102,7 +102,8 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden size-8 text-slate-600"
+              aria-label={menuAbierto ? "Cerrar menú del portal" : "Abrir menú del portal"}
+              className="md:hidden size-10 text-muted-foreground"
               onClick={() => setMenuAbierto(!menuAbierto)}
             >
               {menuAbierto ? <X className="size-4" /> : <Menu className="size-4" />}

@@ -1,22 +1,18 @@
 import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
-  AlertTriangle,
+  BookOpen,
   CheckCircle2,
   Copy,
   GraduationCap,
   KeyRound,
   Loader2,
-  Mail,
-  Plus,
+  MessageCircle,
+  Pencil,
   Search,
   Shield,
   ShieldAlert,
-  ShieldCheck,
-  UserCheck,
   UserPlus,
-  Users,
-  BookOpen,
 } from "lucide-react";
 import { createSeoMeta } from "@/lib/seo";
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -42,7 +38,9 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth, type UserProfile, type UserRole, LOGIN_EMAIL_DOMAIN } from "@/lib/auth-context";
+import { useAuth, type UserProfile, type UserRole } from "@/lib/auth-context";
+import { cleanPhoneDigits } from "@/services/api";
+import type { Database } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/usuarios/")({
@@ -54,6 +52,26 @@ export const Route = createFileRoute("/admin/usuarios/")({
     }),
   component: AdminUsuariosPage,
 });
+
+interface ActualizarUsuarioPayload {
+  id: string;
+  password?: string | null | undefined;
+  nombre_completo?: string | null | undefined;
+  rol?: UserRole | undefined;
+  documento?: string | null | undefined;
+  telefono?: string | null | undefined;
+  activo?: boolean | undefined;
+  usuario?: string | null | undefined;
+}
+
+interface CredencialesGeneradas {
+  nombre: string;
+  usuario: string;
+  documento: string | null;
+  password: string;
+  rol: UserRole;
+  telefono: string | null;
+}
 
 function AdminUsuariosPage() {
   const { isAdmin, isConfigured, user } = useAuth();
@@ -71,6 +89,18 @@ function AdminUsuariosPage() {
   const [nuevoTelefono, setNuevoTelefono] = useState("");
   const [nuevoPassword, setNuevoPassword] = useState("");
   const [creandoUsuario, setCreandoUsuario] = useState(false);
+  const [credencialesCreadas, setCredencialesCreadas] = useState<CredencialesGeneradas | null>(
+    null,
+  );
+
+  // Modal para editar usuario / restablecer contraseña
+  const [usuarioEditando, setUsuarioEditando] = useState<UserProfile | null>(null);
+  const [editNombre, setEditNombre] = useState("");
+  const [editDocumento, setEditDocumento] = useState("");
+  const [editTelefono, setEditTelefono] = useState("");
+  const [editRol, setEditRol] = useState<UserRole>("estudiante");
+  const [editPassword, setEditPassword] = useState("");
+  const [guardandoEdicion, setGuardandoEdicion] = useState(false);
 
   const cargarUsuarios = async () => {
     if (!isConfigured) {
@@ -88,7 +118,7 @@ function AdminUsuariosPage() {
         console.error("Error cargando usuarios:", error);
       } else {
         setUsuarios(
-          (data || []).map((row: any) => ({
+          (data || []).map((row) => ({
             id: row.id,
             email: row.email,
             nombre_completo: row.nombre_completo,
@@ -112,27 +142,51 @@ function AdminUsuariosPage() {
     cargarUsuarios();
   }, [isConfigured]);
 
+  const actualizarUsuarioBackend = async (payload: ActualizarUsuarioPayload) => {
+    const { data, error } = await supabase.functions.invoke("admin-usuarios", {
+      body: { accion: "actualizar", ...payload },
+    });
+
+    if (!error && data?.ok) {
+      return { ok: true };
+    }
+
+    // Fallback directo a tabla perfiles si no se requiere cambio de contraseña
+    if (!payload.password && typeof payload.id === "string") {
+      const dbFields: Database["public"]["Tables"]["perfiles"]["Update"] = {};
+      if (payload.nombre_completo !== undefined) dbFields.nombre_completo = payload.nombre_completo;
+      if (payload.rol !== undefined) dbFields.rol = payload.rol;
+      if (payload.documento !== undefined) dbFields.documento = payload.documento;
+      if (payload.telefono !== undefined) dbFields.telefono = payload.telefono;
+      if (payload.activo !== undefined) dbFields.activo = payload.activo;
+
+      const { error: dbErr } = await supabase
+        .from("perfiles")
+        .update(dbFields)
+        .eq("id", payload.id);
+
+      if (!dbErr) return { ok: true };
+      return { ok: false, error: dbErr.message };
+    }
+
+    return {
+      ok: false,
+      error: error?.message || data?.error || "Error actualizando el usuario.",
+    };
+  };
+
   const cambiarRol = async (userId: string, targetRol: UserRole) => {
     const prev = [...usuarios];
     setUsuarios((current) =>
       current.map((u) => (u.id === userId ? { ...u, rol: targetRol } : u)),
     );
 
-    try {
-      const { error } = await supabase
-        .from("perfiles")
-        .update({ rol: targetRol })
-        .eq("id", userId);
-
-      if (error) {
-        toast.error("No se pudo cambiar el rol: " + error.message);
-        setUsuarios(prev);
-      } else {
-        toast.success(`Rol actualizado a ${targetRol}.`);
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Error al actualizar rol.");
+    const res = await actualizarUsuarioBackend({ id: userId, rol: targetRol });
+    if (!res.ok) {
+      toast.error("No se pudo cambiar el rol: " + res.error);
       setUsuarios(prev);
+    } else {
+      toast.success(`Rol actualizado a ${targetRol}.`);
     }
   };
 
@@ -141,63 +195,110 @@ function AdminUsuariosPage() {
     const prev = [...usuarios];
     setUsuarios((c) => c.map((u) => (u.id === userId ? { ...u, activo: next } : u)));
 
-    try {
-      const { error } = await supabase
-        .from("perfiles")
-        .update({ activo: next })
-        .eq("id", userId);
-
-      if (error) {
-        toast.error("Error al cambiar estado: " + error.message);
-        setUsuarios(prev);
-      } else {
-        toast.success(next ? "Usuario activado." : "Usuario desactivado temporalmente.");
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Error al cambiar estado.");
+    const res = await actualizarUsuarioBackend({ id: userId, activo: next });
+    if (!res.ok) {
+      toast.error("Error al cambiar estado: " + res.error);
       setUsuarios(prev);
+    } else {
+      toast.success(next ? "Usuario activado." : "Usuario desactivado temporalmente.");
+    }
+  };
+
+  const abrirModalEdicion = (u: UserProfile) => {
+    setUsuarioEditando(u);
+    setEditNombre(u.nombre_completo || "");
+    setEditDocumento(u.documento || "");
+    setEditTelefono(u.telefono || "");
+    setEditRol(u.rol);
+    setEditPassword("");
+  };
+
+  const handleGuardarEdicion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!usuarioEditando) return;
+    if (!editNombre.trim()) {
+      toast.error("El nombre completo es obligatorio.");
+      return;
+    }
+    if (editPassword.trim() && editPassword.trim().length < 6) {
+      toast.error("La nueva contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    setGuardandoEdicion(true);
+    try {
+      const res = await actualizarUsuarioBackend({
+        id: usuarioEditando.id,
+        nombre_completo: editNombre.trim(),
+        documento: editDocumento.trim() || null,
+        telefono: editTelefono.trim() || null,
+        rol: editRol,
+        ...(editPassword.trim() ? { password: editPassword.trim() } : {}),
+      });
+
+      if (!res.ok) {
+        toast.error(res.error || "No se pudo actualizar el usuario.");
+      } else {
+        toast.success(
+          editPassword.trim()
+            ? "Datos y contraseña actualizados correctamente."
+            : "Datos del usuario actualizados.",
+        );
+        setUsuarioEditando(null);
+        await cargarUsuarios();
+      }
+    } finally {
+      setGuardandoEdicion(false);
     }
   };
 
   const handleCrearUsuario = async (e: React.FormEvent) => {
     e.preventDefault();
-    const cleanUser = nuevoUsuario.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
-    if (!cleanUser || cleanUser.length < 3) {
-      toast.error("El nombre de usuario debe tener al menos 3 caracteres.");
-      return;
-    }
     if (!nuevoNombre.trim()) {
       toast.error("El nombre completo es obligatorio.");
       return;
     }
-    const pass = nuevoPassword.trim() || nuevoDocumento.trim() || "Funasf2026*";
+    const cleanDoc = nuevoDocumento.replace(/\s+/g, "").trim();
+    if ((nuevoRol === "estudiante" || nuevoRol === "docente") && !cleanDoc) {
+      toast.error("El número de documento es obligatorio para estudiantes y docentes.");
+      return;
+    }
+    const cleanUser = nuevoUsuario.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+    const pass = nuevoPassword.trim() || cleanDoc || "Funasf2026*";
     if (pass.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres.");
+      toast.error("La contraseña o documento debe tener al menos 6 caracteres.");
       return;
     }
 
     setCreandoUsuario(true);
     try {
-      // Intentar invocar la edge function de admin
       const { data: edgeData, error: edgeErr } = await supabase.functions.invoke("admin-usuarios", {
         body: {
           accion: "crear",
-          usuario: cleanUser,
+          usuario: cleanUser || undefined,
           nombre_completo: nuevoNombre.trim(),
           rol: nuevoRol,
-          documento: nuevoDocumento.trim() || null,
+          documento: cleanDoc || null,
           telefono: nuevoTelefono.trim() || null,
           password: pass,
         },
       });
 
       if (edgeErr || !edgeData?.ok) {
-        // Si la edge function no está desplegada aún en cloud, mensaje claro
-        const errMsg = edgeErr?.message || edgeData?.error || "Verifica la función admin-usuarios";
-        toast.error("No se pudo crear automáticamente: " + errMsg);
+        const errMsg = edgeErr?.message || edgeData?.error || "Error invocando admin-usuarios";
+        toast.error("No se pudo crear la cuenta: " + errMsg);
       } else {
-        toast.success(`Usuario @${cleanUser} creado exitosamente con contraseña inicial.`);
-        setModalCrearOpen(false);
+        const usuarioFinal = edgeData.usuario || cleanUser || cleanDoc;
+        const passFinal = edgeData.password_temporal || pass;
+        setCredencialesCreadas({
+          nombre: nuevoNombre.trim(),
+          usuario: usuarioFinal,
+          documento: cleanDoc || null,
+          password: passFinal,
+          rol: nuevoRol,
+          telefono: nuevoTelefono.trim() || null,
+        });
+        toast.success(`Cuenta creada para ${nuevoNombre.trim()}.`);
         setNuevoNombre("");
         setNuevoUsuario("");
         setNuevoDocumento("");
@@ -210,6 +311,19 @@ function AdminUsuariosPage() {
     } finally {
       setCreandoUsuario(false);
     }
+  };
+
+  const copiarCredenciales = (cred: CredencialesGeneradas) => {
+    const identificador = cred.documento || cred.usuario;
+    const portalUrl =
+      cred.rol === "estudiante"
+        ? "https://edufunasf.org/portal-estudiantil"
+        : cred.rol === "docente"
+          ? "https://edufunasf.org/docente"
+          : "https://edufunasf.org/admin/login";
+    const texto = `Credenciales FUNASF - ${cred.nombre}\nPortal: ${portalUrl}\nDocumento / Usuario: ${identificador}\nContraseña: ${cred.password}`;
+    navigator.clipboard.writeText(texto);
+    toast.success("Credenciales copiadas al portapapeles.");
   };
 
   if (!isAdmin) {
@@ -299,7 +413,10 @@ function AdminUsuariosPage() {
             </div>
             <Button
               size="sm"
-              onClick={() => setModalCrearOpen(true)}
+              onClick={() => {
+                setCredencialesCreadas(null);
+                setModalCrearOpen(true);
+              }}
               className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold h-8 shrink-0 shadow-xs"
             >
               <UserPlus className="size-3.5 mr-1.5" />
@@ -318,7 +435,7 @@ function AdminUsuariosPage() {
               <TableHead className="text-xs font-bold text-slate-800">Identificación / Teléfono</TableHead>
               <TableHead className="text-xs font-bold text-slate-800 text-center">Rol</TableHead>
               <TableHead className="text-xs font-bold text-slate-800 text-center">Estado</TableHead>
-              <TableHead className="text-xs font-bold text-slate-800 text-right">Gestión de Rol</TableHead>
+              <TableHead className="text-xs font-bold text-slate-800 text-right">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -430,22 +547,30 @@ function AdminUsuariosPage() {
                     </TableCell>
 
                     <TableCell className="text-right">
-                      {esYo ? (
-                        <span className="text-xs text-slate-400 italic">Cuenta activa</span>
-                      ) : (
-                        <div className="flex justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => abrirModalEdicion(u)}
+                          className="h-7 px-2.5 text-[11px] font-medium"
+                        >
+                          <Pencil className="size-3 mr-1" />
+                          Editar / Clave
+                        </Button>
+                        {!esYo && (
                           <select
                             value={u.rol}
                             onChange={(e) => cambiarRol(u.id, e.target.value as UserRole)}
-                            className="text-xs border border-slate-300 rounded-lg px-2 py-1 bg-white text-slate-800 font-medium"
+                            className="text-xs border border-slate-300 rounded-lg px-2 py-1 bg-white text-slate-800 font-medium h-7"
                           >
                             <option value="estudiante">Estudiante</option>
                             <option value="docente">Docente</option>
                             <option value="editor">Editor CMS</option>
                             <option value="admin">Administrador</option>
                           </select>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );
@@ -460,20 +585,259 @@ function AdminUsuariosPage() {
         <DialogContent className="rounded-2xl max-w-md">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900">
-              Crear Nueva Cuenta de Usuario
+              {credencialesCreadas ? "Credenciales de Acceso Generadas" : "Crear Nueva Cuenta de Usuario"}
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500">
-              Registra un estudiante o docente para habilitar su acceso al portal educativo con usuario y contraseña.
+              {credencialesCreadas
+                ? "Comparte estos datos de ingreso con el usuario. Puede ingresar con su número de documento o su nombre de usuario."
+                : "Registra un estudiante, docente o administrador para habilitar su acceso inmediato al portal."}
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleCrearUsuario} className="space-y-3.5 py-1">
+          {credencialesCreadas ? (
+            <div className="space-y-4 py-2">
+              <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-2 text-xs">
+                <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
+                  <CheckCircle2 className="size-4 text-emerald-600" />
+                  {credencialesCreadas.nombre}
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                      Documento de Ingreso
+                    </span>
+                    <span className="font-mono font-bold text-slate-900">
+                      {credencialesCreadas.documento || "N/A"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                      Usuario Alterno
+                    </span>
+                    <span className="font-mono font-bold text-emerald-700">
+                      @{credencialesCreadas.usuario}
+                    </span>
+                  </div>
+                  <div className="col-span-2 pt-1 border-t border-emerald-200/60">
+                    <span className="text-[10px] uppercase font-bold text-slate-500 block">
+                      Contraseña Inicial
+                    </span>
+                    <span className="font-mono font-bold text-sm text-slate-900">
+                      {credencialesCreadas.password}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copiarCredenciales(credencialesCreadas)}
+                  className="flex-1 text-xs"
+                >
+                  <Copy className="size-3.5 mr-1.5" />
+                  Copiar credenciales
+                </Button>
+                {credencialesCreadas.telefono && (
+                  <Button
+                    asChild
+                    size="sm"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs"
+                  >
+                    <a
+                      href={`https://wa.me/${cleanPhoneDigits(credencialesCreadas.telefono)}?text=${encodeURIComponent(
+                        `Hola ${credencialesCreadas.nombre}, tu cuenta académica en FUNASF ha sido habilitada.\n\n📌 Ingresa con tu documento: ${credencialesCreadas.documento || credencialesCreadas.usuario}\n🔑 Contraseña inicial: ${credencialesCreadas.password}\n🌐 Portal: https://edufunasf.org/${credencialesCreadas.rol === "docente" ? "docente" : "portal-estudiantil"}`,
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MessageCircle className="size-3.5 mr-1.5" />
+                      Enviar por WhatsApp
+                    </a>
+                  </Button>
+                )}
+              </div>
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    setCredencialesCreadas(null);
+                    setModalCrearOpen(false);
+                  }}
+                  className="w-full bg-slate-900 text-white text-xs"
+                >
+                  Cerrar
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : (
+            <form onSubmit={handleCrearUsuario} className="space-y-3.5 py-1">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Rol Asignado</Label>
+                <select
+                  value={nuevoRol}
+                  onChange={(e) => setNuevoRol(e.target.value as UserRole)}
+                  className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white font-medium"
+                >
+                  <option value="estudiante">Estudiante</option>
+                  <option value="docente">Docente</option>
+                  <option value="editor">Editor de Contenido</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Nombre Completo *</Label>
+                <Input
+                  placeholder="Ej. Camila Andrea Rodríguez"
+                  value={nuevoNombre}
+                  onChange={(e) => setNuevoNombre(e.target.value)}
+                  required
+                  className="text-xs"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold">
+                    Documento (CC/TI) {nuevoRol === "estudiante" || nuevoRol === "docente" ? "*" : ""}
+                  </Label>
+                  <Input
+                    placeholder="1005847291"
+                    value={nuevoDocumento}
+                    onChange={(e) => setNuevoDocumento(e.target.value)}
+                    required={nuevoRol === "estudiante" || nuevoRol === "docente"}
+                    className="text-xs font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold">Usuario (Opcional)</Label>
+                  <Input
+                    placeholder="Auto: documento o nombre"
+                    value={nuevoUsuario}
+                    onChange={(e) => setNuevoUsuario(e.target.value.toLowerCase())}
+                    className="text-xs font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold">Teléfono / WhatsApp</Label>
+                  <Input
+                    placeholder="3154829102"
+                    value={nuevoTelefono}
+                    onChange={(e) => setNuevoTelefono(e.target.value)}
+                    className="text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <Label className="text-xs font-semibold">Contraseña Inicial</Label>
+                  <Input
+                    type="text"
+                    placeholder="Por defecto: documento"
+                    value={nuevoPassword}
+                    onChange={(e) => setNuevoPassword(e.target.value)}
+                    className="text-xs font-mono"
+                  />
+                </div>
+              </div>
+
+              <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                El usuario podrá iniciar sesión ingresando su <strong>Número de Documento</strong> (o usuario) y su contraseña inicial.
+              </p>
+
+              <DialogFooter className="pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setModalCrearOpen(false)}
+                  className="text-xs"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  type="submit"
+                  size="sm"
+                  disabled={creandoUsuario}
+                  className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+                >
+                  {creandoUsuario ? (
+                    <Loader2 className="size-3.5 animate-spin mr-1" />
+                  ) : (
+                    <UserPlus className="size-3.5 mr-1" />
+                  )}
+                  Crear Usuario
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* DIÁLOGO: EDITAR USUARIO / RESTABLECER CONTRASEÑA */}
+      <Dialog
+        open={Boolean(usuarioEditando)}
+        onOpenChange={(open) => !open && setUsuarioEditando(null)}
+      >
+        <DialogContent className="rounded-2xl max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-slate-900">
+              Editar Usuario y Contraseña
+            </DialogTitle>
+            <DialogDescription className="text-xs text-slate-500">
+              Actualiza los datos de identificación o asigna una nueva contraseña de acceso para{" "}
+              <strong>{usuarioEditando?.nombre_completo || usuarioEditando?.email}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleGuardarEdicion} className="space-y-3.5 py-1">
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Rol Asignado</Label>
+              <Label className="text-xs font-semibold">Nombre Completo *</Label>
+              <Input
+                value={editNombre}
+                onChange={(e) => setEditNombre(e.target.value)}
+                required
+                className="text-xs"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Documento (CC/TI)</Label>
+                <Input
+                  value={editDocumento}
+                  onChange={(e) => setEditDocumento(e.target.value)}
+                  placeholder="Ej. 1005847291"
+                  className="text-xs font-mono"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Teléfono / WhatsApp</Label>
+                <Input
+                  value={editTelefono}
+                  onChange={(e) => setEditTelefono(e.target.value)}
+                  placeholder="Ej. 3154829102"
+                  className="text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Rol en el Sistema</Label>
               <select
-                value={nuevoRol}
-                onChange={(e) => setNuevoRol(e.target.value as UserRole)}
-                className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white font-medium"
+                value={editRol}
+                onChange={(e) => setEditRol(e.target.value as UserRole)}
+                disabled={Boolean(user && usuarioEditando?.id === user.id)}
+                className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white font-medium disabled:opacity-60"
               >
                 <option value="estudiante">Estudiante</option>
                 <option value="docente">Docente</option>
@@ -482,73 +846,35 @@ function AdminUsuariosPage() {
               </select>
             </div>
 
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold">Nombre Completo</Label>
+            <div className="rounded-xl bg-amber-50/70 border border-amber-200 p-3 space-y-1.5">
+              <Label className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+                <KeyRound className="size-3.5 text-amber-700" />
+                Restablecer Contraseña (Opcional)
+              </Label>
               <Input
-                placeholder="Ej. Camila Andrea Rodríguez"
-                value={nuevoNombre}
-                onChange={(e) => setNuevoNombre(e.target.value)}
-                required
-                className="text-xs"
+                type="text"
+                value={editPassword}
+                onChange={(e) => setEditPassword(e.target.value)}
+                placeholder="Dejar en blanco para conservar la actual"
+                className="text-xs font-mono bg-white"
               />
+              {editDocumento && (
+                <button
+                  type="button"
+                  onClick={() => setEditPassword(editDocumento.trim())}
+                  className="text-[11px] font-semibold text-amber-800 underline hover:text-amber-950"
+                >
+                  Usar número de documento ({editDocumento.trim()}) como nueva contraseña
+                </button>
+              )}
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Nombre de Usuario</Label>
-                <Input
-                  placeholder="ej. camila.rodriguez"
-                  value={nuevoUsuario}
-                  onChange={(e) => setNuevoUsuario(e.target.value.toLowerCase())}
-                  required
-                  className="text-xs font-mono"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Documento (CC/TI)</Label>
-                <Input
-                  placeholder="1005847291"
-                  value={nuevoDocumento}
-                  onChange={(e) => setNuevoDocumento(e.target.value)}
-                  className="text-xs font-mono"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Teléfono / WhatsApp</Label>
-                <Input
-                  placeholder="3154829102"
-                  value={nuevoTelefono}
-                  onChange={(e) => setNuevoTelefono(e.target.value)}
-                  className="text-xs"
-                />
-              </div>
-
-              <div className="space-y-1">
-                <Label className="text-xs font-semibold">Contraseña Inicial</Label>
-                <Input
-                  type="password"
-                  placeholder="Por defecto: documento"
-                  value={nuevoPassword}
-                  onChange={(e) => setNuevoPassword(e.target.value)}
-                  className="text-xs font-mono"
-                />
-              </div>
-            </div>
-
-            <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-              El usuario podrá iniciar sesión inmediatamente introduciendo su usuario (<strong>@{nuevoUsuario || "usuario"}</strong>) y su contraseña en el portal.
-            </p>
 
             <DialogFooter className="pt-2">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => setModalCrearOpen(false)}
+                onClick={() => setUsuarioEditando(null)}
                 className="text-xs"
               >
                 Cancelar
@@ -556,15 +882,11 @@ function AdminUsuariosPage() {
               <Button
                 type="submit"
                 size="sm"
-                disabled={creandoUsuario}
+                disabled={guardandoEdicion}
                 className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
               >
-                {creandoUsuario ? (
-                  <Loader2 className="size-3.5 animate-spin mr-1" />
-                ) : (
-                  <UserPlus className="size-3.5 mr-1" />
-                )}
-                Crear Usuario
+                {guardandoEdicion && <Loader2 className="size-3.5 animate-spin mr-1" />}
+                Guardar Cambios
               </Button>
             </DialogFooter>
           </form>

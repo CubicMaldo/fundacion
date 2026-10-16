@@ -16,7 +16,7 @@ export function PortalesHubSection() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
         {/* Tarjeta 1: Portal Estudiantil */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-all duration-300 group">
+        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
           <div>
             <div className="flex items-center justify-between mb-5">
               <span className="p-3 rounded-xl bg-brand-green/10 text-brand-green-deep group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
@@ -53,7 +53,7 @@ export function PortalesHubSection() {
 
           <Button
             asChild
-            className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold rounded-xl h-11 shadow-xs group-hover:shadow-md transition-all"
+            className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold rounded-xl h-11 shadow-xs group-hover:shadow-md"
           >
             <Link to="/portal-estudiantil">
               Ingresar al Portal Estudiantil
@@ -63,7 +63,7 @@ export function PortalesHubSection() {
         </div>
 
         {/* Tarjeta 2: Portal Docente */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-gold/60 hover:shadow-md transition-all duration-300 group">
+        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-gold/60 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
           <div>
             <div className="flex items-center justify-between mb-5">
               <span className="p-3 rounded-xl bg-brand-gold/15 text-brand-gold-deep group-hover:bg-brand-gold group-hover:text-brand-green-deep transition-colors duration-300">
@@ -101,7 +101,7 @@ export function PortalesHubSection() {
           <Button
             asChild
             variant="outline"
-            className="w-full border-border hover:border-brand-gold hover:bg-brand-gold/10 text-foreground font-semibold rounded-xl h-11 transition-all"
+            className="w-full border-border hover:border-brand-gold hover:bg-brand-gold/10 text-foreground font-semibold rounded-xl h-11"
           >
             <Link to="/docente">
               Ingresar al Portal Docente
@@ -111,7 +111,7 @@ export function PortalesHubSection() {
         </div>
 
         {/* Tarjeta 3: Admisiones y Becas 2026 */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-all duration-300 group md:col-span-2 lg:col-span-1">
+        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-7 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-[border-color,box-shadow] duration-200 group md:col-span-2 lg:col-span-1">
           <div>
             <div className="flex items-center justify-between mb-5">
               <span className="p-3 rounded-xl bg-emerald-500/10 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
@@ -148,7 +148,7 @@ export function PortalesHubSection() {
           <Button
             asChild
             variant="secondary"
-            className="w-full bg-muted hover:bg-brand-green-soft text-brand-green-deep font-semibold rounded-xl h-11 transition-all"
+            className="w-full bg-muted hover:bg-brand-green-soft text-brand-green-deep font-semibold rounded-xl h-11"
           >
             <Link to="/inscripcion">
               Postularme a Beca 2026

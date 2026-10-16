@@ -66,7 +66,9 @@ export function InscripcionForm({
       documentoNumero,
       telefono,
       correo,
-      ciudad: `${ciudad} (${modalidadDeseada})`,
+      ciudad,
+      modalidad: modalidadDeseada,
+      aceptaTratamientoDatos: aceptaHabeasData,
       programaNombre: effectivePrograma,
       programaId: programaId || undefined,
       website_empresa: honeypot || undefined,
@@ -155,7 +157,10 @@ export function InscripcionForm({
       </div>
 
       {errorMsg && (
-        <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
+        <div
+          role="alert"
+          className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive"
+        >
           {errorMsg}
         </div>
       )}
@@ -164,7 +169,7 @@ export function InscripcionForm({
       {!programaNombre && (
         <div className="space-y-1.5">
           <Label htmlFor="form-programa" className="text-xs font-semibold">
-            Programa académico de interés *
+            Programa académico de interés <span aria-hidden="true">*</span>
           </Label>
           <select
             id="form-programa"
@@ -186,7 +191,7 @@ export function InscripcionForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="form-nombre" className="text-xs font-semibold">
-          Nombre completo *
+          Nombre completo <span aria-hidden="true">*</span>
         </Label>
         <Input
           id="form-nombre"
@@ -201,7 +206,7 @@ export function InscripcionForm({
       <div className="grid grid-cols-3 gap-2">
         <div className="space-y-1.5">
           <Label htmlFor="form-tipo-doc" className="text-xs font-semibold">
-            Tipo doc. *
+            Tipo doc. <span aria-hidden="true">*</span>
           </Label>
           <select
             id="form-tipo-doc"
@@ -219,7 +224,7 @@ export function InscripcionForm({
 
         <div className="col-span-2 space-y-1.5">
           <Label htmlFor="form-num-doc" className="text-xs font-semibold">
-            Número de documento *
+            Número de documento <span aria-hidden="true">*</span>
           </Label>
           <Input
             id="form-num-doc"
@@ -235,7 +240,7 @@ export function InscripcionForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="form-telefono" className="text-xs font-semibold">
-            Teléfono / WhatsApp *
+            Teléfono / WhatsApp <span aria-hidden="true">*</span>
           </Label>
           <Input
             id="form-telefono"
@@ -250,13 +255,13 @@ export function InscripcionForm({
 
         <div className="space-y-1.5">
           <Label htmlFor="form-ciudad" className="text-xs font-semibold">
-            Ciudad o Municipio *
+            Ciudad o Municipio <span aria-hidden="true">*</span>
           </Label>
           <Input
             id="form-ciudad"
             value={ciudad}
             onChange={(e) => setCiudad(e.target.value)}
-            placeholder="Ej. Cali, Soledad, Barranquilla..."
+            placeholder="Ej. Cali, Soledad, Santo Tomás, Ponedera..."
             required
             className="h-10"
           />
@@ -266,7 +271,7 @@ export function InscripcionForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-1.5">
           <Label htmlFor="form-correo" className="text-xs font-semibold">
-            Correo electrónico *
+            Correo electrónico <span aria-hidden="true">*</span>
           </Label>
           <Input
             id="form-correo"

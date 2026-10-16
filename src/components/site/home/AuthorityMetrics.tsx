@@ -1,36 +1,49 @@
 import { BookOpen, Building2, MapPin, Percent } from "lucide-react";
 
 interface MetricItem {
+  prefijo?: string;
   valor: string;
+  sufijo?: string;
+  etiquetaCorta?: string;
   etiqueta: string;
   detalle: string;
   icono: typeof BookOpen;
+  isMono?: boolean;
 }
 
 const metricas: MetricItem[] = [
   {
-    valor: "19 Programas",
+    valor: "19",
+    sufijo: "Programas",
+    etiquetaCorta: "Formación",
     etiqueta: "Oferta técnico-laboral",
     detalle: "Salud, administración, SST, educación y áreas productivas",
     icono: BookOpen,
   },
   {
-    valor: "Hasta 90%",
+    prefijo: "Hasta",
+    valor: "90%",
+    etiquetaCorta: "Convenio",
     etiqueta: "Beca solidaria",
     detalle: "Subsidios educativos directos en convenio institucional",
     icono: Percent,
   },
   {
-    valor: "Presencia Regional",
-    etiqueta: "Valle y Costa Atlántica",
-    detalle: "Sedes y convenios en Cali, Jamundí, Barranquilla y municipios",
+    valor: "6+",
+    sufijo: "Territorios",
+    etiquetaCorta: "Multi-sede",
+    etiqueta: "Presencia regional",
+    detalle: "Valle, Atlántico, Cesar y proyección internacional en Panamá",
     icono: MapPin,
   },
   {
-    valor: "NIT 901964394-1",
-    etiqueta: "Entidad formal sin ánimo de lucro",
-    detalle: "Personería jurídica y registro oficial en Colombia",
+    prefijo: "NIT",
+    valor: "901964394-1",
+    etiquetaCorta: "Oficial",
+    etiqueta: "Personería jurídica formal",
+    detalle: "Entidad sin ánimo de lucro registrada en Colombia",
     icono: Building2,
+    isMono: true,
   },
 ];
 
@@ -46,20 +59,45 @@ export function AuthorityMetrics() {
           return (
             <div
               key={idx}
-              className="flex flex-col items-start p-3 sm:p-4 rounded-xl transition-all duration-300 hover:bg-muted/50 group"
+              className="flex flex-col justify-between p-3 sm:p-4 rounded-xl transition-colors duration-200 hover:bg-muted/50 group"
             >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="p-2 rounded-lg bg-brand-green/10 text-brand-green group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                  <Icon className="size-4 sm:size-5" />
-                </span>
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-foreground font-display tabular-nums">
-                  {m.valor}
-                </span>
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="p-2 rounded-lg bg-brand-green/10 text-brand-green group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+                    <Icon className="size-4 sm:size-5" />
+                  </span>
+                  {m.etiquetaCorta && (
+                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                      {m.etiquetaCorta}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                  {m.prefijo && (
+                    <span className="text-xs sm:text-sm font-bold text-muted-foreground tracking-wide">
+                      {m.prefijo}
+                    </span>
+                  )}
+                  <span
+                    className={`font-extrabold tracking-tight text-foreground tabular-nums whitespace-nowrap ${
+                      m.isMono
+                        ? "font-mono text-xl sm:text-2xl lg:text-[1.35rem]"
+                        : "font-display text-2xl sm:text-3xl lg:text-4xl"
+                    }`}
+                  >
+                    {m.valor}
+                  </span>
+                  {m.sufijo && (
+                    <span className="text-xs sm:text-sm font-semibold text-brand-green-deep">
+                      {m.sufijo}
+                    </span>
+                  )}
+                </div>
+                <h3 className="text-xs sm:text-sm font-bold text-foreground mt-2">
+                  {m.etiqueta}
+                </h3>
               </div>
-              <h3 className="text-xs sm:text-sm font-bold text-brand-green-deep tracking-tight">
-                {m.etiqueta}
-              </h3>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-1 leading-snug line-clamp-2">
+              <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug line-clamp-2">
                 {m.detalle}
               </p>
             </div>

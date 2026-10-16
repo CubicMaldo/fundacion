@@ -1,142 +1,364 @@
-// Edge Function: administración de cuentas académicas (solo administradores).
-// Crea docentes/estudiantes con usuario + contraseña y permite restablecer contraseña,
-// activar/desactivar y cambiar rol. Usa service_role, nunca expuesto al navegador.
-import { createClient } from "npm:@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 
-// Dominio sintético para cuentas que inician sesión con "usuario" en lugar de correo.
-// Debe coincidir con LOGIN_EMAIL_DOMAIN en src/lib/auth-context.tsx
-const LOGIN_EMAIL_DOMAIN = "usuarios.edufunasf.org";
-const ROLES = ["admin", "editor", "docente", "estudiante"] as const;
-type Rol = (typeof ROLES)[number];
-
-const cors = {
+const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const json = (status: number, body: unknown) =>
-  new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
+const INTERNAL_DOMAIN = "usuarios.edufunasf.org";
 
-const USUARIO_RE = /^[a-z0-9._-]{3,40}$/;
-const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-
-function validarPassword(p: unknown): string | null {
-  if (typeof p !== "string" || p.length < 8 || p.length > 72) return "La contraseña debe tener entre 8 y 72 caracteres.";
-  return null;
+function slugifyUsername(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, ".")
+    .replace(/^\.+|\.+$/g, "")
+    .slice(0, 28);
 }
 
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
-  if (req.method !== "POST") return json(405, { error: "Método no permitido" });
-
-  const url = Deno.env.get("SUPABASE_URL")!;
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
-
-  // 1. Autenticar al llamador y exigir rol admin activo
-  const token = req.headers.get("Authorization")?.replace("Bearer ", "");
-  if (!token) return json(401, { error: "No autenticado" });
-  const { data: caller, error: callerErr } = await admin.auth.getUser(token);
-  if (callerErr || !caller.user) return json(401, { error: "Sesión inválida" });
-  const { data: perfil } = await admin.from("perfiles").select("rol, activo").eq("id", caller.user.id).maybeSingle();
-  if (!perfil || perfil.rol !== "admin" || !perfil.activo) return json(403, { error: "Solo administradores" });
-
-  let body: Record<string, unknown>;
-  try {
-    body = await req.json();
-  } catch {
-    return json(400, { error: "JSON inválido" });
+Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    if (body.accion === "crear") {
-      const usuario = String(body.usuario ?? "").trim().toLowerCase();
-      const nombre = String(body.nombre_completo ?? "").trim();
-      const rol = body.rol as Rol;
-      const correoContacto = body.correo ? String(body.correo).trim().toLowerCase() : null;
-      const documento = body.documento ? String(body.documento).trim() : null;
-      const telefono = body.telefono ? String(body.telefono).trim() : null;
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
 
-      if (!USUARIO_RE.test(usuario)) return json(400, { error: "Usuario inválido: 3-40 caracteres (a-z, 0-9, . _ -)." });
-      if (nombre.length < 3 || nombre.length > 150) return json(400, { error: "Nombre completo inválido." });
-      if (!ROLES.includes(rol)) return json(400, { error: "Rol inválido." });
-      if (correoContacto && !EMAIL_RE.test(correoContacto)) return json(400, { error: "Correo de contacto inválido." });
-      const pErr = validarPassword(body.password);
-      if (pErr) return json(400, { error: pErr });
-
-      const { data: existe } = await admin.from("perfiles").select("id").ilike("usuario", usuario).maybeSingle();
-      if (existe) return json(409, { error: "Ese nombre de usuario ya existe." });
-
-      const { data, error } = await admin.auth.admin.createUser({
-        email: `${usuario}@${LOGIN_EMAIL_DOMAIN}`,
-        password: body.password as string,
-        email_confirm: true,
-        app_metadata: { rol, usuario },
-        user_metadata: { nombre_completo: nombre, documento, telefono },
-      });
-      if (error || !data.user) return json(400, { error: error?.message ?? "No se pudo crear el usuario." });
-
-      // El trigger crea el perfil; aseguramos datos de contacto y rol (idempotente).
-      const { error: upErr } = await admin
-        .from("perfiles")
-        .upsert({
-          id: data.user.id,
-          email: correoContacto ?? data.user.email!,
-          nombre_completo: nombre,
-          rol,
-          usuario,
-          documento,
-          telefono,
-        });
-      if (upErr) return json(500, { error: `Usuario creado pero el perfil falló: ${upErr.message}` });
-      return json(200, { ok: true, id: data.user.id });
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error("Variables SUPABASE_URL o SUPABASE_SERVICE_ROLE_KEY no configuradas.");
     }
 
-    if (body.accion === "actualizar") {
-      const id = String(body.id ?? "");
-      if (!/^[0-9a-f-]{36}$/i.test(id)) return json(400, { error: "Id inválido." });
-      if (id === caller.user.id && (body.rol !== undefined || body.activo === false)) {
-        return json(400, { error: "No puedes cambiar tu propio rol ni desactivarte." });
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: "No autorizado: falta encabezado Authorization." }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    const token = authHeader.replace(/^Bearer\s+/i, "");
+    const {
+      data: { user: callerUser },
+      error: authErr,
+    } = await supabaseAdmin.auth.getUser(token);
+
+    if (authErr || !callerUser) {
+      return new Response(
+        JSON.stringify({ error: "Sesión inválida o expirada." }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const { data: callerProfile, error: profileErr } = await supabaseAdmin
+      .from("perfiles")
+      .select("rol, activo")
+      .eq("id", callerUser.id)
+      .single();
+
+    if (profileErr || !callerProfile || callerProfile.rol !== "admin" || !callerProfile.activo) {
+      return new Response(
+        JSON.stringify({ error: "Acceso denegado: se requieren permisos de Administrador activo." }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    const body = await req.json();
+    const accion = body.accion ?? "crear";
+
+    if (accion === "crear") {
+      const nombreCompleto = String(body.nombre_completo ?? "").trim();
+      const rol = String(body.rol ?? "estudiante").trim();
+      const documento = String(body.documento ?? "").replace(/\s+/g, "").trim();
+      const telefono = String(body.telefono ?? "").trim();
+      const usuarioInput = String(body.usuario ?? "").trim();
+      const passwordInput = String(body.password ?? "").trim();
+      const cursoId = body.curso_id ? String(body.curso_id).trim() : "";
+      const inscripcionId = body.inscripcion_id ? String(body.inscripcion_id).trim() : "";
+      const reutilizarExistente = Boolean(body.reutilizar_existente);
+
+      if (!nombreCompleto) {
+        return new Response(
+          JSON.stringify({ error: "El nombre completo es obligatorio." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
       }
 
-      const authUpdate: Record<string, unknown> = {};
-      const perfilUpdate: Record<string, unknown> = {};
+      if (!["admin", "editor", "docente", "estudiante"].includes(rol)) {
+        return new Response(
+          JSON.stringify({ error: "Rol inválido." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
 
-      if (body.password !== undefined) {
-        const pErr = validarPassword(body.password);
-        if (pErr) return json(400, { error: pErr });
-        authUpdate.password = body.password;
+      if ((rol === "estudiante" || rol === "docente") && !documento) {
+        return new Response(
+          JSON.stringify({ error: "El número de documento es obligatorio para docentes y estudiantes." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
       }
-      if (body.rol !== undefined) {
-        if (!ROLES.includes(body.rol as Rol)) return json(400, { error: "Rol inválido." });
-        perfilUpdate.rol = body.rol;
-        authUpdate.app_metadata = { rol: body.rol };
+
+      // Verificar si ya existe por documento
+      if (documento) {
+        const { data: existingDoc } = await supabaseAdmin
+          .from("perfiles")
+          .select("id, email, usuario, rol")
+          .eq("documento", documento)
+          .maybeSingle();
+
+        if (existingDoc) {
+          if (reutilizarExistente) {
+            let matriculado = false;
+            if (cursoId) {
+              const { error: matErr } = await supabaseAdmin
+                .from("matriculas")
+                .upsert(
+                  { estudiante_id: existingDoc.id, curso_id: cursoId, estado: "cursando" },
+                  { onConflict: "estudiante_id,curso_id", ignoreDuplicates: true },
+                );
+              matriculado = !matErr;
+            }
+            if (inscripcionId) {
+              await supabaseAdmin
+                .from("inscripciones")
+                .update({ estado: "admitido" })
+                .eq("id", inscripcionId);
+            }
+            return new Response(
+              JSON.stringify({
+                ok: true,
+                reutilizado: true,
+                id: existingDoc.id,
+                email: existingDoc.email,
+                usuario: existingDoc.usuario,
+                rol: existingDoc.rol,
+                matriculado,
+              }),
+              { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+            );
+          }
+
+          return new Response(
+            JSON.stringify({ error: `Ya existe un usuario registrado con el documento ${documento}.` }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
       }
-      if (body.activo !== undefined) {
-        perfilUpdate.activo = Boolean(body.activo);
-        authUpdate.ban_duration = body.activo ? "none" : "876000h";
+
+      const baseUsuario = slugifyUsername(usuarioInput || documento || nombreCompleto) || "usuario";
+      let usuarioFinal = baseUsuario;
+      let sufijo = 1;
+
+      while (true) {
+        const { data: existingUser } = await supabaseAdmin
+          .from("perfiles")
+          .select("id")
+          .eq("usuario", usuarioFinal)
+          .maybeSingle();
+
+        if (!existingUser) break;
+        sufijo += 1;
+        usuarioFinal = `${baseUsuario}${sufijo}`;
+      }
+
+      const email = `${usuarioFinal}@${INTERNAL_DOMAIN}`;
+      const password = passwordInput || documento || `${usuarioFinal}2026*`;
+
+      if (password.length < 6) {
+        return new Response(
+          JSON.stringify({ error: "La contraseña o documento debe tener al menos 6 caracteres." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
+      const { data: createdAuth, error: createErr } = await supabaseAdmin.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          nombre_completo: nombreCompleto,
+        },
+        app_metadata: {
+          rol,
+          usuario: usuarioFinal,
+          documento: documento || null,
+          telefono: telefono || null,
+        },
+      });
+
+      if (createErr || !createdAuth.user) {
+        return new Response(
+          JSON.stringify({ error: createErr?.message || "No se pudo crear el usuario en Auth." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
+      const { error: upsertErr } = await supabaseAdmin.from("perfiles").upsert({
+        id: createdAuth.user.id,
+        email,
+        nombre_completo: nombreCompleto,
+        rol,
+        usuario: usuarioFinal,
+        documento: documento || null,
+        telefono: telefono || null,
+        activo: true,
+      });
+
+      if (upsertErr) {
+        await supabaseAdmin.auth.admin.deleteUser(createdAuth.user.id);
+        return new Response(
+          JSON.stringify({ error: `Error guardando perfil: ${upsertErr.message}` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
+      let matriculado = false;
+      if (cursoId && rol === "estudiante") {
+        const { error: matErr } = await supabaseAdmin
+          .from("matriculas")
+          .insert({
+            estudiante_id: createdAuth.user.id,
+            curso_id: cursoId,
+            estado: "cursando",
+          });
+        matriculado = !matErr;
+      }
+
+      if (inscripcionId) {
+        await supabaseAdmin
+          .from("inscripciones")
+          .update({ estado: "admitido" })
+          .eq("id", inscripcionId);
+      }
+
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          id: createdAuth.user.id,
+          email,
+          usuario: usuarioFinal,
+          documento: documento || null,
+          password_temporal: password,
+          rol,
+          matriculado,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    if (accion === "actualizar") {
+      const userId = String(body.id ?? "").trim();
+      if (!userId) {
+        return new Response(
+          JSON.stringify({ error: "Falta el ID del usuario." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
+      if (body.documento !== undefined && body.documento !== null && String(body.documento).trim() !== "") {
+        const cleanDoc = String(body.documento).replace(/\s+/g, "").trim();
+        const { data: dupDoc } = await supabaseAdmin
+          .from("perfiles")
+          .select("id")
+          .eq("documento", cleanDoc)
+          .neq("id", userId)
+          .maybeSingle();
+
+        if (dupDoc) {
+          return new Response(
+            JSON.stringify({ error: `El documento ${cleanDoc} ya pertenece a otro usuario.` }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+      }
+
+      const authUpdates: Record<string, unknown> = {};
+      if (body.password && String(body.password).trim().length >= 6) {
+        authUpdates.password = String(body.password).trim();
+      }
+      if (typeof body.activo === "boolean") {
+        authUpdates.ban_duration = body.activo ? "none" : "876000h";
+      }
+
+      const { data: currentAuth } = await supabaseAdmin.auth.admin.getUserById(userId);
+      const currentAppMeta = currentAuth?.user?.app_metadata ?? {};
+      const nextAppMeta: Record<string, unknown> = { ...currentAppMeta };
+      let appMetaChanged = false;
+
+      if (body.rol && ["admin", "editor", "docente", "estudiante"].includes(body.rol)) {
+        nextAppMeta.rol = body.rol;
+        appMetaChanged = true;
+      }
+      if (body.documento !== undefined) {
+        nextAppMeta.documento = String(body.documento).replace(/\s+/g, "").trim() || null;
+        appMetaChanged = true;
+      }
+      if (body.telefono !== undefined) {
+        nextAppMeta.telefono = String(body.telefono).trim() || null;
+        appMetaChanged = true;
+      }
+      if (appMetaChanged) {
+        authUpdates.app_metadata = nextAppMeta;
       }
       if (body.nombre_completo !== undefined) {
-        const n = String(body.nombre_completo).trim();
-        if (n.length < 3 || n.length > 150) return json(400, { error: "Nombre completo inválido." });
-        perfilUpdate.nombre_completo = n;
+        authUpdates.user_metadata = {
+          ...(currentAuth?.user?.user_metadata ?? {}),
+          nombre_completo: String(body.nombre_completo).trim(),
+        };
       }
 
-      if (Object.keys(authUpdate).length) {
-        const { error } = await admin.auth.admin.updateUserById(id, authUpdate);
-        if (error) return json(400, { error: error.message });
+      if (Object.keys(authUpdates).length > 0) {
+        const { error: authUpdateErr } = await supabaseAdmin.auth.admin.updateUserById(userId, authUpdates);
+        if (authUpdateErr) {
+          return new Response(
+            JSON.stringify({ error: authUpdateErr.message }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
       }
-      if (Object.keys(perfilUpdate).length) {
-        const { error } = await admin.from("perfiles").update(perfilUpdate).eq("id", id);
-        if (error) return json(400, { error: error.message });
+
+      const perfilUpdates: Record<string, unknown> = {};
+      if (body.nombre_completo !== undefined) perfilUpdates.nombre_completo = String(body.nombre_completo).trim();
+      if (body.rol !== undefined) perfilUpdates.rol = body.rol;
+      if (body.documento !== undefined) perfilUpdates.documento = String(body.documento).replace(/\s+/g, "").trim() || null;
+      if (body.telefono !== undefined) perfilUpdates.telefono = String(body.telefono).trim() || null;
+      if (typeof body.activo === "boolean") perfilUpdates.activo = body.activo;
+
+      if (Object.keys(perfilUpdates).length > 0) {
+        const { error: dbErr } = await supabaseAdmin
+          .from("perfiles")
+          .update(perfilUpdates)
+          .eq("id", userId);
+
+        if (dbErr) {
+          return new Response(
+            JSON.stringify({ error: dbErr.message }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
       }
-      return json(200, { ok: true });
+
+      return new Response(
+        JSON.stringify({ ok: true }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
     }
 
-    return json(400, { error: "Acción no soportada." });
+    return new Response(
+      JSON.stringify({ error: `Acción desconocida: ${accion}` }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
   } catch (err) {
-    console.error("[admin-usuarios]", err);
-    return json(500, { error: "Error interno al procesar la solicitud." });
+    const msg = err instanceof Error ? err.message : "Error interno del servidor";
+    return new Response(
+      JSON.stringify({ error: msg }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+    );
   }
 });

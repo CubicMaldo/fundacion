@@ -1,21 +1,22 @@
 import { useState } from "react";
 import {
-  AlertCircle,
   Award,
   BookOpen,
   Calendar,
-  CheckCircle2,
   Clock,
   ExternalLink,
   FileCheck,
   FileText,
   FileUp,
   GraduationCap,
+  KeyRound,
   Loader2,
   LogOut,
   MapPin,
   MessageSquare,
   Printer,
+  Save,
+  Trash2,
   UploadCloud,
   User as UserIcon,
 } from "lucide-react";
@@ -25,6 +26,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -43,9 +45,9 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import {
   subirEntregaTrabajo,
+  eliminarEntregaTrabajo,
   obtenerUrlDescargaEvidencia,
   type MatriculaEstudiante,
-  type ObservacionAcademica,
 } from "@/services/academico";
 import { toast } from "sonner";
 
@@ -55,11 +57,49 @@ interface ExpedienteEstudianteProps {
 }
 
 export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudianteProps) {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, updateOwnAccount } = useAuth();
   const [matriculaSeleccionadaId, setMatriculaSeleccionadaId] = useState<string>(
     matriculas[0]?.id || "",
   );
   const [boletinModalOpen, setBoletinModalOpen] = useState(false);
+  const [constanciaModalOpen, setConstanciaModalOpen] = useState(false);
+  const [eliminandoEntregaId, setEliminandoEntregaId] = useState<string | null>(null);
+
+  // Estado para modal de Mi Cuenta / Contraseña
+  const [cuentaModalOpen, setCuentaModalOpen] = useState(false);
+  const [nombreCuenta, setNombreCuenta] = useState("");
+  const [telefonoCuenta, setTelefonoCuenta] = useState("");
+  const [passwordCuenta, setPasswordCuenta] = useState("");
+  const [guardandoCuenta, setGuardandoCuenta] = useState(false);
+
+  const abrirModalCuenta = () => {
+    setNombreCuenta(profile?.nombre_completo || "");
+    setTelefonoCuenta(profile?.telefono || "");
+    setPasswordCuenta("");
+    setCuentaModalOpen(true);
+  };
+
+  const handleGuardarCuenta = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordCuenta.trim() && passwordCuenta.trim().length < 6) {
+      toast.error("La nueva contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    setGuardandoCuenta(true);
+    const res = await updateOwnAccount({
+      nombre_completo: nombreCuenta.trim() || undefined,
+      telefono: telefonoCuenta.trim(),
+      password: passwordCuenta.trim() || undefined,
+    });
+    setGuardandoCuenta(false);
+    if (res.error) {
+      toast.error(res.error);
+    } else {
+      toast.success("Datos de cuenta y contraseña actualizados.");
+      setCuentaModalOpen(false);
+      setPasswordCuenta("");
+    }
+  };
 
   const handleAbrirArchivo = async (url: string) => {
     try {
@@ -70,11 +110,23 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
     }
   };
 
+  const handleEliminarEntrega = async (entregaId: string, archivoUrl: string, titulo: string) => {
+    if (!confirm(`¿Deseas retirar la entrega "${titulo}" para subir un nuevo archivo?`)) return;
+    setEliminandoEntregaId(entregaId);
+    const res = await eliminarEntregaTrabajo({ entregaId, archivoUrl });
+    setEliminandoEntregaId(null);
+    if (res.ok) {
+      toast.success("Entrega retirada. Ahora puedes cargar un nuevo archivo.");
+      onRefresh?.();
+    } else {
+      toast.error(res.error || "No se pudo eliminar la entrega.");
+    }
+  };
+
   const matriculaActiva =
     matriculas.find((m) => m.id === matriculaSeleccionadaId) || matriculas[0];
 
   // Cálculos estadísticos
-  const totalCursos = matriculas.length;
   const cursosAprobados = matriculas.filter((m) => m.estado === "aprobado").length;
   const cursosEnCurso = matriculas.filter((m) => m.estado === "cursando").length;
 
@@ -97,34 +149,58 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 </Badge>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {user?.email || "estudiante@edufunasf.org"} &bull; Código ID: {profile?.id?.slice(0, 8) || "FUN-2026"}
+                {profile?.documento ? `Doc: ${profile.documento}` : user?.email || "estudiante@edufunasf.org"}
+                {profile?.usuario ? ` • Usuario: @${profile.usuario}` : ""}
+                {" • "}Código ID: {profile?.id?.slice(0, 8).toUpperCase() || "FUN-2026"}
               </p>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center">
-              <div className="rounded-xl bg-muted/50 px-4 py-2 text-center border border-border/60">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="grid grid-cols-2 gap-2.5 sm:flex sm:items-center">
+              <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
                 <span className="block text-lg font-bold text-foreground">{cursosEnCurso}</span>
                 <span className="text-[10px] uppercase font-semibold text-muted-foreground">Cursando</span>
               </div>
-              <div className="rounded-xl bg-muted/50 px-4 py-2 text-center border border-border/60">
+              <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
                 <span className="block text-lg font-bold text-foreground">{cursosAprobados}</span>
                 <span className="text-[10px] uppercase font-semibold text-muted-foreground">Aprobados</span>
               </div>
             </div>
 
             {matriculas.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setBoletinModalOpen(true)}
-                className="text-xs font-semibold border-brand-green/30 text-brand-green hover:bg-brand-green/10"
-              >
-                <Printer className="size-3.5 mr-1.5" />
-                Boletín Oficial
-              </Button>
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setConstanciaModalOpen(true)}
+                  className="text-xs font-semibold border-slate-300 text-slate-700 hover:bg-slate-50"
+                >
+                  <FileText className="size-3.5 mr-1.5 text-brand-green" />
+                  Constancia
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setBoletinModalOpen(true)}
+                  className="text-xs font-semibold border-brand-green/30 text-brand-green hover:bg-brand-green/10"
+                >
+                  <Printer className="size-3.5 mr-1.5" />
+                  Boletín Oficial
+                </Button>
+              </>
             )}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={abrirModalCuenta}
+              className="text-xs text-slate-700 hover:bg-slate-50"
+              title="Cambiar contraseña o teléfono"
+            >
+              <KeyRound className="size-3.5 mr-1.5 text-amber-600" />
+              Mi Clave
+            </Button>
 
             <Button
               variant="outline"
@@ -194,10 +270,22 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                           <Calendar className="size-3.5 text-brand-green" />
                           Periodo: {matriculaActiva.curso.periodo}
                         </span>
+                        {matriculaActiva.curso.horarioDescripcion && (
+                          <span className="flex items-center gap-1">
+                            <Clock className="size-3.5 text-brand-green" />
+                            {matriculaActiva.curso.horarioDescripcion}
+                          </span>
+                        )}
                         {matriculaActiva.curso.aula && (
                           <span className="flex items-center gap-1">
                             <MapPin className="size-3.5 text-brand-green" />
                             {matriculaActiva.curso.aula}
+                          </span>
+                        )}
+                        {matriculaActiva.curso.docenteNombre && (
+                          <span className="flex items-center gap-1">
+                            <UserIcon className="size-3.5 text-brand-green" />
+                            Docente: {matriculaActiva.curso.docenteNombre}
                           </span>
                         )}
                       </div>
@@ -327,6 +415,11 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                                 {entrega.descripcion}
                               </p>
                             )}
+                            {entrega.retroalimentacion && (
+                              <p className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5 w-fit">
+                                Retroalimentación: {entrega.retroalimentacion}
+                              </p>
+                            )}
                             <span className="text-[10px] text-muted-foreground flex items-center gap-1">
                               <Clock className="size-3" />
                               Entregado el: {new Date(entrega.fechaEntrega).toLocaleDateString()}
@@ -357,6 +450,24 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                               <span className="font-bold text-foreground">
                                 Nota: {entrega.nota.toFixed(1)}
                               </span>
+                            )}
+                            {entrega.estado === "entregado" && entrega.nota == null && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={eliminandoEntregaId === entrega.id}
+                                onClick={() =>
+                                  handleEliminarEntrega(entrega.id, entrega.archivoUrl, entrega.titulo)
+                                }
+                                className="h-7 px-2 text-xs text-slate-400 hover:text-destructive hover:bg-destructive/10"
+                                title="Retirar entrega (disponible mientras no haya sido calificada)"
+                              >
+                                {eliminandoEntregaId === entrega.id ? (
+                                  <Loader2 className="size-3.5 animate-spin" />
+                                ) : (
+                                  <Trash2 className="size-3.5" />
+                                )}
+                              </Button>
                             )}
                           </div>
                         </div>
@@ -429,7 +540,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                   NIT: 901964394-1 &bull; Personería Jurídica Vigente &bull; Institución de Educación y Desarrollo Humano
                 </p>
                 <p className="text-[11px] text-slate-500">
-                  Sede Principal: Carrera 24C # 3-10, Cali, Valle del Cauca &bull; Tel: +57 313 577 9384
+                  Sede Principal: CR 96 45 119, Cali, Valle del Cauca &bull; Tel: +57 313 577 9384
                 </p>
               </div>
               <div className="rounded-xl border border-slate-300 p-2 text-center bg-slate-50 shrink-0">
@@ -553,6 +664,182 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
               </Button>
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* DIÁLOGO: CONSTANCIA OFICIAL DE ESTUDIO */}
+      <Dialog open={constanciaModalOpen} onOpenChange={setConstanciaModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 sm:p-0">
+          <div className="p-6 sm:p-10 space-y-6 bg-white text-slate-900 print:p-0">
+            <div className="border-b-2 border-slate-800 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div>
+                <h2 className="text-base sm:text-lg font-black tracking-wider uppercase text-slate-900 font-display">
+                  Fundación Internacional Amigos Sin Fronteras — FUNASF
+                </h2>
+                <p className="text-xs font-semibold text-slate-700">
+                  NIT: 901964394-1 &bull; Institución de Educación y Desarrollo Humano
+                </p>
+              </div>
+              <div className="rounded-xl border border-slate-300 p-2 text-center bg-slate-50 shrink-0">
+                <span className="block text-[10px] uppercase font-bold text-slate-500">Certificación</span>
+                <span className="block text-xs font-mono font-bold text-emerald-800">CONSTANCIA DE ESTUDIO</span>
+              </div>
+            </div>
+
+            <div className="py-4 space-y-4 text-xs sm:text-sm text-slate-800 leading-relaxed text-justify">
+              <p className="font-bold text-center uppercase tracking-wide text-slate-900">
+                LA SECRETARÍA ACADÉMICA DE LA FUNDACIÓN INTERNACIONAL AMIGOS SIN FRONTERAS (FUNASF)
+              </p>
+              <p className="font-bold text-center uppercase tracking-widest text-slate-900 py-1">
+                HACE CONSTAR QUE:
+              </p>
+              <p>
+                El(la) estudiante <strong>{profile?.nombre_completo || "Estudiante FUNASF"}</strong>,
+                identificado(a) con documento y/o registro estudiantil No.{" "}
+                <strong className="font-mono">
+                  {profile?.documento || profile?.id?.slice(0, 8).toUpperCase() || "FUN-2026"}
+                </strong>
+                , se encuentra formalmente registrado(a) en nuestra plataforma académica institucional y cursa / ha cursado los siguientes módulos formativos:
+              </p>
+
+              <ul className="list-disc pl-6 space-y-1.5 font-medium text-slate-900">
+                {matriculas.map((mat) => (
+                  <li key={mat.id}>
+                    <strong>{mat.curso.nombre}</strong> ({mat.curso.programaNombre}) — Código:{" "}
+                    <span className="font-mono">{mat.curso.codigo}</span>, Periodo:{" "}
+                    <span className="font-mono">{mat.curso.periodo}</span>, Estado:{" "}
+                    <span className="uppercase font-bold">{mat.estado}</span>.
+                  </li>
+                ))}
+              </ul>
+
+              <p>
+                La presente constancia se expide por solicitud del interesado(a) a los{" "}
+                <strong>{new Date().getDate()}</strong> días del mes de{" "}
+                <strong>
+                  {new Date().toLocaleDateString("es-CO", { month: "long" })}
+                </strong>{" "}
+                de <strong>{new Date().getFullYear()}</strong>.
+              </p>
+            </div>
+
+            <div className="pt-8 grid grid-cols-2 gap-8 text-center text-xs">
+              <div className="border-t border-slate-400 pt-2">
+                <span className="block font-bold text-slate-800">Secretaría Académica</span>
+                <span className="text-[11px] text-slate-500">FUNASF — NIT 901964394-1</span>
+              </div>
+              <div className="border-t border-slate-400 pt-2">
+                <span className="block font-bold text-slate-800">Código de Verificación</span>
+                <span className="text-[11px] font-mono text-slate-600">
+                  FUNASF-{profile?.id?.slice(0, 8).toUpperCase() || "2026"}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 print:hidden">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setConstanciaModalOpen(false)}
+                className="text-xs"
+              >
+                Cerrar
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => window.print()}
+                className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+              >
+                <Printer className="size-3.5 mr-1.5" />
+                Imprimir Constancia
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* DIÁLOGO: MI CUENTA Y CAMBIO DE CONTRASEÑA */}
+      <Dialog open={cuentaModalOpen} onOpenChange={setCuentaModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={handleGuardarCuenta} className="space-y-4">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+                <KeyRound className="size-4 text-brand-green" />
+                Mi Perfil y Contraseña
+              </DialogTitle>
+              <DialogDescription className="text-xs text-muted-foreground">
+                Actualiza tu número de contacto o personaliza tu contraseña de acceso al Portal Estudiantil.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="rounded-xl bg-muted/50 border border-border/70 p-3 text-xs space-y-1">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Documento / Usuario:</span>
+                <span className="font-mono font-semibold text-foreground">
+                  {profile?.documento || profile?.usuario || user?.email}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Nombre Completo</Label>
+              <Input
+                value={nombreCuenta}
+                onChange={(e) => setNombreCuenta(e.target.value)}
+                required
+                className="text-xs h-9"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Teléfono / WhatsApp</Label>
+              <Input
+                value={telefonoCuenta}
+                onChange={(e) => setTelefonoCuenta(e.target.value)}
+                placeholder="Ej. 300 000 0000"
+                className="text-xs h-9"
+              />
+            </div>
+
+            <div className="space-y-1.5 pt-2 border-t border-border/60">
+              <Label className="text-xs font-semibold">Nueva Contraseña (Opcional)</Label>
+              <Input
+                type="password"
+                value={passwordCuenta}
+                onChange={(e) => setPasswordCuenta(e.target.value)}
+                placeholder="Dejar en blanco para mantener la actual"
+                className="text-xs h-9 font-mono"
+              />
+              <p className="text-[11px] text-muted-foreground">
+                Mínimo 6 caracteres. Si la cambias, úsala la próxima vez que ingreses.
+              </p>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setCuentaModalOpen(false)}
+                className="text-xs"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={guardandoCuenta}
+                className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+              >
+                {guardandoCuenta ? (
+                  <Loader2 className="size-3.5 animate-spin mr-1.5" />
+                ) : (
+                  <Save className="size-3.5 mr-1.5" />
+                )}
+                Guardar Cambios
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

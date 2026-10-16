@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
+  ClipboardList,
   GraduationCap,
   Loader2,
+  Pencil,
   Plus,
   Trash2,
   UserPlus,
@@ -13,6 +15,7 @@ import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -38,7 +41,8 @@ export const Route = createFileRoute("/admin/cursos/")({
   head: () =>
     createSeoMeta({
       title: "Gestión de Cursos y Matrículas | FUNASF Admin",
-      description: "Panel de administración académica para gestión de cursos, docentes y matrículas de estudiantes.",
+      description:
+        "Panel de administración académica para gestión de cursos, docentes y matrículas de estudiantes.",
       noindex: true,
       canonicalPath: "/admin/cursos",
     }),
@@ -52,6 +56,7 @@ interface CursoAdmin {
   periodo: string;
   horario_descripcion: string | null;
   aula: string | null;
+  descripcion: string | null;
   activo: boolean;
   nota_minima_aprobacion: number;
   programa_id: string;
@@ -82,15 +87,19 @@ function AdminCursosPage() {
   const [estudiantes, setEstudiantes] = useState<EstudianteOption[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal Crear Curso
+  // Modal Crear / Editar Curso
   const [modalCursoOpen, setModalCursoOpen] = useState(false);
-  const [nuevoNombre, setNuevoNombre] = useState("");
-  const [nuevoCodigo, setNuevoCodigo] = useState("");
-  const [nuevoPeriodo, setNuevoPeriodo] = useState("2026-1");
-  const [nuevoProgramaId, setNuevoProgramaId] = useState("");
-  const [nuevoDocenteId, setNuevoDocenteId] = useState("");
-  const [nuevoHorario, setNuevoHorario] = useState("");
-  const [nuevoAula, setNuevoAula] = useState("");
+  const [cursoEditandoId, setCursoEditandoId] = useState<string | null>(null);
+  const [formNombre, setFormNombre] = useState("");
+  const [formCodigo, setFormCodigo] = useState("");
+  const [formPeriodo, setFormPeriodo] = useState("2026-1");
+  const [formProgramaId, setFormProgramaId] = useState("");
+  const [formDocenteId, setFormDocenteId] = useState("");
+  const [formHorario, setFormHorario] = useState("");
+  const [formAula, setFormAula] = useState("");
+  const [formNotaMinima, setFormNotaMinima] = useState("3.0");
+  const [formDescripcion, setFormDescripcion] = useState("");
+  const [formActivo, setFormActivo] = useState(true);
   const [guardandoCurso, setGuardandoCurso] = useState(false);
 
   // Modal Matricular Estudiante
@@ -112,12 +121,22 @@ function AdminCursosPage() {
     }
 
     try {
-      // 1. Cargar programas y docentes
       const [progRes, docRes, estRes, curRes] = await Promise.all([
         supabase.from("programas").select("id, nombre").order("nombre"),
-        supabase.from("perfiles").select("id, nombre_completo").eq("rol", "docente").order("nombre_completo"),
-        supabase.from("perfiles").select("id, nombre_completo, email, usuario, documento").eq("rol", "estudiante").order("nombre_completo"),
-        supabase.from("cursos").select("*, programas(nombre), perfiles(nombre_completo), matriculas(count)").order("created_at", { ascending: false }),
+        supabase
+          .from("perfiles")
+          .select("id, nombre_completo")
+          .eq("rol", "docente")
+          .order("nombre_completo"),
+        supabase
+          .from("perfiles")
+          .select("id, nombre_completo, email, usuario, documento")
+          .eq("rol", "estudiante")
+          .order("nombre_completo"),
+        supabase
+          .from("cursos")
+          .select("*, programas(nombre), perfiles(nombre_completo), matriculas(count)")
+          .order("created_at", { ascending: false }),
       ]);
 
       setProgramas(progRes.data || []);
@@ -131,6 +150,7 @@ function AdminCursosPage() {
         periodo: c.periodo,
         horario_descripcion: c.horario_descripcion,
         aula: c.aula,
+        descripcion: c.descripcion,
         activo: c.activo,
         nota_minima_aprobacion: Number(c.nota_minima_aprobacion ?? 3.0),
         programa_id: c.programa_id,
@@ -141,8 +161,8 @@ function AdminCursosPage() {
       }));
 
       setCursos(list);
-      if (progRes.data?.[0] && !nuevoProgramaId) {
-        setNuevoProgramaId(progRes.data[0].id);
+      if (progRes.data?.[0] && !formProgramaId) {
+        setFormProgramaId(progRes.data[0].id);
       }
     } catch (err) {
       console.error("Error cargando cursos:", err);
@@ -156,41 +176,103 @@ function AdminCursosPage() {
     cargarDatos();
   }, [isConfigured]);
 
-  const handleCrearCurso = async (e: React.FormEvent) => {
+  const abrirModalCrearCurso = () => {
+    setCursoEditandoId(null);
+    setFormNombre("");
+    setFormCodigo("");
+    setFormPeriodo("2026-1");
+    setFormProgramaId(programas[0]?.id || "");
+    setFormDocenteId("");
+    setFormHorario("");
+    setFormAula("");
+    setFormNotaMinima("3.0");
+    setFormDescripcion("");
+    setFormActivo(true);
+    setModalCursoOpen(true);
+  };
+
+  const abrirModalEditarCurso = (c: CursoAdmin) => {
+    setCursoEditandoId(c.id);
+    setFormNombre(c.nombre);
+    setFormCodigo(c.codigo);
+    setFormPeriodo(c.periodo);
+    setFormProgramaId(c.programa_id);
+    setFormDocenteId(c.docente_id || "");
+    setFormHorario(c.horario_descripcion || "");
+    setFormAula(c.aula || "");
+    setFormNotaMinima(String(c.nota_minima_aprobacion ?? 3.0));
+    setFormDescripcion(c.descripcion || "");
+    setFormActivo(c.activo);
+    setModalCursoOpen(true);
+  };
+
+  const handleGuardarCurso = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nuevoNombre.trim() || !nuevoCodigo.trim() || !nuevoProgramaId) {
+    if (!formNombre.trim() || !formCodigo.trim() || !formProgramaId) {
       toast.error("Por favor completa los campos requeridos.");
+      return;
+    }
+
+    const notaMin = Number(formNotaMinima);
+    if (isNaN(notaMin) || notaMin < 0 || notaMin > 5) {
+      toast.error("La nota mínima de aprobación debe estar entre 0.0 y 5.0.");
       return;
     }
 
     setGuardandoCurso(true);
     try {
-      const { error } = await supabase.from("cursos").insert({
-        nombre: nuevoNombre.trim(),
-        codigo: nuevoCodigo.trim().toUpperCase(),
-        periodo: nuevoPeriodo.trim(),
-        programa_id: nuevoProgramaId,
-        docente_id: nuevoDocenteId || null,
-        horario_descripcion: nuevoHorario.trim() || null,
-        aula: nuevoAula.trim() || null,
-        activo: true,
-      });
+      const payload = {
+        nombre: formNombre.trim(),
+        codigo: formCodigo.trim().toUpperCase(),
+        periodo: formPeriodo.trim(),
+        programa_id: formProgramaId,
+        docente_id: formDocenteId || null,
+        horario_descripcion: formHorario.trim() || null,
+        aula: formAula.trim() || null,
+        nota_minima_aprobacion: notaMin,
+        descripcion: formDescripcion.trim() || null,
+        activo: formActivo,
+      };
+
+      const { error } = cursoEditandoId
+        ? await supabase.from("cursos").update(payload).eq("id", cursoEditandoId)
+        : await supabase.from("cursos").insert(payload);
 
       if (error) {
-        toast.error("Error al crear curso: " + error.message);
+        toast.error("Error al guardar curso: " + error.message);
       } else {
-        toast.success("Curso creado exitosamente.");
+        toast.success(
+          cursoEditandoId ? "Curso actualizado correctamente." : "Curso creado exitosamente.",
+        );
         setModalCursoOpen(false);
-        setNuevoNombre("");
-        setNuevoCodigo("");
-        setNuevoHorario("");
-        setNuevoAula("");
         await cargarDatos();
       }
     } catch (err: any) {
       toast.error(err.message || "Error inesperado.");
     } finally {
       setGuardandoCurso(false);
+    }
+  };
+
+  const handleEliminarCurso = async (c: CursoAdmin) => {
+    if ((c.matriculas_count || 0) > 0) {
+      toast.error(
+        `No puedes eliminar el curso ${c.codigo} porque tiene ${c.matriculas_count} estudiante(s) matriculado(s). Primero retíralos o desactiva el curso.`,
+      );
+      return;
+    }
+    if (!confirm(`¿Eliminar definitivamente el curso ${c.codigo} - ${c.nombre}?`)) return;
+
+    try {
+      const { error } = await supabase.from("cursos").delete().eq("id", c.id);
+      if (error) {
+        toast.error("No se pudo eliminar el curso: " + error.message);
+      } else {
+        toast.success("Curso eliminado.");
+        await cargarDatos();
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Error al eliminar el curso.");
     }
   };
 
@@ -235,7 +317,9 @@ function AdminCursosPage() {
     try {
       const { data, error } = await supabase
         .from("matriculas")
-        .select("id, estado, nota_definitiva, perfiles:estudiante_id(id, nombre_completo, email, documento, usuario)")
+        .select(
+          "id, estado, nota_definitiva, perfiles:estudiante_id(id, nombre_completo, email, documento, usuario)",
+        )
         .eq("curso_id", c.id);
 
       if (error) {
@@ -245,6 +329,25 @@ function AdminCursosPage() {
       }
     } finally {
       setCargandoEstudiantesCurso(false);
+    }
+  };
+
+  const handleCambiarEstadoMatricula = async (matriculaId: string, nuevoEstado: string) => {
+    const prev = [...estudiantesCurso];
+    setEstudiantesCurso((curr) =>
+      curr.map((m) => (m.id === matriculaId ? { ...m, estado: nuevoEstado } : m)),
+    );
+
+    const { error } = await supabase
+      .from("matriculas")
+      .update({ estado: nuevoEstado })
+      .eq("id", matriculaId);
+
+    if (error) {
+      toast.error("Error actualizando estado de matrícula: " + error.message);
+      setEstudiantesCurso(prev);
+    } else {
+      toast.success(`Estado de matrícula actualizado a "${nuevoEstado}".`);
     }
   };
 
@@ -267,7 +370,7 @@ function AdminCursosPage() {
   return (
     <AdminLayout
       title="Gestión de Cursos y Matrículas Académicas"
-      subtitle="Crea asignaturas, vincula a los docentes a cargo y gestiona las listas de estudiantes matriculados."
+      subtitle="Crea y edita asignaturas, vincula docentes titulares, administra listas de matriculados y supervisa planillas de notas."
     >
       {/* Botón de Creación */}
       <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -280,7 +383,7 @@ function AdminCursosPage() {
 
         <Button
           size="sm"
-          onClick={() => setModalCursoOpen(true)}
+          onClick={abrirModalCrearCurso}
           className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold shrink-0 shadow-xs"
         >
           <Plus className="size-3.5 mr-1.5" />
@@ -323,7 +426,17 @@ function AdminCursosPage() {
                       <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">
                         {c.codigo}
                       </span>
-                      <span className="font-bold text-xs text-slate-900">{c.nombre}</span>
+                      <div>
+                        <span className="font-bold text-xs text-slate-900">{c.nombre}</span>
+                        {!c.activo && (
+                          <Badge variant="outline" className="ml-2 text-[9px] text-slate-400">
+                            Inactivo
+                          </Badge>
+                        )}
+                        {c.aula && (
+                          <p className="text-[10px] text-slate-500">{c.aula}</p>
+                        )}
+                      </div>
                     </div>
                   </TableCell>
 
@@ -347,7 +460,7 @@ function AdminCursosPage() {
                       {c.periodo}
                     </Badge>
                     {c.horario_descripcion && (
-                      <div className="text-[10px] text-slate-500 mt-0.5 truncate max-w-[150px]">
+                      <div className="text-[10px] text-slate-500 mt-0.5 truncate max-w-[150px] mx-auto">
                         {c.horario_descripcion}
                       </div>
                     )}
@@ -358,8 +471,7 @@ function AdminCursosPage() {
                       type="button"
                       onClick={() => abrirVerEstudiantes(c)}
                       className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 transition-colors"
-                      title="Ver estudiantes matriculados"
-                      aria-label={`Ver ${c.matriculas_count || 0} estudiantes matriculados en ${c.codigo}`}
+                      title="Ver y gestionar estudiantes matriculados"
                     >
                       <Users className="size-3 text-emerald-600" />
                       <span>{c.matriculas_count || 0}</span>
@@ -367,7 +479,7 @@ function AdminCursosPage() {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-1.5">
+                    <div className="flex justify-end items-center gap-1.5">
                       <Button
                         size="sm"
                         variant="outline"
@@ -381,6 +493,39 @@ function AdminCursosPage() {
                         <UserPlus className="size-3 mr-1" />
                         Matricular
                       </Button>
+
+                      <Button
+                        asChild
+                        size="sm"
+                        variant="outline"
+                        className="text-xs h-7 px-2 font-medium border-slate-200"
+                        title="Abrir planilla de calificaciones y malla del curso"
+                      >
+                        <Link to="/docente/$cursoId" params={{ cursoId: c.id }}>
+                          <ClipboardList className="size-3 mr-1 text-blue-600" />
+                          Planilla
+                        </Link>
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => abrirModalEditarCurso(c)}
+                        className="size-7 p-0 text-slate-600 hover:text-slate-900"
+                        title="Editar curso"
+                      >
+                        <Pencil className="size-3.5" />
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => handleEliminarCurso(c)}
+                        className="size-7 p-0 text-slate-400 hover:text-destructive"
+                        title="Eliminar curso"
+                      >
+                        <Trash2 className="size-3.5" />
+                      </Button>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -390,24 +535,24 @@ function AdminCursosPage() {
         </Table>
       </div>
 
-      {/* DIÁLOGO: CREAR CURSO */}
+      {/* DIÁLOGO: CREAR / EDITAR CURSO */}
       <Dialog open={modalCursoOpen} onOpenChange={setModalCursoOpen}>
         <DialogContent className="rounded-2xl max-w-lg">
           <DialogHeader>
             <DialogTitle className="text-base font-bold text-slate-900">
-              Crear Nueva Asignatura / Curso
+              {cursoEditandoId ? "Editar Asignatura / Curso" : "Crear Nueva Asignatura / Curso"}
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500">
-              Define la asignatura, su código institucional y el docente titular responsable.
+              Define la asignatura, su código institucional, el docente titular responsable y los parámetros de aprobación.
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={handleCrearCurso} className="space-y-3.5 py-1">
+          <form onSubmit={handleGuardarCurso} className="space-y-3.5 py-1">
             <div className="space-y-1">
-              <Label className="text-xs font-semibold">Programa Académico</Label>
+              <Label className="text-xs font-semibold">Programa Académico *</Label>
               <select
-                value={nuevoProgramaId}
-                onChange={(e) => setNuevoProgramaId(e.target.value)}
+                value={formProgramaId}
+                onChange={(e) => setFormProgramaId(e.target.value)}
                 required
                 className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white"
               >
@@ -421,34 +566,34 @@ function AdminCursosPage() {
 
             <div className="grid grid-cols-3 gap-3">
               <div className="col-span-2 space-y-1">
-                <Label className="text-xs font-semibold">Nombre de la Asignatura</Label>
+                <Label className="text-xs font-semibold">Nombre de la Asignatura *</Label>
                 <Input
                   placeholder="Ej. Farmacología Básica"
-                  value={nuevoNombre}
-                  onChange={(e) => setNuevoNombre(e.target.value)}
+                  value={formNombre}
+                  onChange={(e) => setFormNombre(e.target.value)}
                   required
                   className="text-xs"
                 />
               </div>
 
               <div className="space-y-1">
-                <Label className="text-xs font-semibold">Código</Label>
+                <Label className="text-xs font-semibold">Código *</Label>
                 <Input
                   placeholder="ENF-201"
-                  value={nuevoCodigo}
-                  onChange={(e) => setNuevoCodigo(e.target.value)}
+                  value={formCodigo}
+                  onChange={(e) => setFormCodigo(e.target.value)}
                   required
                   className="text-xs font-mono uppercase"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="col-span-2 space-y-1">
                 <Label className="text-xs font-semibold">Docente Titular</Label>
                 <select
-                  value={nuevoDocenteId}
-                  onChange={(e) => setNuevoDocenteId(e.target.value)}
+                  value={formDocenteId}
+                  onChange={(e) => setFormDocenteId(e.target.value)}
                   className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white"
                 >
                   <option value="">-- Sin docente asignado --</option>
@@ -461,23 +606,24 @@ function AdminCursosPage() {
               </div>
 
               <div className="space-y-1">
-                <Label className="text-xs font-semibold">Periodo Académico</Label>
+                <Label className="text-xs font-semibold">Periodo *</Label>
                 <Input
-                  value={nuevoPeriodo}
-                  onChange={(e) => setNuevoPeriodo(e.target.value)}
+                  value={formPeriodo}
+                  onChange={(e) => setFormPeriodo(e.target.value)}
                   placeholder="2026-1"
+                  required
                   className="text-xs font-mono"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1">
                 <Label className="text-xs font-semibold">Horario</Label>
                 <Input
                   placeholder="Sábados 8:00 AM - 1:00 PM"
-                  value={nuevoHorario}
-                  onChange={(e) => setNuevoHorario(e.target.value)}
+                  value={formHorario}
+                  onChange={(e) => setFormHorario(e.target.value)}
                   className="text-xs"
                 />
               </div>
@@ -486,11 +632,47 @@ function AdminCursosPage() {
                 <Label className="text-xs font-semibold">Aula / Sede</Label>
                 <Input
                   placeholder="Sede Cali - Aula 102"
-                  value={nuevoAula}
-                  onChange={(e) => setNuevoAula(e.target.value)}
+                  value={formAula}
+                  onChange={(e) => setFormAula(e.target.value)}
                   className="text-xs"
                 />
               </div>
+
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold">Nota Mín. (0-5)</Label>
+                <Input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="5"
+                  value={formNotaMinima}
+                  onChange={(e) => setFormNotaMinima(e.target.value)}
+                  className="text-xs font-mono"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-xs font-semibold">Descripción / Contenidos del Curso</Label>
+              <Textarea
+                rows={2}
+                placeholder="Breve resumen temático del módulo..."
+                value={formDescripcion}
+                onChange={(e) => setFormDescripcion(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg bg-slate-50 px-3 py-2 border border-slate-200">
+              <span className="text-xs font-semibold text-slate-700">Estado del Curso</span>
+              <select
+                value={formActivo ? "activo" : "inactivo"}
+                onChange={(e) => setFormActivo(e.target.value === "activo")}
+                className="text-xs rounded border border-slate-300 px-2 py-1 bg-white font-semibold"
+              >
+                <option value="activo">Activo (Visible para docentes y estudiantes)</option>
+                <option value="inactivo">Inactivo / Archivado</option>
+              </select>
             </div>
 
             <DialogFooter className="pt-2">
@@ -509,12 +691,8 @@ function AdminCursosPage() {
                 disabled={guardandoCurso}
                 className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
               >
-                {guardandoCurso ? (
-                  <Loader2 className="size-3.5 animate-spin mr-1" />
-                ) : (
-                  <Plus className="size-3.5 mr-1" />
-                )}
-                Crear Curso
+                {guardandoCurso && <Loader2 className="size-3.5 animate-spin mr-1" />}
+                {cursoEditandoId ? "Guardar Cambios" : "Crear Curso"}
               </Button>
             </DialogFooter>
           </form>
@@ -546,12 +724,13 @@ function AdminCursosPage() {
                   <option value="">-- Selecciona un estudiante registrado --</option>
                   {estudiantes.map((est) => (
                     <option key={est.id} value={est.id}>
-                      {est.nombre_completo} {est.documento ? `(CC ${est.documento})` : ""} - @{est.usuario || est.email}
+                      {est.nombre_completo} {est.documento ? `(CC ${est.documento})` : ""} - @
+                      {est.usuario || est.email}
                     </option>
                   ))}
                 </select>
                 <p className="text-[11px] text-slate-500">
-                  ¿No encuentras al estudiante? Primero regístralo en la sección de <strong>Usuarios</strong>.
+                  ¿No encuentras al estudiante? Regístralo en <strong>Usuarios</strong> o conviértelo desde <strong>Inscripciones</strong>.
                 </p>
               </div>
 
@@ -584,7 +763,7 @@ function AdminCursosPage() {
         </DialogContent>
       </Dialog>
 
-      {/* DIÁLOGO: VER ESTUDIANTES MATRICULADOS */}
+      {/* DIÁLOGO: VER Y GESTIONAR ESTUDIANTES MATRICULADOS */}
       <Dialog open={modalVerEstudiantesOpen} onOpenChange={setModalVerEstudiantesOpen}>
         <DialogContent className="rounded-2xl max-w-xl">
           {cursoViendo && (
@@ -608,12 +787,12 @@ function AdminCursosPage() {
                   No hay estudiantes matriculados en este curso todavía.
                 </div>
               ) : (
-                <div className="max-h-72 overflow-y-auto rounded-xl border border-slate-200">
+                <div className="max-h-80 overflow-y-auto rounded-xl border border-slate-200">
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-slate-50 text-xs">
                         <TableHead>Estudiante</TableHead>
-                        <TableHead className="text-center">Estado</TableHead>
+                        <TableHead className="text-center">Estado Académico</TableHead>
                         <TableHead className="text-center">Definitiva</TableHead>
                         <TableHead className="text-right">Retirar</TableHead>
                       </TableRow>
@@ -624,16 +803,24 @@ function AdminCursosPage() {
                         return (
                           <TableRow key={m.id} className="text-xs">
                             <TableCell>
-                              <div className="font-semibold text-slate-900">{p.nombre_completo || "Estudiante"}</div>
+                              <div className="font-semibold text-slate-900">
+                                {p.nombre_completo || "Estudiante"}
+                              </div>
                               <div className="text-[10px] text-slate-500">
-                                {p.documento ? `CC ${p.documento} · ` : ""}
-                                @{p.usuario || p.email}
+                                {p.documento ? `CC ${p.documento} · ` : ""}@{p.usuario || p.email}
                               </div>
                             </TableCell>
                             <TableCell className="text-center">
-                              <Badge variant="outline" className="text-[10px] capitalize">
-                                {m.estado}
-                              </Badge>
+                              <select
+                                value={m.estado}
+                                onChange={(e) => handleCambiarEstadoMatricula(m.id, e.target.value)}
+                                className="text-[11px] rounded-md border border-slate-300 px-2 py-1 bg-white font-semibold capitalize"
+                              >
+                                <option value="cursando">Cursando</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="reprobado">Reprobado</option>
+                                <option value="retirado">Retirado</option>
+                              </select>
                             </TableCell>
                             <TableCell className="text-center font-mono font-bold">
                               {m.nota_definitiva != null ? Number(m.nota_definitiva).toFixed(2) : "—"}
@@ -657,7 +844,13 @@ function AdminCursosPage() {
                 </div>
               )}
 
-              <DialogFooter>
+              <DialogFooter className="flex items-center justify-between sm:justify-between">
+                <Button asChild variant="outline" size="sm" className="text-xs">
+                  <Link to="/docente/$cursoId" params={{ cursoId: cursoViendo.id }}>
+                    <ClipboardList className="size-3.5 mr-1.5 text-blue-600" />
+                    Abrir Planilla de Notas
+                  </Link>
+                </Button>
                 <Button
                   type="button"
                   variant="outline"

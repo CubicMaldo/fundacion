@@ -78,8 +78,8 @@ function QuienesSomos() {
           </div>
           <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
             <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80"
-              alt="Compromiso social y formación para el futuro FUNASF"
+              src="/images/sedes/sede-cali.jpg"
+              alt="Compromiso social y formación en la sede de FUNASF en Cali, Colombia"
               className="size-full object-cover transition-transform duration-500 hover:scale-105"
               loading="lazy"
               decoding="async"
@@ -140,8 +140,8 @@ function QuienesSomos() {
           </div>
           <div className="aspect-[3/4] w-full overflow-hidden rounded-2xl border border-border shadow-md bg-muted">
             <img
-              src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=800&q=80"
-              alt="Historia y proyección internacional FUNASF Panamá y Colombia"
+              src="/images/sedes/sede-panama.jpg"
+              alt="Historia y proyección internacional FUNASF — Orígenes en Panamá y expansión a Colombia"
               className="size-full object-cover transition-transform duration-500 hover:scale-105"
               loading="lazy"
               decoding="async"
