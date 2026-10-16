@@ -198,24 +198,24 @@ export function Header() {
                 <Link
                   to={item.to}
                   className={cn(
-                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
+                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                     active
                       ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
-                      : "text-foreground/75 group-hover:bg-brand-green-soft/50 group-hover:text-foreground",
+                      : "text-foreground/75 group-hover:bg-brand-green-soft/50 group-hover:text-foreground group-focus-within:bg-brand-green-soft/50 group-focus-within:text-foreground",
                   )}
                 >
                   <span>{item.label}</span>
                   <ChevronDown
                     aria-hidden="true"
                     className={cn(
-                      "size-3.5 transition-transform duration-200 group-hover:rotate-180",
+                      "size-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180",
                       active
                         ? "text-brand-green-deep opacity-90"
                         : "text-muted-foreground opacity-60",
                     )}
                   />
                 </Link>
-                <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-[opacity,visibility] duration-200 z-50">
                   <div className="border-border bg-popover w-72 rounded-xl border p-1.5 shadow-lg">
                     <div className="border-border/60 mb-1 border-b px-2.5 py-1.5">
                       <Link
@@ -280,7 +280,7 @@ export function Header() {
                 key={item.label}
                 to={item.to}
                 className={cn(
-                  "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all duration-200 outline-none",
+                  "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                   active
                     ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
                     : "text-foreground/75 hover:bg-brand-green-soft/50 hover:text-foreground",
@@ -297,7 +297,7 @@ export function Header() {
           <Button
             asChild
             size="sm"
-            className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-full px-5 text-xs font-bold tracking-wide uppercase shadow-sm transition-all hover:shadow-md"
+            className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-full px-5 text-xs font-bold tracking-wide uppercase shadow-sm transition-[background-color,box-shadow,transform] hover:shadow-md"
           >
             <Link to="/inscripcion">
               Postularme a Beca
@@ -310,7 +310,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-foreground hover:bg-secondary size-9 rounded-lg lg:hidden"
+                className="text-foreground hover:bg-secondary size-10 rounded-lg lg:hidden"
                 aria-label="Abrir menú"
               >
                 <Menu className="size-5" aria-hidden="true" />

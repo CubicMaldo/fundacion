@@ -70,7 +70,7 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
           return (
             <div
               key={i}
-              className="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs hover:border-brand-green/40 hover:shadow-md transition-all duration-300 group"
+              className="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs hover:border-brand-green/40 hover:shadow-md transition-[border-color,box-shadow] duration-200 group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -143,7 +143,7 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
                             <span>{p}</span>
                             <ArrowRight
                               aria-hidden
-                              className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-brand-green shrink-0"
+                              className="size-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-[opacity,transform] text-brand-green shrink-0"
                             />
                           </Link>
                         ) : (

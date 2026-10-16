@@ -41,7 +41,7 @@ export function MobileStickyBar() {
         <Link
           to="/inscripcion"
           {...(programaSlug ? { search: { programa: programaSlug } } : {})}
-          className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-brand-green px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all active:scale-[0.98] active:bg-brand-green-deep"
+          className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-brand-green px-4 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-[background-color,transform] duration-150 active:scale-[0.98] active:bg-brand-green-deep"
         >
           <GraduationCap className="size-4 text-brand-gold" />
           <span>{programaSlug ? "Postularme a esta Beca" : "Postularme a Beca"}</span>

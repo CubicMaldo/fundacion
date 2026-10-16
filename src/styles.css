@@ -48,8 +48,10 @@
   --color-brand-green-soft: var(--brand-green-soft);
   --color-brand-brown: var(--brand-brown);
   --color-brand-brown-soft: var(--brand-brown-soft);
+  --color-brand-cream: var(--brand-brown-soft);
   --color-brand-sand: var(--brand-sand);
   --color-brand-gold: var(--brand-gold);
+  --color-brand-gold-light: var(--brand-gold-light);
   --color-brand-gold-deep: var(--brand-gold-deep);
   --color-surface: var(--surface);
   --color-surface-strong: var(--surface-strong);
@@ -107,6 +109,7 @@
   --brand-brown-soft: #fbf5ea;
   --brand-sand: oklch(0.962 0.022 86);
   --brand-gold: #d69d30;
+  --brand-gold-light: #e3b14d;
   --brand-gold-deep: #b38022;
   --surface: oklch(0.976 0.011 92);
   --surface-strong: oklch(0.95 0.021 88);
@@ -143,6 +146,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
 
@@ -153,6 +157,12 @@
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  img:not([src$=".svg"]) {
+    outline: 1px solid rgba(0, 0, 0, 0.08);
+    outline-offset: -1px;
   }
 
   :focus-visible {
@@ -207,9 +217,9 @@
   padding: 1.5rem;
   box-shadow: var(--shadow-soft);
   transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
+    border-color 0.25s ease-out,
+    box-shadow 0.25s ease-out,
+    transform 0.25s ease-out;
 
   &:hover {
     border-color: color-mix(in oklab, var(--color-brand-green) 45%, var(--color-border));
@@ -238,9 +248,11 @@
 @keyframes funasf-fade-up {
   from {
     opacity: 0;
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 

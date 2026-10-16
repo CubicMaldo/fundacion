@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import {
   BookOpen,
   Calendar,
@@ -24,8 +25,8 @@ export function PlataformasEstudio() {
   return (
     <>
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Tarjeta 1: Aulas Virtuales / Moodle */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+        {/* Tarjeta 1: Aulas Virtuales */}
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex size-12 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-4">
               <Laptop className="size-6" />
@@ -33,11 +34,11 @@ export function PlataformasEstudio() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-brand-green">
               Campus Digital
             </span>
-            <h3 className="text-lg font-bold text-slate-900 mt-1">
-              Aulas Virtuales (Moodle / Q10)
+            <h3 className="text-lg font-bold text-foreground mt-1">
+              Aulas Virtuales y Material
             </h3>
-            <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
-              Ingresa al espacio donde se encuentran tus foros de discusión, material de clase descargable, evaluaciones y tareas asignadas.
+            <p className="text-xs text-muted-foreground mt-2.5 leading-relaxed">
+              Ingresa al espacio de aprendizaje virtual dispuesto en articulación con tu institución aliada para consultar material de clase, actividades y evaluaciones.
             </p>
           </div>
 
@@ -46,29 +47,29 @@ export function PlataformasEstudio() {
               className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-medium text-xs shadow-xs"
               onClick={() => setModalAulaOpen(true)}
             >
-              <span>Acceder al Aula Virtual</span>
+              <span>Instructivo de Acceso</span>
               <ExternalLink className="size-3.5 ml-1.5" />
             </Button>
-            <p className="text-[11px] text-center text-slate-400">
+            <p className="text-[11px] text-center text-muted-foreground">
               Usa tu documento de identidad como usuario
             </p>
           </div>
         </div>
 
-        {/* Tarjeta 2: Bibliotecas Digitales y Recursos */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
+        {/* Tarjeta 2: Pensum y Guías de Estudio */}
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-xs flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex size-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700 mb-4">
               <BookOpen className="size-6" />
             </div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-brand-brown">
-              Repositorio de Estudio
+              Guías Académicas
             </span>
-            <h3 className="text-lg font-bold text-slate-900 mt-1">
-              Biblioteca Virtual y Guías
+            <h3 className="text-lg font-bold text-foreground mt-1">
+              Módulos y Pensum Oficial
             </h3>
-            <p className="text-xs text-slate-600 mt-2.5 leading-relaxed">
-              Consulta libros electrónicos, normas técnicas colombianas (ICONTEC), artículos científicos y módulos de estudio oficiales.
+            <p className="text-xs text-muted-foreground mt-2.5 leading-relaxed">
+              Consulta los módulos formativos, perfiles ocupacionales y ejes temáticos de cada uno de los programas técnico laborales en convenio.
             </p>
           </div>
 
@@ -76,17 +77,12 @@ export function PlataformasEstudio() {
             <Button
               asChild
               variant="outline"
-              className="w-full border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-medium"
+              className="w-full border-border text-foreground hover:bg-muted text-xs font-medium"
             >
-              <a
-                href="https://openlibra.com"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center gap-1.5"
-              >
-                <span>Explorar Biblioteca Digital</span>
+              <Link to="/programas" className="flex items-center justify-center gap-1.5">
+                <span>Consultar Módulos por Programa</span>
                 <ExternalLink className="size-3.5" />
-              </a>
+              </Link>
             </Button>
           </div>
         </div>

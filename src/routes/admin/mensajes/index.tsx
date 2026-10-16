@@ -116,11 +116,12 @@ function AdminMensajesPage() {
           .select("*")
           .order("created_at", { ascending: false });
 
-        if (error || !data || data.length === 0) {
-          setMensajes(DEMO_MENSAJES);
+        if (error) {
+          console.error("Error cargando mensajes:", error);
+          setMensajes([]);
         } else {
           setMensajes(
-            data.map((row) => ({
+            (data || []).map((row) => ({
               id: row.id,
               nombre: row.nombre,
               correo: row.correo,
@@ -135,7 +136,7 @@ function AdminMensajesPage() {
         }
       } catch (err) {
         console.warn("Error cargando mensajes:", err);
-        setMensajes(DEMO_MENSAJES);
+        setMensajes([]);
       } finally {
         setLoading(false);
       }

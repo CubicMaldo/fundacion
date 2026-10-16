@@ -33,6 +33,11 @@ interface AuthContextType {
   signIn: (identifier: string, password: string, roleHint?: UserRole) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  updateOwnAccount: (params: {
+    password?: string | undefined;
+    telefono?: string | undefined;
+    nombre_completo?: string | undefined;
+  }) => Promise<{ ok: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -208,22 +213,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!raw) return { error: "Ingresa tu usuario o correo electrónico." };
     if (!password) return { error: "Ingresa tu contraseña." };
 
-    // Si es un correo electrónico o nombre de usuario
-    const emailToUse = raw.includes("@") ? raw.toLowerCase() : `${raw.toLowerCase()}@${LOGIN_EMAIL_DOMAIN}`;
+    // Resolver identificador (email directo, o buscar por usuario/documento vía RPC seguro)
+    let emailToUse = raw.includes("@") ? raw.toLowerCase() : `${raw.toLowerCase()}@${LOGIN_EMAIL_DOMAIN}`;
 
     if (configured) {
       try {
+        if (!raw.includes("@")) {
+          const { data: resolvedEmail } = await supabase.rpc("resolver_email_login", {
+            p_identificador: raw.toLowerCase(),
+          });
+          if (resolvedEmail) {
+            emailToUse = resolvedEmail;
+          }
+        }
+
         const { data, error } = await supabase.auth.signInWithPassword({
           email: emailToUse,
           password,
         });
 
         if (error) {
-          // Si falló y no tenía @, intentar también si usaron su correo regular
           return {
             error:
               error.message === "Invalid login credentials"
-                ? "Credenciales incorrectas. Verifica tu usuario/correo y contraseña."
+                ? "Credenciales incorrectas. Verifica tu documento/usuario y contraseña."
                 : error.message,
           };
         }
@@ -309,6 +322,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   };
 
+  const updateOwnAccount = async (params: {
+    password?: string | undefined;
+    telefono?: string | undefined;
+    nombre_completo?: string | undefined;
+  }): Promise<{ ok: boolean; error?: string }> => {
+    if (!user || !profile) {
+      return { ok: false, error: "No hay sesión activa." };
+    }
+
+    if (params.password !== undefined && params.password.trim() !== "") {
+      if (params.password.trim().length < 6) {
+        return { ok: false, error: "La nueva contraseña debe tener al menos 6 caracteres." };
+      }
+      if (configured) {
+        const { error: pwdErr } = await supabase.auth.updateUser({
+          password: params.password.trim(),
+        });
+        if (pwdErr) {
+          return { ok: false, error: pwdErr.message };
+        }
+      }
+    }
+
+    const dbUpdates: { telefono?: string | null; nombre_completo?: string } = {};
+    if (params.telefono !== undefined) {
+      dbUpdates.telefono = params.telefono.trim() || null;
+    }
+    if (params.nombre_completo !== undefined && params.nombre_completo.trim() !== "") {
+      dbUpdates.nombre_completo = params.nombre_completo.trim();
+    }
+
+    if (Object.keys(dbUpdates).length > 0) {
+      if (configured) {
+        const { error: dbErr } = await supabase
+          .from("perfiles")
+          .update(dbUpdates)
+          .eq("id", user.id);
+
+        if (dbErr) {
+          return { ok: false, error: dbErr.message };
+        }
+      }
+
+      const nextProfile: UserProfile = {
+        ...profile,
+        ...(dbUpdates.telefono !== undefined ? { telefono: dbUpdates.telefono } : {}),
+        ...(dbUpdates.nombre_completo !== undefined
+          ? { nombre_completo: dbUpdates.nombre_completo }
+          : {}),
+      };
+      setProfile(nextProfile);
+      setStoredAuth(user, nextProfile);
+    }
+
+    return { ok: true };
+  };
+
   const signOut = async () => {
     if (configured) {
       try {
@@ -343,6 +413,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signIn,
         signOut,
         refreshProfile,
+        updateOwnAccount,
       }}
     >
       {children}

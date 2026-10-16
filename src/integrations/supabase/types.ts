@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -654,7 +654,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      cerrar_curso: { Args: { p_curso: string }; Returns: number }
+      cerrar_curso: { Args: { p_curso_id: string }; Returns: number }
       comparte_curso: { Args: { p_perfil: string }; Returns: boolean }
       es_docente_de_curso: { Args: { p_curso: string }; Returns: boolean }
       es_docente_de_matricula: {
@@ -668,6 +668,10 @@ export type Database = {
       recalcular_nota_definitiva: {
         Args: { p_matricula: string }
         Returns: undefined
+      }
+      resolver_email_login: {
+        Args: { p_identificador: string }
+        Returns: string
       }
       ruta_evidencia_matricula: { Args: { p_name: string }; Returns: string }
     }
@@ -821,4 +825,3 @@ export const Constants = {
     },
   },
 } as const
-

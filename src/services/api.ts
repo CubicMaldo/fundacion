@@ -571,46 +571,92 @@ export interface ItemGaleria {
   orden: number;
 }
 
+const GALERIA_INSTITUCIONAL_FALLBACK: ItemGaleria[] = [
+  {
+    id: "gal-sede-cali",
+    titulo: "Sede Principal Cali, Valle del Cauca",
+    descripcion:
+      "Atención administrativa, orientación vocacional y coordinación general de programas y becas en Cali.",
+    categoria: "Sedes",
+    imagenUrl: "/images/sedes/sede-cali.jpg",
+    altText: "Sede principal de FUNASF en Cali, Valle del Cauca",
+    orden: 1,
+  },
+  {
+    id: "gal-atlantico-colegio",
+    titulo: "Jornadas educativas en el Atlántico",
+    descripcion:
+      "Encuentros formativos y de orientación con estudiantes y familias en los municipios del Atlántico.",
+    categoria: "Comunidad",
+    imagenUrl: "/images/sedes/sede-atlantico-colegio.jpg",
+    altText: "Jornada educativa de FUNASF en el departamento del Atlántico",
+    orden: 2,
+  },
+  {
+    id: "gal-ponedera-candelaria",
+    titulo: "Sede Educativa en Ponedera — Institución Educativa Técnica Comercial La Candelaria",
+    descripcion:
+      "Alianza interinstitucional para acercar programas técnico laborales con becas solidarias al municipio de Ponedera.",
+    categoria: "Alianzas",
+    imagenUrl: "/blog/sede-ponedera-candelaria.webp",
+    altText: "Sede aliada en Ponedera, Atlántico",
+    orden: 3,
+  },
+  {
+    id: "gal-enfermeria-practica",
+    titulo: "Formación en Auxiliar de Enfermería",
+    descripcion:
+      "Acompañamiento pedagógico en programas del área de la salud en convenio con instituciones aliadas.",
+    categoria: "Salud",
+    imagenUrl: "/blog/auxiliar-enfermeria-vocacion.webp",
+    altText: "Estudiantes del programa Auxiliar de Enfermería en práctica formativa",
+    orden: 4,
+  },
+  {
+    id: "gal-electricidad-practica",
+    titulo: "Talleres prácticos de Auxiliar en Electricidad",
+    descripcion:
+      "Formación técnica orientada al empleo digno y al fortalecimiento de capacidades productivas.",
+    categoria: "Talleres",
+    imagenUrl: "/blog/auxiliar-electricidad-practica.webp",
+    altText: "Taller práctico de Auxiliar en Electricidad",
+    orden: 5,
+  },
+  {
+    id: "gal-construccion-ponedera",
+    titulo: "Formación en Construcción de Edificaciones en Ponedera",
+    descripcion:
+      "Capacitación técnica laboral para el desarrollo de infraestructura comunitaria y empleabilidad regional.",
+    categoria: "Talleres",
+    imagenUrl: "/blog/construccion-edificaciones-ponedera.webp",
+    altText: "Formación técnica en Construcción de Edificaciones en Ponedera",
+    orden: 6,
+  },
+  {
+    id: "gal-atlantico-soledad",
+    titulo: "Presencia territorial en Soledad y municipios del Atlántico",
+    descripcion:
+      "Coordinación de convocatorias de becas, programas técnicos y acción social comunitaria en el Atlántico.",
+    categoria: "Sedes",
+    imagenUrl: "/images/sedes/sede-atlantico-soledad.jpg",
+    altText: "Presencia territorial de FUNASF en Soledad, Atlántico",
+    orden: 7,
+  },
+  {
+    id: "gal-sede-panama",
+    titulo: "Proyección Internacional — Panamá",
+    descripcion:
+      "Articulación de alianzas educativas, culturales y sociales en el marco de nuestra visión sin fronteras.",
+    categoria: "Sedes",
+    imagenUrl: "/images/sedes/sede-panama.jpg",
+    altText: "Sede de articulación internacional de FUNASF en Panamá",
+    orden: 8,
+  },
+];
+
 export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
   if (!isSupabaseAvailable()) {
-    return [
-      {
-        id: "gal-1",
-        titulo: "Jornadas de orientación vocacional",
-        descripcion: "Encuentro con jóvenes y familias para la postulación a becas solidarias.",
-        categoria: "Comunidad",
-        imagenUrl:
-          "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
-        orden: 1,
-      },
-      {
-        id: "gal-2",
-        titulo: "Talleres de formación práctica",
-        descripcion: "Prácticas de laboratorio y desarrollo de habilidades técnicas.",
-        categoria: "Talleres",
-        imagenUrl:
-          "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80",
-        orden: 2,
-      },
-      {
-        id: "gal-3",
-        titulo: "Entrega de certificaciones",
-        descripcion: "Celebración del logro de nuestros estudiantes graduados.",
-        categoria: "Eventos",
-        imagenUrl:
-          "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
-        orden: 3,
-      },
-      {
-        id: "gal-4",
-        titulo: "Brigadas comunitarias de salud",
-        descripcion: "Atención preventiva y apoyo a familias en territorios vulnerables.",
-        categoria: "Salud",
-        imagenUrl:
-          "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
-        orden: 4,
-      },
-    ];
+    return GALERIA_INSTITUCIONAL_FALLBACK;
   }
 
   try {
@@ -621,7 +667,7 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
       .order("orden", { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return [];
+      return GALERIA_INSTITUCIONAL_FALLBACK;
     }
 
     return data.map((row) => ({
@@ -635,7 +681,7 @@ export async function getGaleriaActiva(): Promise<ItemGaleria[]> {
     }));
   } catch (err) {
     console.warn("[API] Error consultando galería:", err);
-    return [];
+    return GALERIA_INSTITUCIONAL_FALLBACK;
   }
 }
 
@@ -650,6 +696,9 @@ export interface CrearInscripcionInput {
   telefono: string;
   correo: string;
   ciudad: string;
+  modalidad?: string | undefined;
+  mensaje?: string | undefined;
+  aceptaTratamientoDatos?: boolean | undefined;
   programaNombre: string;
   programaId?: string | undefined;
   website_empresa?: string | undefined;
@@ -705,12 +754,15 @@ export async function crearInscripcion(
     const { data: inserted, error } = await supabase
       .from("inscripciones")
       .insert({
-        nombre_completo: input.nombreCompleto,
+        nombre_completo: input.nombreCompleto.trim(),
         documento_tipo: input.documentoTipo,
-        documento_numero: input.documentoNumero,
-        telefono: input.telefono,
-        correo: input.correo,
-        ciudad: input.ciudad,
+        documento_numero: input.documentoNumero.trim(),
+        telefono: input.telefono.trim(),
+        correo: input.correo.trim(),
+        ciudad: input.ciudad.trim(),
+        modalidad: input.modalidad?.trim() || null,
+        mensaje: input.mensaje?.trim() || null,
+        acepta_tratamiento_datos: input.aceptaTratamientoDatos ?? true,
         programa_nombre: input.programaNombre,
         programa_id: input.programaId || null,
         estado: "nuevo",
@@ -725,7 +777,20 @@ export async function crearInscripcion(
     if (inserted?.id) {
       supabase.functions
         .invoke("notificar", {
-          body: { tipo: "inscripcion", id: inserted.id },
+          body: {
+            tipo: "inscripcion",
+            id: inserted.id,
+            datos: {
+              nombreCompleto: input.nombreCompleto,
+              documentoTipo: input.documentoTipo,
+              documentoNumero: input.documentoNumero,
+              programaNombre: input.programaNombre,
+              telefono: input.telefono,
+              correo: input.correo,
+              ciudad: input.ciudad,
+              modalidad: input.modalidad || "Virtual",
+            },
+          },
         })
         .catch((e) => console.warn("[Notificar] Edge function:", e));
     }
@@ -775,11 +840,11 @@ export async function enviarMensajeContacto(
     const { data: inserted, error } = await supabase
       .from("mensajes_contacto")
       .insert({
-        nombre: input.nombre,
-        correo: input.correo,
-        telefono: input.telefono || null,
-        asunto: input.asunto,
-        mensaje: input.mensaje,
+        nombre: input.nombre.trim(),
+        correo: input.correo.trim(),
+        telefono: input.telefono?.trim() || null,
+        asunto: input.asunto.trim(),
+        mensaje: input.mensaje.trim(),
         leido: false,
         estado: "nuevo",
       })
@@ -793,7 +858,17 @@ export async function enviarMensajeContacto(
     if (inserted?.id) {
       supabase.functions
         .invoke("notificar", {
-          body: { tipo: "contacto", id: inserted.id },
+          body: {
+            tipo: "mensaje",
+            id: inserted.id,
+            datos: {
+              nombreCompleto: input.nombre,
+              telefono: input.telefono,
+              correo: input.correo,
+              asunto: input.asunto,
+              mensaje: input.mensaje,
+            },
+          },
         })
         .catch((e) => console.warn("[Notificar] Edge function:", e));
     }
@@ -856,7 +931,10 @@ export function formatColPhone(phone: string): string {
 
 export function cleanPhoneDigits(phone: string): string {
   const digits = phone.replace(/\D/g, "");
-  return digits.startsWith("57") ? digits : `57${digits}` || "573135779384";
+  if (!digits) {
+    return "573135779384";
+  }
+  return digits.startsWith("57") ? digits : `57${digits}`;
 }
 
 export const DEFAULT_SITE_SETTINGS: SiteSettings = {

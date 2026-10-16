@@ -19,6 +19,7 @@ import {
   FileCheck,
   FileText,
   ExternalLink,
+  Settings,
 } from "lucide-react";
 import { createSeoMeta } from "@/lib/seo";
 import { DocenteLayout } from "@/components/docente/DocenteLayout";
@@ -31,11 +32,14 @@ import {
   calificarEntrega,
   obtenerUrlDescargaEvidencia,
   crearObservacionAcademica,
+  actualizarObservacionAcademica,
+  eliminarObservacionAcademica,
+  actualizarDetallesCursoDocente,
   cerrarCursoDocente,
   type CursoDetalleDocente,
   type ComponenteEvaluacion,
   type EstudianteMatriculado,
-  type EntregaTrabajo,
+  type ObservacionAcademica,
 } from "@/services/academico";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,12 +113,20 @@ function DocenteCursoDetallePage() {
   } | null>(null);
   const [guardandoNota, setGuardandoNota] = useState(false);
 
-  // Estados para observación académica
+  // Estados para observación académica (crear / editar)
   const [modalObsEst, setModalObsEst] = useState<EstudianteMatriculado | null>(null);
+  const [obsEditando, setObsEditando] = useState<ObservacionAcademica | null>(null);
   const [obsTipo, setObsTipo] = useState<"felicitacion" | "alerta_academica" | "asistencia" | "seguimiento">("seguimiento");
   const [obsTitulo, setObsTitulo] = useState("");
   const [obsDetalle, setObsDetalle] = useState("");
   const [guardandoObs, setGuardandoObs] = useState(false);
+
+  // Estados para configuración operativa del curso (horario, aula, descripción)
+  const [modalInfoCursoOpen, setModalInfoCursoOpen] = useState(false);
+  const [infoHorario, setInfoHorario] = useState("");
+  const [infoAula, setInfoAula] = useState("");
+  const [infoDesc, setInfoDesc] = useState("");
+  const [guardandoInfoCurso, setGuardandoInfoCurso] = useState(false);
 
   // Estado para cierre de curso
   const [cerrandoCurso, setCerrandoCurso] = useState(false);
@@ -122,10 +134,12 @@ function DocenteCursoDetallePage() {
   // Estados para calificar entrega de trabajo
   const [modalCalificarEntrega, setModalCalificarEntrega] = useState<{
     entregaId: string;
+    matriculaId: string;
     estudianteNombre: string;
     titulo: string;
     notaActual: number | "";
     retro: string;
+    componenteId: string;
   } | null>(null);
   const [guardandoNotaEntrega, setGuardandoNotaEntrega] = useState(false);
 
@@ -235,7 +249,7 @@ function DocenteCursoDetallePage() {
     }
   };
 
-  // Guardar observación pedagógica
+  // Guardar o actualizar observación pedagógica
   const handleGuardarObservacion = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!modalObsEst || !obsTitulo.trim() || !obsDetalle.trim()) {
@@ -244,22 +258,72 @@ function DocenteCursoDetallePage() {
     }
 
     setGuardandoObs(true);
-    const res = await crearObservacionAcademica({
-      matriculaId: modalObsEst.matriculaId,
-      tipo: obsTipo,
-      titulo: obsTitulo,
-      detalle: obsDetalle,
-    });
-    setGuardandoObs(false);
+    if (obsEditando) {
+      const res = await actualizarObservacionAcademica({
+        id: obsEditando.id,
+        tipo: obsTipo,
+        titulo: obsTitulo,
+        detalle: obsDetalle,
+      });
+      setGuardandoObs(false);
+      if (res.ok) {
+        toast.success("Observación pedagógica actualizada.");
+        setModalObsEst(null);
+        setObsEditando(null);
+        setObsTitulo("");
+        setObsDetalle("");
+        await cargar();
+      } else {
+        toast.error(res.error || "No se pudo actualizar la observación.");
+      }
+    } else {
+      const res = await crearObservacionAcademica({
+        matriculaId: modalObsEst.matriculaId,
+        tipo: obsTipo,
+        titulo: obsTitulo,
+        detalle: obsDetalle,
+      });
+      setGuardandoObs(false);
 
+      if (res.ok) {
+        toast.success("Observación pedagógica registrada.");
+        setModalObsEst(null);
+        setObsTitulo("");
+        setObsDetalle("");
+        await cargar();
+      } else {
+        toast.error(res.error || "No se pudo registrar la observación.");
+      }
+    }
+  };
+
+  const handleEliminarObservacion = async (id: string, titulo: string) => {
+    if (!confirm(`¿Eliminar la observación "${titulo}"?`)) return;
+    const res = await eliminarObservacionAcademica(id);
     if (res.ok) {
-      toast.success("Observación pedagógica registrada.");
-      setModalObsEst(null);
-      setObsTitulo("");
-      setObsDetalle("");
+      toast.success("Observación eliminada.");
       await cargar();
     } else {
-      toast.error(res.error || "No se pudo registrar la observación.");
+      toast.error(res.error || "No se pudo eliminar la observación.");
+    }
+  };
+
+  const handleGuardarInfoCurso = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGuardandoInfoCurso(true);
+    const res = await actualizarDetallesCursoDocente({
+      cursoId,
+      horarioDescripcion: infoHorario,
+      aula: infoAula,
+      descripcion: infoDesc,
+    });
+    setGuardandoInfoCurso(false);
+    if (res.ok) {
+      toast.success("Información operativa del curso actualizada.");
+      setModalInfoCursoOpen(false);
+      await cargar();
+    } else {
+      toast.error(res.error || "No se pudo actualizar la información del curso.");
     }
   };
 
@@ -300,11 +364,17 @@ function DocenteCursoDetallePage() {
       entregaId: modalCalificarEntrega.entregaId,
       nota: notaNum,
       retroalimentacion: modalCalificarEntrega.retro,
+      componenteId: modalCalificarEntrega.componenteId || undefined,
+      matriculaId: modalCalificarEntrega.matriculaId || undefined,
     });
     setGuardandoNotaEntrega(false);
 
     if (res.ok) {
-      toast.success("Entrega calificada exitosamente.");
+      toast.success(
+        modalCalificarEntrega.componenteId
+          ? "Entrega calificada y sincronizada con la planilla."
+          : "Entrega calificada exitosamente.",
+      );
       setModalCalificarEntrega(null);
       await cargar();
     } else {
@@ -442,6 +512,21 @@ function DocenteCursoDetallePage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                setInfoHorario(curso.horarioDescripcion || "");
+                setInfoAula(curso.aula || "");
+                setInfoDesc(curso.descripcion || "");
+                setModalInfoCursoOpen(true);
+              }}
+              className="text-xs font-semibold border-slate-200 hover:bg-slate-50"
+            >
+              <Settings className="size-3.5 mr-1 text-slate-600" />
+              Horario / Aula
+            </Button>
+
             <Button
               size="sm"
               variant="outline"
@@ -676,6 +761,7 @@ function DocenteCursoDetallePage() {
                               size="sm"
                               onClick={() => {
                                 setModalObsEst(est);
+                                setObsEditando(null);
                                 setObsTipo("seguimiento");
                                 setObsTitulo("");
                                 setObsDetalle("");
@@ -833,6 +919,33 @@ function DocenteCursoDetallePage() {
                         <h4 className="font-semibold text-xs text-slate-800">{obs.titulo}</h4>
                         <p className="text-xs text-slate-600 leading-relaxed">{obs.detalle}</p>
                       </div>
+
+                      <div className="flex items-center gap-1 shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setModalObsEst(est);
+                            setObsEditando(obs);
+                            setObsTipo(obs.tipo);
+                            setObsTitulo(obs.titulo);
+                            setObsDetalle(obs.detalle);
+                          }}
+                          className="size-8 p-0 text-slate-500 hover:text-slate-900"
+                          title="Editar observación"
+                        >
+                          <Edit className="size-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEliminarObservacion(obs.id, obs.titulo)}
+                          className="size-8 p-0 text-slate-500 hover:text-destructive"
+                          title="Eliminar observación"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
                     </div>
                   )),
                 )}
@@ -938,10 +1051,12 @@ function DocenteCursoDetallePage() {
                             onClick={() =>
                               setModalCalificarEntrega({
                                 entregaId: entrega.id,
+                                matriculaId: entrega.matriculaId,
                                 estudianteNombre: entrega.estudianteNombre,
                                 titulo: entrega.titulo,
                                 notaActual: entrega.nota !== null && entrega.nota !== undefined ? entrega.nota : "",
                                 retro: entrega.retroalimentacion || "",
+                                componenteId: "",
                               })
                             }
                             className="text-xs font-semibold h-8"
@@ -1118,17 +1233,22 @@ function DocenteCursoDetallePage() {
         </DialogContent>
       </Dialog>
 
-      {/* DIÁLOGO: NUEVA OBSERVACIÓN PEDAGÓGICA */}
+      {/* DIÁLOGO: NUEVA / EDITAR OBSERVACIÓN PEDAGÓGICA */}
       <Dialog
         open={Boolean(modalObsEst)}
-        onOpenChange={(open) => !open && setModalObsEst(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setModalObsEst(null);
+            setObsEditando(null);
+          }
+        }}
       >
         <DialogContent className="rounded-2xl max-w-md">
           {modalObsEst && (
             <form onSubmit={handleGuardarObservacion} className="space-y-4">
               <DialogHeader>
                 <DialogTitle className="text-base font-bold text-slate-900">
-                  Observación Pedagógica
+                  {obsEditando ? "Editar Observación Pedagógica" : "Nueva Observación Pedagógica"}
                 </DialogTitle>
                 <DialogDescription className="text-xs text-slate-500">
                   Estudiante: <strong>{modalObsEst.nombreCompleto}</strong>
@@ -1177,7 +1297,10 @@ function DocenteCursoDetallePage() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => setModalObsEst(null)}
+                  onClick={() => {
+                    setModalObsEst(null);
+                    setObsEditando(null);
+                  }}
                   className="text-xs"
                 >
                   Cancelar
@@ -1189,7 +1312,7 @@ function DocenteCursoDetallePage() {
                   className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
                 >
                   {guardandoObs ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Save className="size-3.5 mr-1" />}
-                  Guardar Observación
+                  {obsEditando ? "Actualizar Observación" : "Guardar Observación"}
                 </Button>
               </DialogFooter>
             </form>
@@ -1239,6 +1362,34 @@ function DocenteCursoDetallePage() {
                 />
               </div>
 
+              {componentes.length > 0 && (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">
+                    Vincular a Componente de la Planilla (Opcional)
+                  </Label>
+                  <select
+                    value={modalCalificarEntrega.componenteId}
+                    onChange={(e) =>
+                      setModalCalificarEntrega({
+                        ...modalCalificarEntrega,
+                        componenteId: e.target.value,
+                      })
+                    }
+                    className="w-full text-xs rounded-lg border border-slate-300 p-2 bg-white"
+                  >
+                    <option value="">-- Solo calificar la evidencia (No sincronizar a planilla) --</option>
+                    {componentes.map((comp) => (
+                      <option key={comp.id} value={comp.id}>
+                        {comp.nombre} ({comp.porcentaje}%)
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-[11px] text-slate-500">
+                    Si seleccionas un componente, esta nota se asentará también en la columna correspondiente del estudiante.
+                  </p>
+                </div>
+              )}
+
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Retroalimentación / Comentarios para el Estudiante</Label>
                 <Textarea
@@ -1281,6 +1432,78 @@ function DocenteCursoDetallePage() {
               </DialogFooter>
             </form>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* DIÁLOGO: CONFIGURACIÓN OPERATIVA DEL CURSO */}
+      <Dialog open={modalInfoCursoOpen} onOpenChange={setModalInfoCursoOpen}>
+        <DialogContent className="rounded-2xl max-w-md">
+          <form onSubmit={handleGuardarInfoCurso} className="space-y-4">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold text-slate-900">
+                Información Operativa del Curso
+              </DialogTitle>
+              <DialogDescription className="text-xs text-slate-500">
+                Actualiza el horario, salón o indicaciones generales visibles para los estudiantes matriculados.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Horario de Clases</Label>
+              <Input
+                placeholder="Ej. Sábados 8:00 AM - 12:00 PM"
+                value={infoHorario}
+                onChange={(e) => setInfoHorario(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Aula / Enlace Virtual</Label>
+              <Input
+                placeholder="Ej. Laboratorio 204 / Campus Virtual"
+                value={infoAula}
+                onChange={(e) => setInfoAula(e.target.value)}
+                className="text-xs"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Descripción / Indicaciones del Módulo</Label>
+              <Textarea
+                placeholder="Objetivos, metodología o materiales requeridos para las sesiones..."
+                value={infoDesc}
+                onChange={(e) => setInfoDesc(e.target.value)}
+                rows={3}
+                className="text-xs"
+              />
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setModalInfoCursoOpen(false)}
+                className="text-xs"
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={guardandoInfoCurso}
+                className="bg-brand-green hover:bg-brand-green-deep text-white text-xs font-semibold"
+              >
+                {guardandoInfoCurso ? (
+                  <Loader2 className="size-3.5 animate-spin mr-1" />
+                ) : (
+                  <Save className="size-3.5 mr-1" />
+                )}
+                Guardar Información
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </DocenteLayout>

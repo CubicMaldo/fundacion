@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle2, FileText, Loader2, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,24 +35,39 @@ export function TramitesEstudianteDialog({
   const [open, setOpen] = useState(false);
   const [tipo, setTipo] = useState<TipoTramite>(tipoInicial);
   const [nombre, setNombre] = useState(profile?.nombre_completo || "");
-  const [correo, setCorreo] = useState(profile?.email || user?.email || "");
-  const [telefono, setTelefono] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [telefono, setTelefono] = useState(profile?.telefono || "");
   const [mensaje, setMensaje] = useState("");
   const [enviando, setEnviando] = useState(false);
   const [enviado, setEnviado] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (profile?.nombre_completo && !nombre) {
+      setNombre(profile.nombre_completo);
+    }
+    if (profile?.telefono && !telefono) {
+      setTelefono(profile.telefono);
+    }
+    const rawEmail = profile?.email || user?.email || "";
+    const isSynthetic = rawEmail.endsWith("@usuarios.edufunasf.org");
+    if (rawEmail && !isSynthetic && !correo) {
+      setCorreo(rawEmail);
+    }
+  }, [profile, user, nombre, telefono, correo]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setEnviando(true);
     setErrorMsg(null);
 
+    const docInfo = profile?.documento ? `\nDocumento: ${profile.documento}` : "";
     const res = await enviarMensajeContacto({
       nombre: nombre || "Estudiante FUNASF",
       correo,
       telefono: telefono || undefined,
       asunto: `[Trámite Estudiantil] ${tipo}`,
-      mensaje: `Solicitud de trámite: ${tipo}\nEstudiante: ${nombre}\nDocumento/Detalle:\n${mensaje}`,
+      mensaje: `Solicitud de trámite: ${tipo}\nEstudiante: ${nombre}${docInfo}\nDetalle:\n${mensaje}`,
     });
 
     setEnviando(false);
@@ -70,7 +85,7 @@ export function TramitesEstudianteDialog({
   };
 
   const waMensaje = encodeURIComponent(
-    `Hola FUNASF, soy el estudiante ${nombre || ""}. Deseo radicar la solicitud de: "${tipo}".`,
+    `Hola FUNASF, soy el estudiante ${nombre || ""}${profile?.documento ? ` (Doc: ${profile.documento})` : ""}. Deseo radicar la solicitud de: "${tipo}".`,
   );
   const waUrl = `${whatsappLink}?text=${waMensaje}`;
 

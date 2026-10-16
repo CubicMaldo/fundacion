@@ -199,14 +199,19 @@ function Contacto() {
                 </div>
 
                 {errorMsg && (
-                  <div className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive">
+                  <div
+                    role="alert"
+                    className="rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-xs text-destructive"
+                  >
                     {errorMsg}
                   </div>
                 )}
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="form-nombre">Nombre completo *</Label>
+                    <Label htmlFor="form-nombre">
+                      Nombre completo <span aria-hidden="true">*</span>
+                    </Label>
                     <Input
                       id="form-nombre"
                       value={nombre}
@@ -216,7 +221,9 @@ function Contacto() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="form-correo">Correo electrónico *</Label>
+                    <Label htmlFor="form-correo">
+                      Correo electrónico <span aria-hidden="true">*</span>
+                    </Label>
                     <Input
                       id="form-correo"
                       type="email"
@@ -236,11 +243,13 @@ function Contacto() {
                       type="tel"
                       value={telefono}
                       onChange={(e) => setTelefono(e.target.value)}
-                      placeholder="Ej. +57 315 123 4567"
+                      placeholder="Ej. +57 313 577 9384"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="form-asunto">Asunto de tu consulta *</Label>
+                    <Label htmlFor="form-asunto">
+                      Asunto de tu consulta <span aria-hidden="true">*</span>
+                    </Label>
                     <Input
                       id="form-asunto"
                       value={asunto}
@@ -252,7 +261,9 @@ function Contacto() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="form-mensaje">Mensaje *</Label>
+                  <Label htmlFor="form-mensaje">
+                    Mensaje <span aria-hidden="true">*</span>
+                  </Label>
                   <Textarea
                     id="form-mensaje"
                     value={mensaje}

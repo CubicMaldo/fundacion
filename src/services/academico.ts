@@ -850,7 +850,7 @@ export async function guardarCalificacion(params: {
   componenteId: string;
   matriculaId: string;
   nota: number;
-  retroalimentacion?: string | null;
+  retroalimentacion?: string | null | undefined;
 }): Promise<{ ok: boolean; error?: string }> {
   if (params.nota < 0 || params.nota > 5) {
     return { ok: false, error: "La nota debe estar entre 0.0 y 5.0" };
@@ -876,10 +876,43 @@ export async function guardarCalificacion(params: {
   }
 }
 
+export async function eliminarEntregaTrabajo(params: {
+  entregaId: string;
+  archivoUrl?: string | null | undefined;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase
+      .from("entregas_trabajos")
+      .delete()
+      .eq("id", params.entregaId)
+      .eq("estado", "entregado");
+
+    if (error) return { ok: false, error: error.message };
+
+    if (
+      params.archivoUrl &&
+      !params.archivoUrl.startsWith("http") &&
+      !params.archivoUrl.startsWith("#")
+    ) {
+      await supabase.storage
+        .from("evidencias-academicas")
+        .remove([params.archivoUrl.replace(/^\/+/, "")]);
+    }
+
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
 export async function calificarEntrega(params: {
   entregaId: string;
   nota: number;
-  retroalimentacion?: string | null;
+  retroalimentacion?: string | null | undefined;
+  componenteId?: string | null | undefined;
+  matriculaId?: string | null | undefined;
 }): Promise<{ ok: boolean; error?: string }> {
   if (params.nota < 0 || params.nota > 5) {
     return { ok: false, error: "La nota debe estar entre 0.0 y 5.0" };
@@ -897,6 +930,22 @@ export async function calificarEntrega(params: {
       .eq("id", params.entregaId);
 
     if (error) return { ok: false, error: error.message };
+
+    if (params.componenteId && params.matriculaId) {
+      const syncRes = await guardarCalificacion({
+        componenteId: params.componenteId,
+        matriculaId: params.matriculaId,
+        nota: params.nota,
+        retroalimentacion: params.retroalimentacion ?? null,
+      });
+      if (!syncRes.ok) {
+        return {
+          ok: false,
+          error: `La entrega fue calificada, pero no se pudo sincronizar con el componente de evaluación: ${syncRes.error}`,
+        };
+      }
+    }
+
     return { ok: true };
   } catch (err: any) {
     return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
@@ -926,14 +975,81 @@ export async function crearObservacionAcademica(params: {
   }
 }
 
-export async function cerrarCursoDocente(cursoId: string): Promise<{ ok: boolean; filasAfectadas?: number; error?: string }> {
+export async function actualizarObservacionAcademica(params: {
+  id: string;
+  tipo: "felicitacion" | "alerta_academica" | "asistencia" | "seguimiento";
+  titulo: string;
+  detalle: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase
+      .from("observaciones_academicas")
+      .update({
+        tipo: params.tipo,
+        titulo: params.titulo.trim(),
+        detalle: params.detalle.trim(),
+      })
+      .eq("id", params.id);
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function eliminarObservacionAcademica(
+  id: string,
+): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase.from("observaciones_academicas").delete().eq("id", id);
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function actualizarDetallesCursoDocente(params: {
+  cursoId: string;
+  horarioDescripcion?: string | null;
+  aula?: string | null;
+  descripcion?: string | null;
+}): Promise<{ ok: boolean; error?: string }> {
+  if (!isSupabaseConfigured()) return { ok: true };
+
+  try {
+    const { error } = await supabase
+      .from("cursos")
+      .update({
+        horario_descripcion: params.horarioDescripcion?.trim() || null,
+        aula: params.aula?.trim() || null,
+        descripcion: params.descripcion?.trim() || null,
+      })
+      .eq("id", params.cursoId);
+
+    if (error) return { ok: false, error: error.message };
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
+  }
+}
+
+export async function cerrarCursoDocente(
+  cursoId: string,
+): Promise<{ ok: boolean; filasAfectadas?: number; error?: string }> {
   if (!isSupabaseConfigured()) return { ok: true, filasAfectadas: 1 };
 
   try {
-    const { data, error } = await supabase.rpc("cerrar_curso" as any, { p_curso: cursoId });
+    const { data, error } = await supabase.rpc("cerrar_curso", { p_curso_id: cursoId });
     if (error) return { ok: false, error: error.message };
     return { ok: true, filasAfectadas: Number(data) };
   } catch (err: any) {
     return { ok: false, error: err?.message || ERROR_SISTEMA_NO_DISPONIBLE };
   }
 }
+

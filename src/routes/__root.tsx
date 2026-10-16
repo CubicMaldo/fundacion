@@ -205,7 +205,7 @@ function ScrollToTop() {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const { pathname, search } = useLocation();
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute = pathname.startsWith("/admin") || pathname.startsWith("/docente");
   const [isStudentSub, setIsStudentSub] = useState(false);
 
   useEffect(() => {
