@@ -36,15 +36,15 @@ export const whatsappLink = `https://wa.me/${cleanWaDigits}`;
 
 export const quienesSomos = {
   intro:
-    "La Fundación Internacional Amigos Sin Fronteras – FUNASF es una organización de carácter social orientada al desarrollo de programas y proyectos que contribuyen al bienestar, la educación, la formación, la inclusión y el fortalecimiento de las comunidades.",
+    "En la Fundación Internacional Amigos Sin Fronteras (FUNASF) conectamos a jóvenes, adultos y familias con becas de estudio, carreras técnicas laborales y programas de salud y bienestar en Cali y el Caribe colombiano.",
   parrafos: [
-    "Nuestro trabajo nace de una convicción: una oportunidad puede cambiar una vida, pero una comunidad unida puede transformar una sociedad.",
-    "Desarrollamos iniciativas sociales, educativas, de formación para el trabajo, emprendimiento, salud, bienestar y apoyo comunitario. Para ello, articulamos esfuerzos con docentes, profesionales, voluntarios, instituciones, empresas, organizaciones sociales y personas comprometidas con la transformación social.",
+    "Nuestro trabajo nace de una convicción sencilla: el talento está en todas partes, pero las oportunidades no siempre llegan a todos los barrios y municipios.",
+    "Desarrollamos programas de formación técnica para el trabajo, emprendimiento, brigadas de salud y apoyo comunitario junto a docentes, voluntarios e instituciones educativas aliadas.",
   ],
   compromiso:
-    "Trabajamos para que las oportunidades no estén determinadas únicamente por la capacidad económica de una persona. Por eso impulsamos programas de apoyo, becas, formación y acompañamiento social.",
+    "Trabajamos para que el ingreso económico de tu familia no decida tu futuro. Por eso gestionamos becas de hasta el 90%, horarios flexibles y acompañamiento desde la matrícula hasta la graduación.",
   destacado:
-    "En FUNASF creemos que la educación no tiene fronteras y que el conocimiento debe convertirse en una herramienta para transformar vidas.",
+    "En FUNASF creemos que estudiar una carrera técnica y salir adelante debe ser posible sin importar dónde naciste.",
 };
 
 export const mision = [
@@ -479,14 +479,14 @@ export const faq = [
 ];
 
 export const llamadoAccion = {
-  titulo: "Tu futuro no tiene fronteras",
-  subtitulo: "Una oportunidad puede comenzar con una conversación.",
+  titulo: "Empieza a estudiar o apoya a un estudiante hoy",
+  subtitulo: "Escríbenos para orientarte en tu matrícula, postularte a una beca o sumarte como aliado.",
   bloques: [
-    { titulo: "Estudia", texto: "Encuentra el programa que se adapte a tus sueños." },
-    { titulo: "Becas", texto: "Conoce nuestras convocatorias de apoyo educativo." },
-    { titulo: "Voluntariado", texto: "Comparte tu tiempo y tus talentos." },
-    { titulo: "Dona", texto: "Tu aporte puede convertirse en una oportunidad." },
-    { titulo: "Sé aliado", texto: "Ayúdanos a llevar nuestros programas a más comunidades." },
+    { titulo: "Estudia", texto: "Elige entre 19 programas técnicos con alta salida laboral." },
+    { titulo: "Becas", texto: "Postúlate al subsidio solidario de hasta el 90% en tu semestre." },
+    { titulo: "Voluntariado", texto: "Suma tus conocimientos en brigadas comunitarias y talleres." },
+    { titulo: "Dona", texto: "Apadrina la matrícula o los materiales de un estudiante." },
+    { titulo: "Sé aliado", texto: "Abre cupos de práctica laboral o convenios en tu empresa." },
   ],
 };
 

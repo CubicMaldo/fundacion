@@ -258,16 +258,16 @@ export function Logo({
           </span>
           <span
             className={cn(
-              "mt-1.5 text-[11px] font-bold tracking-[0.24em] uppercase leading-tight",
-              invert ? "text-brand-gold" : "text-brand-gold",
+              "mt-1.5 text-[11px] font-bold tracking-wider uppercase leading-tight",
+              invert ? "text-brand-gold-on-dark" : "text-brand-brown",
             )}
           >
             Fundación Internacional
           </span>
           <span
             className={cn(
-              "text-[11.5px] font-bold tracking-[0.28em] uppercase leading-tight",
-              invert ? "text-brand-gold" : "text-brand-gold",
+              "text-[11.5px] font-bold tracking-wider uppercase leading-tight",
+              invert ? "text-brand-gold-on-dark" : "text-brand-brown",
             )}
           >
             Amigos Sin Fronteras
@@ -299,7 +299,7 @@ export function Logo({
                 className={cn(
                   "font-bold uppercase leading-tight",
                   sizeMap.sub1,
-                  invert ? "text-brand-gold" : "text-brand-gold",
+                  invert ? "text-brand-gold-on-dark" : "text-brand-brown",
                 )}
               >
                 Fundación Internacional
@@ -308,7 +308,7 @@ export function Logo({
                 className={cn(
                   "font-bold uppercase leading-tight",
                   sizeMap.sub2,
-                  invert ? "text-brand-gold" : "text-brand-gold",
+                  invert ? "text-brand-gold-on-dark" : "text-brand-brown",
                 )}
               >
                 Amigos Sin Fronteras
@@ -342,7 +342,7 @@ export function Logo({
               className={cn(
                 "font-bold uppercase leading-tight",
                 sizeMap.sub1,
-                invert ? "text-brand-gold" : "text-brand-gold",
+                invert ? "text-brand-gold-on-dark" : "text-brand-brown",
               )}
             >
               Fundación Internacional
@@ -351,7 +351,7 @@ export function Logo({
               className={cn(
                 "font-bold uppercase leading-tight",
                 sizeMap.sub2,
-                invert ? "text-brand-gold" : "text-brand-gold",
+                invert ? "text-brand-gold-on-dark" : "text-brand-brown",
               )}
             >
               Amigos Sin Fronteras

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   GraduationCap,
@@ -16,9 +16,28 @@ import { Button } from "@/components/ui/button";
 import { org } from "@/data/funasf";
 import { useAuth } from "@/lib/auth-context";
 
+const PORTAL_TABS = [
+  { hash: "#expediente", label: "Registro de Notas", mobileLabel: "Consulta de Notas", icon: GraduationCap },
+  { hash: "#plataformas", label: "Aulas Virtuales", mobileLabel: "Aulas y Plataformas", icon: Laptop },
+  { hash: "#tramites", label: "Trámites y Certificados", mobileLabel: "Trámites y Certificados", icon: FileText },
+  { hash: "#calendario", label: "Calendario Académico", mobileLabel: "Calendario Académico", icon: Calendar },
+] as const;
+
 export function StudentPortalLayout({ children }: { children: React.ReactNode }) {
   const [menuAbierto, setMenuAbierto] = useState(false);
+  const [activeHash, setActiveHash] = useState<string>("#expediente");
   const { user, profile, signOut } = useAuth();
+
+  useEffect(() => {
+    const syncHash = () => {
+      if (window.location.hash) {
+        setActiveHash(window.location.hash);
+      }
+    };
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
 
   const mainSiteUrl = "/";
 
@@ -41,7 +60,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
                   <span className="font-display font-bold text-sm text-foreground tracking-tight">
                     EduFUNASF
                   </span>
-                  <span className="inline-flex items-center rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-brand-green ring-1 ring-emerald-500/20">
+                  <span className="inline-flex items-center rounded-md bg-brand-green/10 px-1.5 py-0.5 text-[10px] font-semibold text-brand-green ring-1 ring-brand-green/20">
                     Estudiantes
                   </span>
                 </div>
@@ -77,9 +96,9 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
                   variant="outline"
                   size="sm"
                   onClick={() => signOut()}
-                  className="text-xs text-muted-foreground hover:text-red-600 hover:border-red-200 h-8 px-2.5"
+                  className="text-xs text-muted-foreground hover:text-destructive hover:border-destructive/30 h-8 px-2.5"
                 >
-                  <LogOut className="size-3.5 sm:mr-1.5" />
+                  <LogOut className="size-3.5" />
                   <span className="hidden sm:inline">Cerrar sesión</span>
                 </Button>
               </div>
@@ -103,7 +122,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
               variant="ghost"
               size="icon"
               aria-label={menuAbierto ? "Cerrar menú del portal" : "Abrir menú del portal"}
-              className="md:hidden size-10 text-muted-foreground"
+              className="md:hidden size-11 text-muted-foreground"
               onClick={() => setMenuAbierto(!menuAbierto)}
             >
               {menuAbierto ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -113,36 +132,29 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
 
         {/* Menú colapsable en móvil */}
         {menuAbierto && (
-          <div className="md:hidden border-t border-slate-200 bg-white p-4 space-y-2 animate-in slide-in-from-top duration-200">
-            <a
-              href="#expediente"
-              onClick={() => setMenuAbierto(false)}
-              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Consulta de Notas
-            </a>
-            <a
-              href="#plataformas"
-              onClick={() => setMenuAbierto(false)}
-              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Aulas y Plataformas
-            </a>
-            <a
-              href="#tramites"
-              onClick={() => setMenuAbierto(false)}
-              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Trámites y Certificados
-            </a>
-            <a
-              href="#calendario"
-              onClick={() => setMenuAbierto(false)}
-              className="block rounded-lg px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50"
-            >
-              Calendario Académico
-            </a>
-            <div className="border-t border-slate-100 pt-2">
+          <div className="md:hidden border-t border-border bg-card p-4 space-y-1.5 animate-in slide-in-from-top duration-200">
+            {PORTAL_TABS.map((tab) => {
+              const isActive = activeHash === tab.hash;
+              return (
+                <a
+                  key={tab.hash}
+                  href={tab.hash}
+                  onClick={() => {
+                    setActiveHash(tab.hash);
+                    setMenuAbierto(false);
+                  }}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`block rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+                    isActive
+                      ? "bg-brand-green/10 text-brand-green-deep"
+                      : "text-foreground/80 hover:bg-muted"
+                  }`}
+                >
+                  {tab.mobileLabel}
+                </a>
+              );
+            })}
+            <div className="border-t border-border pt-2">
               <a
                 href={mainSiteUrl}
                 className="block rounded-lg px-3 py-2 text-xs text-brand-green font-medium"
@@ -157,37 +169,29 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
       {/* 2. Barra de Navegación de Pestañas del Portal (Optimizada para Móvil y Desktop) */}
       <nav
         aria-label="Navegación del portal de estudiantes"
-        className="bg-white border-b border-slate-200/80 sticky top-16 z-30 shadow-2xs"
+        className="bg-card border-b border-border/80 sticky top-16 z-30 shadow-2xs"
       >
         <div className="container-page flex items-center gap-2 overflow-x-auto py-2 scrollbar-none">
-          <a
-            href="#expediente"
-            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
-          >
-            <GraduationCap className="size-3.5 text-brand-green" />
-            <span>Registro de Notas</span>
-          </a>
-          <a
-            href="#plataformas"
-            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
-          >
-            <Laptop className="size-3.5 text-brand-green" />
-            <span>Aulas Virtuales</span>
-          </a>
-          <a
-            href="#tramites"
-            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
-          >
-            <FileText className="size-3.5 text-brand-green" />
-            <span>Trámites y Certificados</span>
-          </a>
-          <a
-            href="#calendario"
-            className="inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-brand-green hover:bg-slate-50 rounded-lg border border-slate-200/70 transition-colors"
-          >
-            <Calendar className="size-3.5 text-brand-green" />
-            <span>Calendario Académico</span>
-          </a>
+          {PORTAL_TABS.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeHash === tab.hash;
+            return (
+              <a
+                key={tab.hash}
+                href={tab.hash}
+                onClick={() => setActiveHash(tab.hash)}
+                aria-current={isActive ? "location" : undefined}
+                className={`inline-flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border transition-colors ${
+                  isActive
+                    ? "bg-brand-green text-white border-brand-green font-semibold shadow-2xs"
+                    : "font-medium text-foreground/80 hover:text-brand-green hover:bg-muted/60 border-border/70"
+                }`}
+              >
+                <Icon className={`size-3.5 ${isActive ? "text-white" : "text-brand-green"}`} />
+                <span>{tab.label}</span>
+              </a>
+            );
+          })}
         </div>
       </nav>
 
@@ -195,10 +199,10 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
       <main className="flex-1">{children}</main>
 
       {/* 4. Footer Específico del Portal Académico */}
-      <footer className="border-t border-slate-200 bg-white py-8 text-xs text-slate-500">
+      <footer className="border-t border-border bg-card py-8 text-xs text-muted-foreground">
         <div className="container-page flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-700">EduFUNASF</span>
+            <span className="font-bold text-foreground">EduFUNASF</span>
             <span>—</span>
             <span>Campus Virtual & Secretaría Académica</span>
           </div>
@@ -219,7 +223,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
             </a>
             <Link
               to="/admin/login"
-              className="hover:text-brand-green flex items-center gap-1 text-slate-400 hover:text-slate-700 transition-colors"
+              className="hover:text-brand-green flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
               title="Panel Administrativo FUNASF"
             >
               <Lock className="size-3" /> Panel Admin

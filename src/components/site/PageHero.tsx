@@ -28,8 +28,8 @@ export function PageHero({
         <div className="fade-up max-w-3xl">
           {displayEyebrow ? (
             <div className="inline-flex items-center gap-2">
-              {badgeIcon ? <span className="text-brand-gold">{badgeIcon}</span> : null}
-              <span className="text-brand-gold text-xs font-bold tracking-[0.16em] uppercase">
+              {badgeIcon ? <span className="text-brand-gold-on-dark">{badgeIcon}</span> : null}
+              <span className="text-brand-gold-on-dark text-xs font-semibold tracking-wider uppercase">
                 {displayEyebrow}
               </span>
             </div>

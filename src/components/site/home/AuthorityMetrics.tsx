@@ -50,10 +50,13 @@ const metricas: MetricItem[] = [
 export function AuthorityMetrics() {
   return (
     <section
-      aria-label="Cifras de impacto y autoridad institucional"
+      aria-labelledby="metricas-heading"
       className="relative z-10 -mt-6 sm:-mt-10 mb-12 sm:mb-16 container-page"
     >
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 bg-card border border-border/80 rounded-2xl p-4 sm:p-6 md:p-8 shadow-xl shadow-brand-green/5 backdrop-blur-sm">
+      <h2 id="metricas-heading" className="sr-only">
+        Cifras de impacto y autoridad institucional
+      </h2>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 bg-card border border-border/80 rounded-2xl p-4 sm:p-6 md:p-8 shadow-[var(--shadow-soft)]">
         {metricas.map((m, idx) => {
           const Icon = m.icono;
           return (
@@ -63,14 +66,9 @@ export function AuthorityMetrics() {
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="p-2 rounded-lg bg-brand-green/10 text-brand-green group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+                  <span className="inline-flex items-center justify-center size-9 sm:size-10 rounded-lg bg-brand-green/10 text-brand-green group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
                     <Icon className="size-4 sm:size-5" />
                   </span>
-                  {m.etiquetaCorta && (
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                      {m.etiquetaCorta}
-                    </span>
-                  )}
                 </div>
                 <div className="flex items-baseline gap-1.5 flex-wrap">
                   {m.prefijo && (

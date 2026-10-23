@@ -53,6 +53,7 @@
   --color-brand-gold: var(--brand-gold);
   --color-brand-gold-light: var(--brand-gold-light);
   --color-brand-gold-deep: var(--brand-gold-deep);
+  --color-brand-gold-on-dark: var(--brand-gold-on-dark);
   --color-surface: var(--surface);
   --color-surface-strong: var(--surface-strong);
 
@@ -105,12 +106,13 @@
   --brand-green: #285d3d;
   --brand-green-deep: #193f28;
   --brand-green-soft: #eaf2ec;
-  --brand-brown: #d69d30;
+  --brand-brown: #854d0e;
   --brand-brown-soft: #fbf5ea;
   --brand-sand: oklch(0.962 0.022 86);
   --brand-gold: #d69d30;
   --brand-gold-light: #e3b14d;
-  --brand-gold-deep: #b38022;
+  --brand-gold-deep: #854d0e;
+  --brand-gold-on-dark: #fad074;
   --surface: oklch(0.976 0.011 92);
   --surface-strong: oklch(0.95 0.021 88);
 
@@ -150,10 +152,15 @@
     text-rendering: optimizeLegibility;
   }
 
+  p {
+    text-wrap: pretty;
+  }
+
   h1,
   h2,
   h3,
-  h4 {
+  h4,
+  h5 {
     font-family: var(--font-display);
     font-weight: 600;
     letter-spacing: 0;
@@ -167,6 +174,14 @@
 
   :focus-visible {
     outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  .surface-hero :focus-visible,
+  footer :focus-visible,
+  .bg-brand-green-deep :focus-visible,
+  .bg-brand-green :focus-visible {
+    outline-color: var(--brand-gold-on-dark);
     outline-offset: 2px;
   }
 
@@ -194,8 +209,8 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--color-brand-brown);
 }

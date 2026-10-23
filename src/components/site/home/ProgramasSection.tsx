@@ -19,36 +19,28 @@ const areasDestacadas = [
   {
     titulo: "Área de la Salud",
     icono: HeartPulse,
-    color: "emerald",
-    bg: "bg-emerald-500/10 text-emerald-700",
-    badge: "Alta demanda",
+    bg: "bg-brand-green/10 text-brand-green-deep",
     descripcion: "Auxiliar de Enfermería, Servicios Farmacéuticos y Administración en Salud con prácticas asistenciales.",
     ruta: "/programas/auxiliar-de-enfermeria",
   },
   {
     titulo: "Administración y Empresa",
     icono: Briefcase,
-    color: "amber",
-    bg: "bg-amber-500/10 text-amber-700",
-    badge: "Inserción laboral",
+    bg: "bg-brand-gold/15 text-brand-brown",
     descripcion: "Auxiliar Administrativo y Contable, Mercadeo y Ventas, Logística y Secretariado Ejecutivo.",
     ruta: "/programas/auxiliar-administrativo-y-contable",
   },
   {
     titulo: "Seguridad y Salud en el Trabajo",
     icono: ShieldCheck,
-    color: "blue",
-    bg: "bg-blue-500/10 text-blue-700",
-    badge: "Normatividad legal",
+    bg: "bg-brand-green/10 text-brand-green-deep",
     descripcion: "Prevención de riesgos laborales, protocolos SST y capacitación en seguridad y vigilancia.",
     ruta: "/programas/seguridad-y-salud-en-el-trabajo",
   },
   {
     titulo: "Educación y Comunidad",
     icono: Users,
-    color: "purple",
-    bg: "bg-purple-500/10 text-purple-700",
-    badge: "Labor social",
+    bg: "bg-brand-gold/15 text-brand-brown",
     descripcion: "Atención a la Primera Infancia, Belleza Integral, Mecánica de Motos y Validación de Bachillerato.",
     ruta: "/programas/primera-infancia",
   },
@@ -70,15 +62,12 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
           return (
             <div
               key={i}
-              className="flex flex-col justify-between rounded-2xl border border-border bg-card p-5 shadow-xs hover:border-brand-green/40 hover:shadow-md transition-[border-color,box-shadow] duration-200 group"
+              className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-xs hover:border-brand-green/40 hover:shadow-md transition-[border-color,box-shadow] duration-200 group"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className={`p-3 rounded-xl ${area.bg} transition-colors group-hover:bg-brand-green group-hover:text-white`}>
+                  <span className={`inline-flex items-center justify-center size-11 rounded-xl ${area.bg} transition-colors group-hover:bg-brand-green group-hover:text-white`}>
                     <Icon className="size-5" />
-                  </span>
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-brand-gold/20 text-brand-gold-deep border border-brand-gold/30">
-                    {area.badge}
                   </span>
                 </div>
 
@@ -90,7 +79,7 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
                 </p>
               </div>
 
-              <div className="mt-5 pt-3 border-t border-border">
+              <div className="mt-4 pt-4 border-t border-border">
                 <Button
                   asChild
                   variant="link"
@@ -98,7 +87,7 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
                   className="p-0 h-auto text-xs font-semibold text-brand-green group-hover:text-brand-green-deep"
                 >
                   <Link to={area.ruta}>
-                    Ver programa destacado <ArrowRight className="size-3.5 ml-1 transition-transform group-hover:translate-x-1" />
+                    Ver programa destacado <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
               </div>
@@ -109,9 +98,9 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
 
       {/* Acordeón detallado por todas las categorías */}
       <div className="mt-12 max-w-4xl mx-auto">
-        <h4 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4 text-center">
+        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4 text-center">
           Oferta completa por áreas de conocimiento
-        </h4>
+        </h3>
         <Accordion type="single" collapsible className="w-full">
           {categoriasProgramas.map((cat, i) => (
             <AccordionItem key={cat.id} value={`cat-home-${i}`} className="border-border">

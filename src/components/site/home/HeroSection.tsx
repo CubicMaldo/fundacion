@@ -25,16 +25,16 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
     <section className="surface-hero relative overflow-hidden py-14 md:py-20">
       <div className="container-page relative grid gap-10 md:grid-cols-2 md:items-center">
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3.5 py-1 text-xs font-semibold text-brand-gold backdrop-blur-xs">
-            <GraduationCap className="size-3.5 text-brand-gold" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3.5 py-1 text-xs font-semibold text-brand-gold-on-dark">
+            <GraduationCap className="size-3.5 text-brand-gold-on-dark" />
             <span>Convocatoria de Becas Solidarias 2026</span>
           </div>
 
           <div className="space-y-3">
             <h1 className="font-display text-primary-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-[2.75rem] leading-[1.15]">
-              Formación técnica que transforma tu futuro
+              Estudia una carrera técnica con beca de hasta el 90%
             </h1>
-            <p className="text-brand-gold font-display text-lg sm:text-xl font-medium italic">
+            <p className="text-brand-gold-on-dark font-display text-lg sm:text-xl font-medium italic">
               {org.eslogan}
             </p>
           </div>
@@ -48,11 +48,11 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
             <Button
               asChild
               size="lg"
-              className="bg-brand-gold hover:bg-brand-gold-light text-brand-green-deep font-bold px-7 h-12 rounded-full shadow-md transition-[background-color,box-shadow,transform] duration-150 hover:scale-[1.02]"
+              className="bg-brand-gold hover:bg-brand-gold-light text-brand-green-deep font-bold px-7 h-12 rounded-xl shadow-md transition-[background-color,box-shadow,transform] duration-150 hover:scale-[1.02]"
             >
               <Link to="/programas">
                 Ver programas y becas
-                <ArrowRight aria-hidden className="size-4 ml-2" />
+                <ArrowRight aria-hidden className="size-4" />
               </Link>
             </Button>
 
@@ -61,11 +61,11 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
               asChild
               size="lg"
               variant="outlineInvert"
-              className="h-12 rounded-full px-6 border-white/30 text-white hover:bg-white/10 hidden sm:inline-flex"
+              className="h-12 rounded-xl px-6 border-white/30 text-white hover:bg-white/10 hidden sm:inline-flex"
             >
               <a href={whatsappLink} target="_blank" rel="noreferrer">
-                <MessageCircle className="size-4 mr-2 text-emerald-400" />
-                Consultar por WhatsApp
+                <MessageCircle className="size-4 text-emerald-400" />
+                Hablar con admisiones
               </a>
             </Button>
 
@@ -74,7 +74,7 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
               asChild
               size="lg"
               variant="outlineInvert"
-              className="h-12 rounded-full px-6 border-white/30 text-white hover:bg-white/10 sm:hidden"
+              className="h-12 rounded-xl px-6 border-white/30 text-white hover:bg-white/10 sm:hidden"
             >
               <Link to="/quienes-somos">
                 Conoce la Fundación

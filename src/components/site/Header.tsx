@@ -150,13 +150,13 @@ export function Header() {
               <Link
                 to="/portal-estudiantil"
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-medium transition-colors",
+                  "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-colors",
                   pathname === "/portal-estudiantil"
-                    ? "bg-white/20 text-white font-semibold"
-                    : "text-white/80 hover:bg-white/10 hover:text-white",
+                    ? "bg-white/20 text-white"
+                    : "text-white/85 hover:bg-white/10 hover:text-white",
                 )}
               >
-                <GraduationCap aria-hidden className="size-3 text-brand-gold" />
+                <GraduationCap aria-hidden className="size-3 text-brand-gold-on-dark" />
                 <span>Portal Estudiantil</span>
               </Link>
               <span className="text-primary-foreground/30" aria-hidden="true">
@@ -165,10 +165,10 @@ export function Header() {
               <Link
                 to="/docente"
                 className={cn(
-                  "inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 font-medium transition-colors",
+                  "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 font-medium transition-colors",
                   pathname.startsWith("/docente")
-                    ? "bg-white/20 text-white font-semibold"
-                    : "text-white/80 hover:bg-white/10 hover:text-white",
+                    ? "bg-white/20 text-white"
+                    : "text-white/85 hover:bg-white/10 hover:text-white",
                 )}
               >
                 <span>Portal Docente</span>
@@ -198,10 +198,10 @@ export function Header() {
                 <Link
                   to={item.to}
                   className={cn(
-                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                     active
-                      ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
-                      : "text-foreground/75 group-hover:bg-brand-green-soft/50 group-hover:text-foreground group-focus-within:bg-brand-green-soft/50 group-focus-within:text-foreground",
+                      ? "bg-brand-green/12 text-brand-green-deep"
+                      : "text-foreground/80 group-hover:bg-brand-green-soft/60 group-hover:text-foreground group-focus-within:bg-brand-green-soft/60 group-focus-within:text-foreground",
                   )}
                 >
                   <span>{item.label}</span>
@@ -242,16 +242,16 @@ export function Header() {
                             activeOptions={{ exact: true, includeHash: false }}
                             {...(child.hash ? { hash: child.hash } : {})}
                             className={cn(
-                              "flex flex-col items-start px-2.5 py-2 cursor-pointer rounded-lg transition-colors",
+                              "flex flex-col items-start px-2.5 py-2 cursor-pointer rounded-md transition-colors",
                               isChildActive
-                                ? "bg-brand-green-soft/80 text-brand-green-deep ring-1 ring-brand-green/20 shadow-xs"
+                                ? "bg-brand-green-soft text-brand-green-deep"
                                 : "hover:bg-brand-green-soft/50",
                             )}
                           >
                             <span
                               className={cn(
-                                "text-sm",
-                                isChildActive ? "font-bold" : "font-medium text-foreground",
+                                "text-sm font-medium",
+                                isChildActive ? "text-brand-green-deep" : "text-foreground",
                               )}
                             >
                               {child.label}
@@ -280,10 +280,10 @@ export function Header() {
                 key={item.label}
                 to={item.to}
                 className={cn(
-                  "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color,box-shadow] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
+                  "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                   active
-                    ? "bg-brand-green/10 text-brand-green-deep font-bold ring-1 ring-brand-green/20 shadow-xs"
-                    : "text-foreground/75 hover:bg-brand-green-soft/50 hover:text-foreground",
+                    ? "bg-brand-green/12 text-brand-green-deep"
+                    : "text-foreground/80 hover:bg-brand-green-soft/60 hover:text-foreground",
                 )}
               >
                 {item.label}
@@ -297,7 +297,7 @@ export function Header() {
           <Button
             asChild
             size="sm"
-            className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-full px-5 text-xs font-bold tracking-wide uppercase shadow-sm transition-[background-color,box-shadow,transform] hover:shadow-md"
+            className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-xl px-5 text-xs font-semibold shadow-sm transition-[background-color,box-shadow,transform] hover:shadow-md"
           >
             <Link to="/inscripcion">
               Postularme a Beca
@@ -310,7 +310,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-foreground hover:bg-secondary size-10 rounded-lg lg:hidden"
+                className="text-foreground hover:bg-secondary size-11 rounded-lg lg:hidden"
                 aria-label="Abrir menú"
               >
                 <Menu className="size-5" aria-hidden="true" />
@@ -331,16 +331,16 @@ export function Header() {
                   <Link
                     to="/inscripcion"
                     onClick={() => setAbierto(false)}
-                    className="flex items-center justify-between rounded-xl bg-brand-green p-3 text-white shadow-xs hover:bg-brand-green-deep transition-all"
+                    className="flex items-center justify-between rounded-xl bg-brand-green p-3 text-white shadow-xs hover:bg-brand-green-deep transition-[background-color,transform] duration-150"
                   >
                     <div className="flex items-center gap-2.5">
-                      <GraduationCap className="size-4 text-brand-gold shrink-0" />
+                      <GraduationCap className="size-4 text-brand-gold-on-dark shrink-0" />
                       <div className="text-left">
-                        <p className="text-xs font-bold leading-tight uppercase tracking-wider">
-                          Postulación a Becas 90 %
+                        <p className="text-xs font-bold leading-tight">
+                          Postulación a Becas del 90 %
                         </p>
-                        <p className="text-[11px] text-white/80 mt-0.5">
-                          Diligencia tu cupo en línea
+                        <p className="text-[11px] text-white/85 mt-0.5">
+                          Diligencia tu cupo en línea sin costo
                         </p>
                       </div>
                     </div>
@@ -351,14 +351,20 @@ export function Header() {
                 {/* Navegación móvil estructurada y clara */}
                 <nav aria-label="Navegación móvil" className="px-4 py-2">
                   <Accordion type="multiple" className="w-full">
-                    {navegacion.map((item) =>
-                      item.children ? (
+                    {navegacion.map((item) => {
+                      const active = isRouteActive(item.to, item.children, pathname);
+                      return item.children ? (
                         <AccordionItem
                           key={item.label}
                           value={item.label}
                           className="border-border/50 border-b"
                         >
-                          <AccordionTrigger className="text-foreground px-2 py-3.5 text-sm font-semibold hover:no-underline">
+                          <AccordionTrigger
+                            className={cn(
+                              "px-2 py-3.5 text-sm font-semibold hover:no-underline rounded-lg",
+                              active ? "text-brand-green-deep" : "text-foreground",
+                            )}
+                          >
                             <span>{item.label}</span>
                           </AccordionTrigger>
                           <AccordionContent className="space-y-1 pt-1 pb-3 pl-2">
@@ -367,19 +373,30 @@ export function Header() {
                               onClick={() => setAbierto(false)}
                               className="text-primary bg-primary/5 hover:bg-primary/10 block rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
                             >
-                              Ver todo en {item.label} →
+                              Ver todo en {item.label}
                             </Link>
-                            {item.children.map((child) => (
-                              <Link
-                                key={child.label}
-                                to={child.to}
-                                {...(child.hash ? { hash: child.hash } : {})}
-                                onClick={() => setAbierto(false)}
-                                className="block rounded-lg px-3 py-2 text-xs text-foreground/80 hover:bg-brand-green-soft/40 hover:text-foreground"
-                              >
-                                {child.label}
-                              </Link>
-                            ))}
+                            {item.children.map((child) => {
+                              const isChildActive =
+                                mounted &&
+                                child.to === pathname &&
+                                (child.hash ? (activeHash || "") === child.hash : !activeHash);
+                              return (
+                                <Link
+                                  key={child.label}
+                                  to={child.to}
+                                  {...(child.hash ? { hash: child.hash } : {})}
+                                  onClick={() => setAbierto(false)}
+                                  className={cn(
+                                    "block rounded-lg px-3 py-2 text-xs font-medium transition-colors",
+                                    isChildActive
+                                      ? "bg-brand-green/12 text-brand-green-deep"
+                                      : "text-foreground/80 hover:bg-brand-green-soft/40 hover:text-foreground",
+                                  )}
+                                >
+                                  {child.label}
+                                </Link>
+                              );
+                            })}
                           </AccordionContent>
                         </AccordionItem>
                       ) : (
@@ -387,13 +404,18 @@ export function Header() {
                           <Link
                             to={item.to}
                             onClick={() => setAbierto(false)}
-                            className="block px-2 py-3.5 text-sm font-semibold text-foreground hover:text-brand-green transition-colors"
+                            className={cn(
+                              "block rounded-lg px-2 py-3.5 text-sm font-semibold transition-colors",
+                              active
+                                ? "bg-brand-green/10 text-brand-green-deep"
+                                : "text-foreground hover:text-brand-green",
+                            )}
                           >
                             {item.label}
                           </Link>
                         </div>
-                      ),
-                    )}
+                      );
+                    })}
                   </Accordion>
                 </nav>
               </div>

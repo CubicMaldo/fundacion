@@ -119,7 +119,7 @@ export function InscripcionForm({
         <div className="pt-3 flex flex-col sm:flex-row gap-3 justify-center">
           <Button asChild size="lg" className="bg-brand-green hover:bg-brand-green-deep text-white font-semibold">
             <a href={waUrl} target="_blank" rel="noreferrer">
-              <MessageCircle className="size-4 mr-2" />
+              <MessageCircle className="size-4" />
               Contactar por WhatsApp ahora
             </a>
           </Button>
@@ -308,20 +308,21 @@ export function InscripcionForm({
           checked={aceptaHabeasData}
           onCheckedChange={(checked) => setAceptaHabeasData(checked === true)}
         />
-        <label
-          htmlFor="habeas-data-inscripcion"
-          className="text-xs text-muted-foreground leading-snug cursor-pointer select-none"
-        >
-          Autorizo a FUNASF el tratamiento de mis datos personales para fines de admisión y orientación conforme a la{" "}
+        <div className="text-xs text-muted-foreground leading-snug">
+          <label
+            htmlFor="habeas-data-inscripcion"
+            className="cursor-pointer select-none"
+          >
+            Autorizo a FUNASF el tratamiento de mis datos personales para fines de admisión y orientación conforme a la Ley 1581 de 2012. *
+          </label>{" "}
           <Link
             to="/tratamiento-datos"
             target="_blank"
             className="text-brand-green font-semibold underline hover:text-brand-green-deep"
           >
-            Ley 1581 de 2012 y la Política Institucional
+            Ver Política de Tratamiento de Datos
           </Link>
-          . *
-        </label>
+        </div>
       </div>
 
       <div className="pt-2 space-y-3">
@@ -332,7 +333,7 @@ export function InscripcionForm({
         >
           {enviando ? (
             <>
-              <Loader2 className="size-4 animate-spin mr-2" /> Registrando postulación...
+              <Loader2 className="size-4 animate-spin" /> Registrando postulación...
             </>
           ) : (
             "Enviar solicitud de inscripción y beca"

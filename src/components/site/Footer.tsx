@@ -57,6 +57,7 @@ export function Footer() {
   return (
     <footer className="bg-brand-green-deep text-primary-foreground">
       <div className="container-page py-16">
+        <h2 className="sr-only">Pie de página institucional y navegación secundaria</h2>
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           <div>
             <Logo
@@ -66,10 +67,10 @@ export function Footer() {
               showSubtitle
               className="items-start text-left mb-4"
             />
-            <p className="text-brand-gold mt-1 text-sm font-semibold tracking-wide">
+            <p className="text-brand-gold-on-dark mt-1 text-sm font-semibold tracking-wide">
               {org.eslogan}
             </p>
-            <p className="text-primary-foreground/75 mt-5 max-w-sm text-sm leading-relaxed italic">
+            <p className="text-primary-foreground/80 mt-5 max-w-sm text-sm leading-relaxed italic">
               {org.frases[0]}
             </p>
 
@@ -100,16 +101,16 @@ export function Footer() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {columnas.map((col) => (
               <nav key={col.titulo} aria-label={col.titulo}>
-                <h2 className="text-brand-gold text-xs font-bold tracking-[0.14em] uppercase">
+                <h3 className="text-brand-gold-on-dark text-xs font-semibold tracking-wider uppercase">
                   {col.titulo}
-                </h2>
+                </h3>
                 <ul className="mt-4 space-y-2.5">
                   {col.enlaces.map((e) => (
                     <li key={e.label}>
                       <Link
                         to={e.to}
                         {...(e.hash ? { hash: e.hash } : {})}
-                        className="text-primary-foreground/80 hover:text-primary-foreground text-sm transition-colors"
+                        className="text-primary-foreground/85 hover:text-primary-foreground text-sm transition-colors"
                       >
                         {e.label}
                       </Link>
@@ -120,10 +121,10 @@ export function Footer() {
             ))}
 
             <div className="sm:col-span-2 lg:col-span-4">
-              <h2 className="text-brand-gold text-xs font-bold tracking-[0.14em] uppercase">
+              <h3 className="text-brand-gold-on-dark text-xs font-semibold tracking-wider uppercase">
                 Contacto
-              </h2>
-              <div className="text-primary-foreground/80 mt-4 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-4">
+              </h3>
+              <div className="text-primary-foreground/85 mt-4 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-4">
                 {org.telefonos.map((t) => {
                   const digits = t.replace(/\D/g, "");
                   const href = `tel:+${digits.startsWith("57") ? digits : `57${digits}`}`;
@@ -157,10 +158,10 @@ export function Footer() {
         <div className="border-primary-foreground/15 mt-12 border-t pt-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2">
-              <h2 className="text-primary-foreground/70 text-xs font-bold tracking-[0.14em] uppercase">
+              <h3 className="text-primary-foreground/80 text-xs font-semibold tracking-wider uppercase">
                 Información institucional
-              </h2>
-              <p className="text-primary-foreground/65 max-w-3xl text-xs leading-relaxed">
+              </h3>
+              <p className="text-primary-foreground/80 max-w-3xl text-xs leading-relaxed">
                 Razón social: {org.razonSocial} · Sigla: {org.sigla} · Tipo: {org.tipoContribuyente} ·
                 NIT: {org.nit} · Domicilio principal: {org.ciudadPrincipal}.
               </p>
@@ -171,18 +172,18 @@ export function Footer() {
                 to="/admin/login"
                 className="inline-flex items-center gap-2 rounded-lg border border-primary-foreground/20 bg-primary-foreground/5 px-3.5 py-2 text-xs font-medium text-primary-foreground/85 transition-colors hover:bg-primary-foreground/15 hover:text-white hover:border-brand-gold/40 shadow-2xs"
               >
-                <Lock className="size-3.5 text-brand-gold" />
+                <Lock className="size-3.5 text-brand-gold-on-dark" />
                 <span>Panel Administrativo</span>
               </Link>
             </div>
           </div>
 
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-primary-foreground/55">
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-primary-foreground/80">
             <p>
               © {new Date().getFullYear()} Fundación Internacional Amigos Sin Fronteras – FUNASF.
               Todos los derechos reservados.
             </p>
-            <p className="text-[11px] text-primary-foreground/45">
+            <p className="text-[11px] text-primary-foreground/75">
               EduFUNASF · Gestión Institucional & Académica
             </p>
           </div>

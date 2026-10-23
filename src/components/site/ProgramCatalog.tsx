@@ -134,8 +134,9 @@ export function ProgramCatalog({
               type="button"
               size="sm"
               variant={categoria === "todas" ? "default" : "outline"}
+              aria-pressed={categoria === "todas"}
               onClick={() => setCategoria("todas")}
-              className="h-8 px-3 text-xs font-medium rounded-lg transition-colors"
+              className="h-8 px-3 text-xs font-medium rounded-lg transition-colors tabular-nums"
             >
               Todas las áreas ({programas.length})
             </Button>
@@ -149,13 +150,14 @@ export function ProgramCatalog({
                   type="button"
                   size="sm"
                   variant={isActive ? "default" : "outline"}
+                  aria-pressed={isActive}
                   onClick={() => setCategoria(item.id)}
                   className="h-8 px-3 text-xs font-medium rounded-lg transition-colors inline-flex items-center gap-1.5"
                 >
                   <span>{label}</span>
                   <span
                     className={cn(
-                      "text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none",
+                      "text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none tabular-nums",
                       isActive
                         ? "bg-primary-foreground/20 text-primary-foreground"
                         : "bg-muted text-muted-foreground",
@@ -176,7 +178,7 @@ export function ProgramCatalog({
         aria-live="polite"
       >
         <p>
-          <span className="font-semibold text-foreground">{resultados.length}</span>{" "}
+          <span className="font-semibold text-foreground tabular-nums">{resultados.length}</span>{" "}
           {resultados.length === 1 ? "programa disponible" : "programas disponibles"}
           {categoriaActivaNombre && (
             <span>
@@ -238,7 +240,9 @@ export function ProgramCatalog({
                     "hover:text-brand-green-deep",
                   )}
                 >
-                  Ver información
+                  <span>
+                    Ver información<span className="sr-only"> sobre {programa.nombre}</span>
+                  </span>
                   <ArrowRight
                     aria-hidden
                     className="size-4 transition-transform group-hover:translate-x-1"

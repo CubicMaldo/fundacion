@@ -19,28 +19,28 @@ export function CtaSection({ llamadoAccion }: CtaSectionProps) {
         title={llamadoAccion.titulo}
         description={llamadoAccion.subtitulo}
       />
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-        {llamadoAccion.bloques.map((b) => (
+      <div className="mt-12 grid gap-6 rounded-2xl border border-primary-foreground/20 bg-primary-foreground/5 p-6 sm:grid-cols-2 lg:grid-cols-5 lg:divide-x lg:divide-primary-foreground/15 lg:gap-0 lg:p-8">
+        {llamadoAccion.bloques.map((b, idx) => (
           <div
             key={b.titulo}
-            className="border-primary-foreground/20 bg-primary-foreground/5 rounded-lg border p-5 transition-colors hover:bg-primary-foreground/10 hover:border-brand-gold/40 shadow-xs"
+            className={idx > 0 ? "lg:pl-6 lg:pr-4 first:lg:pl-0" : "lg:pr-6"}
           >
-            <h3 className="text-brand-gold text-base font-medium">{b.titulo}</h3>
-            <p className="text-primary-foreground/80 mt-3 text-sm leading-relaxed">{b.texto}</p>
+            <h3 className="text-brand-gold-on-dark text-base font-semibold">{b.titulo}</h3>
+            <p className="text-primary-foreground/85 mt-2.5 text-sm leading-relaxed">{b.texto}</p>
           </div>
         ))}
       </div>
       <div className="mt-10 flex flex-wrap justify-center gap-3">
         <Button asChild size="lg" variant="gold">
-          <Link to="/contacto">Contáctanos</Link>
+          <Link to="/inscripcion">Postularme a una beca</Link>
         </Button>
         <Button asChild size="lg" variant="outlineInvert">
-          <Link to="/inscripcion">Formulario de inscripción</Link>
+          <Link to="/contacto">Hablar con nosotros</Link>
         </Button>
         <ModalDonacion
           triggerButton={
             <Button size="lg" variant="outlineInvert">
-              Donar
+              Patrocinar un estudiante
             </Button>
           }
         />

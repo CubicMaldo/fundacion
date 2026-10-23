@@ -136,7 +136,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
       <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm">
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-brand-green/15 text-brand-green border border-brand-green/20 shrink-0">
+            <div className="flex size-14 items-center justify-center rounded-xl bg-brand-green/15 text-brand-green border border-brand-green/20 shrink-0">
               <UserIcon className="size-7" />
             </div>
             <div>
@@ -159,11 +159,11 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
           <div className="flex flex-wrap items-center gap-2.5">
             <div className="grid grid-cols-2 gap-2.5 sm:flex sm:items-center">
               <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
-                <span className="block text-lg font-bold text-foreground">{cursosEnCurso}</span>
+                <span className="block text-lg font-bold text-foreground tabular-nums">{cursosEnCurso}</span>
                 <span className="text-[10px] uppercase font-semibold text-muted-foreground">Cursando</span>
               </div>
               <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
-                <span className="block text-lg font-bold text-foreground">{cursosAprobados}</span>
+                <span className="block text-lg font-bold text-foreground tabular-nums">{cursosAprobados}</span>
                 <span className="text-[10px] uppercase font-semibold text-muted-foreground">Aprobados</span>
               </div>
             </div>
@@ -174,9 +174,9 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                   variant="outline"
                   size="sm"
                   onClick={() => setConstanciaModalOpen(true)}
-                  className="text-xs font-semibold border-slate-300 text-slate-700 hover:bg-slate-50"
+                  className="text-xs font-semibold border-border text-foreground hover:bg-muted"
                 >
-                  <FileText className="size-3.5 mr-1.5 text-brand-green" />
+                  <FileText className="size-3.5 text-brand-green" />
                   Constancia
                 </Button>
                 <Button
@@ -185,7 +185,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                   onClick={() => setBoletinModalOpen(true)}
                   className="text-xs font-semibold border-brand-green/30 text-brand-green hover:bg-brand-green/10"
                 >
-                  <Printer className="size-3.5 mr-1.5" />
+                  <Printer className="size-3.5" />
                   Boletín Oficial
                 </Button>
               </>
@@ -195,10 +195,10 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
               variant="outline"
               size="sm"
               onClick={abrirModalCuenta}
-              className="text-xs text-slate-700 hover:bg-slate-50"
+              className="text-xs text-foreground hover:bg-muted"
               title="Cambiar contraseña o teléfono"
             >
-              <KeyRound className="size-3.5 mr-1.5 text-amber-600" />
+              <KeyRound className="size-3.5 text-amber-600" />
               Mi Clave
             </Button>
 
@@ -208,7 +208,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
               onClick={() => signOut()}
               className="text-xs text-muted-foreground hover:text-destructive hover:border-destructive/30"
             >
-              <LogOut className="size-3.5 mr-1.5" />
+              <LogOut className="size-3.5" />
               Cerrar sesión
             </Button>
           </div>
@@ -296,7 +296,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                         Nota Definitiva
                       </span>
                       <span
-                        className={`text-2xl font-bold ${
+                        className={`text-2xl font-bold tabular-nums ${
                           (matriculaActiva.notaDefinitiva ?? 0) >= 3.0
                             ? "text-emerald-600 dark:text-emerald-400"
                             : "text-amber-600 dark:text-amber-400"
@@ -318,7 +318,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                       <p className="text-[11px] text-muted-foreground">Ponderación de notas oficiales y aportes a la definitiva</p>
                     </div>
                     {matriculaActiva.desglose && matriculaActiva.desglose.length > 0 && (
-                      <span className="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                      <span className="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 tabular-nums">
                         {matriculaActiva.desglose.reduce((acc, d) => acc + d.porcentaje, 0)}% Malla Configurada
                       </span>
                     )}
@@ -363,7 +363,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                                 <span className="text-muted-foreground text-[11px] italic">Pendiente</span>
                               )}
                             </TableCell>
-                            <TableCell className="text-xs text-center font-mono font-medium text-slate-700">
+                            <TableCell className="text-xs text-center font-mono font-medium text-foreground/80">
                               {item.nota !== null ? `+${item.aportePonderado.toFixed(2)} pts` : "—"}
                             </TableCell>
                             <TableCell className="text-xs text-muted-foreground">
@@ -433,7 +433,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                               onClick={() => handleAbrirArchivo(entrega.archivoUrl)}
                               className="text-xs h-7 px-2 text-brand-green hover:text-brand-green-deep hover:bg-brand-green/10"
                             >
-                              <ExternalLink className="size-3 mr-1" />
+                              <ExternalLink className="size-3" />
                               Ver archivo
                             </Button>
                             <Badge
@@ -447,7 +447,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                               {entrega.estado}
                             </Badge>
                             {entrega.nota != null && (
-                              <span className="font-bold text-foreground">
+                              <span className="font-bold text-foreground tabular-nums">
                                 Nota: {entrega.nota.toFixed(1)}
                               </span>
                             )}
