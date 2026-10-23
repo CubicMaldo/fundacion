@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight, ChevronDown, GraduationCap, Mail, Menu, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,108 @@ export function Header() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const hash = useRouterState({ select: (s) => s.location.hash });
   const [activeHash, setActiveHash] = useState(hash);
+
+  // Control de dropdowns en la barra superior con auto-cierre a los 4 segundos
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+
+  const clearCloseTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    clearCloseTimer();
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    setOpenDropdown(null);
+  }, [clearCloseTimer]);
+
+  const openDropdownWithTimer = useCallback(
+    (label: string, durationMs = 4000) => {
+      clearCloseTimer();
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+        hoverTimerRef.current = null;
+      }
+      setOpenDropdown(label);
+      timerRef.current = setTimeout(() => {
+        setOpenDropdown(null);
+        timerRef.current = null;
+      }, durationMs);
+    },
+    [clearCloseTimer],
+  );
+
+  const handleTabClick = (e: React.MouseEvent, label: string) => {
+    e.preventDefault();
+    if (openDropdown === label && timerRef.current) {
+      closeDropdown();
+    } else {
+      openDropdownWithTimer(label, 4000);
+    }
+  };
+
+  const handleMouseEnter = (label: string) => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    if (openDropdown !== label && !timerRef.current) {
+      setOpenDropdown(label);
+    }
+  };
+
+  const handleMouseLeave = (label: string) => {
+    if (timerRef.current) {
+      return;
+    }
+    hoverTimerRef.current = setTimeout(() => {
+      setOpenDropdown((current) => (current === label ? null : current));
+      hoverTimerRef.current = null;
+    }, 200);
+  };
+
+  // Cierre al hacer click fuera o presionar Escape
+  useEffect(() => {
+    if (!openDropdown) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        closeDropdown();
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeDropdown();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [openDropdown, closeDropdown]);
+
+  // Limpieza de temporizadores al desmontar el componente
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -106,7 +208,8 @@ export function Header() {
 
   useEffect(() => {
     setAbierto(false);
-  }, [pathname]);
+    closeDropdown();
+  }, [pathname, closeDropdown]);
 
   return (
     <header
@@ -181,45 +284,64 @@ export function Header() {
       {/* 2. Barra de navegación principal */}
       <div className="container-page flex h-20 items-center justify-between gap-6">
         {/* Marca oficial */}
-        <Link to="/" aria-label="FUNASF — Inicio" className="shrink-0">
+        <Link to="/" onClick={closeDropdown} aria-label="FUNASF — Inicio" className="shrink-0">
           <Wordmark />
         </Link>
 
         {/* Enlaces de navegación con hover cards refinados */}
         <nav
+          ref={navRef}
           aria-label="Navegación principal"
           className="hidden lg:flex lg:items-center lg:gap-1 xl:gap-1.5"
         >
           {navegacion.map((item) => {
             const active = isRouteActive(item.to, item.children, pathname);
+            const isOpen = openDropdown === item.label;
 
             return item.children ? (
-              <div key={item.label} className="relative group inline-block">
-                <Link
-                  to={item.to}
+              <div
+                key={item.label}
+                className="relative inline-block"
+                onMouseEnter={() => handleMouseEnter(item.label)}
+                onMouseLeave={() => handleMouseLeave(item.label)}
+              >
+                <button
+                  type="button"
+                  onClick={(e) => handleTabClick(e, item.label)}
+                  aria-expanded={isOpen}
+                  aria-haspopup="true"
                   className={cn(
-                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-                    active
+                    "inline-flex h-9 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50 cursor-pointer",
+                    active || isOpen
                       ? "bg-brand-green/12 text-brand-green-deep"
-                      : "text-foreground/80 group-hover:bg-brand-green-soft/60 group-hover:text-foreground group-focus-within:bg-brand-green-soft/60 group-focus-within:text-foreground",
+                      : "text-foreground/80 hover:bg-brand-green-soft/60 hover:text-foreground",
                   )}
                 >
                   <span>{item.label}</span>
                   <ChevronDown
                     aria-hidden="true"
                     className={cn(
-                      "size-3.5 transition-transform duration-200 group-hover:rotate-180 group-focus-within:rotate-180",
-                      active
+                      "size-3.5 transition-transform duration-200",
+                      isOpen ? "rotate-180" : "rotate-0",
+                      active || isOpen
                         ? "text-brand-green-deep opacity-90"
                         : "text-muted-foreground opacity-60",
                     )}
                   />
-                </Link>
-                <div className="absolute left-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-[opacity,visibility] duration-200 z-50">
+                </button>
+                <div
+                  className={cn(
+                    "absolute left-0 top-full pt-1 transition-[opacity,visibility,transform] duration-200 z-50",
+                    isOpen
+                      ? "opacity-100 visible translate-y-0 pointer-events-auto"
+                      : "opacity-0 invisible -translate-y-1 pointer-events-none",
+                  )}
+                >
                   <div className="border-border bg-popover w-72 rounded-xl border p-1.5 shadow-lg">
                     <div className="border-border/60 mb-1 border-b px-2.5 py-1.5">
                       <Link
                         to={item.to}
+                        onClick={closeDropdown}
                         className="text-primary hover:text-brand-green-deep group/link flex items-center justify-between text-xs font-semibold transition-colors"
                       >
                         <span>Explorar todo en {item.label}</span>
@@ -239,6 +361,7 @@ export function Header() {
                           <Link
                             key={child.label}
                             to={child.to}
+                            onClick={closeDropdown}
                             activeOptions={{ exact: true, includeHash: false }}
                             {...(child.hash ? { hash: child.hash } : {})}
                             className={cn(
@@ -279,6 +402,7 @@ export function Header() {
               <Link
                 key={item.label}
                 to={item.to}
+                onClick={closeDropdown}
                 className={cn(
                   "inline-flex h-9 items-center rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-[color,background-color] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
                   active
@@ -299,7 +423,7 @@ export function Header() {
             size="sm"
             className="bg-brand-green hover:bg-brand-green-deep text-white hidden sm:inline-flex h-10 rounded-xl px-5 text-xs font-semibold shadow-sm transition-[background-color,box-shadow,transform] hover:shadow-md"
           >
-            <Link to="/inscripcion">
+            <Link to="/inscripcion" onClick={closeDropdown}>
               Postularme a Beca
             </Link>
           </Button>
