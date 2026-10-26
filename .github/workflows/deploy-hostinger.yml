@@ -18,7 +18,7 @@ jobs:
       - name: 🟢 Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: 📦 Instalar dependencias
         run: |
@@ -38,6 +38,7 @@ jobs:
         run: npm run build
 
       - name: 🚀 Sincronizar por FTPS a Hostinger public_html
+        if: ${{ secrets.HOSTINGER_FTP_SERVER != '' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.HOSTINGER_FTP_SERVER }}
@@ -48,3 +49,7 @@ jobs:
           local-dir: ./dist/
           server-dir: ./public_html/
           dangerous-clean-slate: false
+
+      - name: ℹ️ Aviso de configuración FTPS
+        if: ${{ secrets.HOSTINGER_FTP_SERVER == '' }}
+        run: echo "HOSTINGER_FTP_SERVER no configurado en los secretos de GitHub. Paso de sincronización FTPS omitido."
