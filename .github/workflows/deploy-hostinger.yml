@@ -10,6 +10,10 @@ jobs:
   build-and-deploy:
     name: Build & Deploy a Hostinger public_html
     runs-on: ubuntu-latest
+    env:
+      HOSTINGER_FTP_SERVER: ${{ secrets.HOSTINGER_FTP_SERVER }}
+      VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
 
     steps:
       - name: 📥 Clonar repositorio
@@ -32,13 +36,10 @@ jobs:
         run: npx tsc --noEmit
 
       - name: 🏗️ Compilar para Hostinger LiteSpeed (Vite + Postbuild)
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         run: npm run build
 
       - name: 🚀 Sincronizar por FTPS a Hostinger public_html
-        if: ${{ secrets.HOSTINGER_FTP_SERVER != '' }}
+        if: env.HOSTINGER_FTP_SERVER != ''
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.HOSTINGER_FTP_SERVER }}
@@ -51,5 +52,5 @@ jobs:
           dangerous-clean-slate: false
 
       - name: ℹ️ Aviso de configuración FTPS
-        if: ${{ secrets.HOSTINGER_FTP_SERVER == '' }}
+        if: env.HOSTINGER_FTP_SERVER == ''
         run: echo "HOSTINGER_FTP_SERVER no configurado en los secretos de GitHub. Paso de sincronización FTPS omitido."
