@@ -120,7 +120,7 @@ function DetallePrograma() {
           </nav>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3 py-1 text-xs font-semibold text-brand-gold">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3 py-1 text-xs font-semibold text-brand-gold-on-dark">
               <GraduationCap className="size-3.5" />
               <span>{programa.categoria}</span>
             </div>

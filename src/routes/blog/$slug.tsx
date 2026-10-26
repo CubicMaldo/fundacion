@@ -180,7 +180,7 @@ function ArticuloDetailPage() {
           </nav>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-gold">
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-gold-on-dark">
               <span>{articulo.categoria}</span>
               <span aria-hidden="true" className="text-primary-foreground/40">
                 ·

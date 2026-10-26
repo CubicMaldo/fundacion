@@ -124,10 +124,8 @@ export function PortalEstudiantilView() {
         ) : (
           <div className="mx-auto max-w-4xl">
             <div className="rounded-3xl border border-slate-200/90 bg-linear-to-br from-emerald-50/70 via-white to-slate-50 p-8 md:p-12 shadow-xs text-center">
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-brand-green/10 text-brand-green mx-auto mb-5 border border-brand-green/20">
-                <UserCheck className="size-8" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+              <h2 className="flex items-center justify-center gap-3 text-2xl sm:text-3xl font-bold font-display text-slate-900">
+                <UserCheck aria-hidden className="size-7 shrink-0 text-brand-green" />
                 Ingreso al Expediente de Notas y Cursos
               </h2>
               <p className="text-sm text-slate-600 max-w-xl mx-auto mt-2 leading-relaxed">
@@ -174,10 +172,9 @@ export function PortalEstudiantilView() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:border-emerald-300 transition-colors">
             <div>
-              <div className="flex size-10 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-3">
+              <div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
                 <FileText className="size-5" />
-              </div>
-              <h4 className="font-bold text-base text-slate-900">Constancia de Estudio</h4>
+              </div><h3 className="font-bold text-base text-slate-900">Constancia de Estudio</h3></div>
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 Documento oficial que certifica tu condición de estudiante activo para cajas de compensación, subsidios o empleadores.
               </p>
@@ -196,10 +193,9 @@ export function PortalEstudiantilView() {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:border-amber-300 transition-colors">
             <div>
-              <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700 mb-3">
+              <div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700">
                 <Award className="size-5" />
-              </div>
-              <h4 className="font-bold text-base text-slate-900">Renovación de Beca</h4>
+              </div><h3 className="font-bold text-base text-slate-900">Renovación de Beca</h3></div>
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 Postulación para mantener tu beneficio institucional de hasta el 90 % en el siguiente periodo académico.
               </p>
@@ -218,10 +214,9 @@ export function PortalEstudiantilView() {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:border-emerald-300 transition-colors">
             <div>
-              <div className="flex size-10 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-3">
+              <div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
                 <FileCheck2 className="size-5" />
-              </div>
-              <h4 className="font-bold text-base text-slate-900">Certificado de Notas</h4>
+              </div><h3 className="font-bold text-base text-slate-900">Certificado de Notas</h3></div>
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 Sábana valorativa con el consolidado de asignaturas aprobadas, créditos y ponderados acumulados.
               </p>
@@ -240,10 +235,9 @@ export function PortalEstudiantilView() {
 
           <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col justify-between hover:border-slate-400 transition-colors">
             <div>
-              <div className="flex size-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700 mb-3">
+              <div className="flex items-center gap-3"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
                 <HelpCircle className="size-5" />
-              </div>
-              <h4 className="font-bold text-base text-slate-900">Peticiones y Asesoría</h4>
+              </div><h3 className="font-bold text-base text-slate-900">Peticiones y Asesoría</h3></div>
               <p className="text-xs text-slate-500 mt-2 leading-relaxed">
                 Comunícate con la coordinación pedagógica ante dudas con tus horarios, docentes o procesos formativos.
               </p>
@@ -284,7 +278,7 @@ export function PortalEstudiantilView() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
-              <div className="flex items-center gap-2 text-amber-600 text-xs font-bold uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-amber-700 text-xs font-bold uppercase tracking-wider mb-2">
                 <Clock className="size-4" />
                 <span>Fase 2</span>
               </div>
@@ -308,7 +302,7 @@ export function PortalEstudiantilView() {
             </div>
 
             <div className="rounded-2xl border border-border bg-card p-5 shadow-xs">
-              <div className="flex items-center gap-2 text-emerald-600 text-xs font-bold uppercase tracking-wider mb-2">
+              <div className="flex items-center gap-2 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-2">
                 <CheckCircle2 className="size-4" />
                 <span>Fase 4</span>
               </div>

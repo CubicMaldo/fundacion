@@ -160,11 +160,11 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
             <div className="grid grid-cols-2 gap-2.5 sm:flex sm:items-center">
               <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
                 <span className="block text-lg font-bold text-foreground tabular-nums">{cursosEnCurso}</span>
-                <span className="text-[10px] uppercase font-semibold text-muted-foreground">Cursando</span>
+                <span className="text-[11px] uppercase font-semibold text-muted-foreground">Cursando</span>
               </div>
               <div className="rounded-xl bg-muted/50 px-3.5 py-2 text-center border border-border/60">
                 <span className="block text-lg font-bold text-foreground tabular-nums">{cursosAprobados}</span>
-                <span className="text-[10px] uppercase font-semibold text-muted-foreground">Aprobados</span>
+                <span className="text-[11px] uppercase font-semibold text-muted-foreground">Aprobados</span>
               </div>
             </div>
 
@@ -420,7 +420,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                                 Retroalimentación: {entrega.retroalimentacion}
                               </p>
                             )}
-                            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
                               <Clock className="size-3" />
                               Entregado el: {new Date(entrega.fechaEntrega).toLocaleDateString()}
                             </span>
@@ -438,7 +438,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                             </Button>
                             <Badge
                               variant="outline"
-                              className={`text-[10px] uppercase font-semibold ${
+                              className={`text-[11px] uppercase font-semibold ${
                                 entrega.estado === "calificado"
                                   ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/30"
                                   : "bg-amber-500/10 text-amber-600 border-amber-500/30"
@@ -498,7 +498,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-foreground">{obs.titulo}</span>
-                            <span className="text-[10px] text-muted-foreground">
+                            <span className="text-[11px] text-muted-foreground">
                               {new Date(obs.createdAt).toLocaleDateString()}
                             </span>
                           </div>
@@ -544,7 +544,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 </p>
               </div>
               <div className="rounded-xl border border-slate-300 p-2 text-center bg-slate-50 shrink-0">
-                <span className="block text-[10px] uppercase font-bold text-slate-500">Documento</span>
+                <span className="block text-[11px] uppercase font-bold text-slate-500">Documento</span>
                 <span className="block text-xs font-mono font-bold text-emerald-800">BOLETÍN OFICIAL</span>
               </div>
             </div>
@@ -552,19 +552,19 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
             {/* Datos del Estudiante */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
               <div>
-                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Estudiante</span>
+                <span className="text-[11px] text-slate-500 uppercase block font-semibold">Estudiante</span>
                 <span className="font-bold text-slate-900">{profile?.nombre_completo || "Estudiante FUNASF"}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Documento / ID</span>
+                <span className="text-[11px] text-slate-500 uppercase block font-semibold">Documento / ID</span>
                 <span className="font-mono font-bold text-slate-900">{profile?.documento || profile?.id?.slice(0, 8).toUpperCase() || "N/A"}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Fecha de Emisión</span>
+                <span className="text-[11px] text-slate-500 uppercase block font-semibold">Fecha de Emisión</span>
                 <span className="font-semibold text-slate-900">{new Date().toLocaleDateString("es-CO")}</span>
               </div>
               <div>
-                <span className="text-[10px] text-slate-500 uppercase block font-semibold">Sede y Registro</span>
+                <span className="text-[11px] text-slate-500 uppercase block font-semibold">Sede y Registro</span>
                 <span className="font-semibold text-slate-900">Valle del Cauca / Atlántico</span>
               </div>
             </div>
@@ -613,7 +613,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                           <TableCell className="text-center">
                             <Badge
                               variant="outline"
-                              className={`text-[10px] uppercase font-bold ${
+                              className={`text-[11px] uppercase font-bold ${
                                 mat.estado === "aprobado"
                                   ? "bg-emerald-50 text-emerald-800 border-emerald-300"
                                   : mat.estado === "reprobado"
@@ -681,7 +681,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 </p>
               </div>
               <div className="rounded-xl border border-slate-300 p-2 text-center bg-slate-50 shrink-0">
-                <span className="block text-[10px] uppercase font-bold text-slate-500">Certificación</span>
+                <span className="block text-[11px] uppercase font-bold text-slate-500">Certificación</span>
                 <span className="block text-xs font-mono font-bold text-emerald-800">CONSTANCIA DE ESTUDIO</span>
               </div>
             </div>

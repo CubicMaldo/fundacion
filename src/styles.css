@@ -152,7 +152,8 @@
     text-rendering: optimizeLegibility;
   }
 
-  p {
+  p,
+  li {
     text-wrap: pretty;
   }
 

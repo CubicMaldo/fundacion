@@ -60,11 +60,11 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
                   <span className="font-display font-bold text-sm text-foreground tracking-tight">
                     EduFUNASF
                   </span>
-                  <span className="inline-flex items-center rounded-md bg-brand-green/10 px-1.5 py-0.5 text-[10px] font-semibold text-brand-green ring-1 ring-brand-green/20">
+                  <span className="inline-flex items-center rounded-md bg-brand-green/10 px-1.5 py-0.5 text-[11px] font-semibold text-brand-green ring-1 ring-brand-green/20">
                     Estudiantes
                   </span>
                 </div>
-                <span className="text-[10px] text-muted-foreground -mt-0.5">
+                <span className="text-[11px] text-muted-foreground -mt-0.5">
                   Fundación Amigos Sin Fronteras
                 </span>
               </div>
@@ -88,7 +88,7 @@ export function StudentPortalLayout({ children }: { children: React.ReactNode })
                   <span className="text-xs font-semibold text-foreground leading-tight">
                     {profile?.nombre_completo || "Estudiante"}
                   </span>
-                  <span className="text-[10px] text-muted-foreground leading-tight">
+                  <span className="text-[11px] text-muted-foreground leading-tight">
                     {user.email}
                   </span>
                 </div>

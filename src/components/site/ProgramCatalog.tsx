@@ -157,7 +157,7 @@ export function ProgramCatalog({
                   <span>{label}</span>
                   <span
                     className={cn(
-                      "text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none tabular-nums",
+                      "text-[11px] font-semibold px-1.5 py-0.5 rounded-full leading-none tabular-nums",
                       isActive
                         ? "bg-primary-foreground/20 text-primary-foreground"
                         : "bg-muted text-muted-foreground",

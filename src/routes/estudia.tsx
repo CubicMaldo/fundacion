@@ -166,8 +166,8 @@ function Estudia() {
           <div>
             <SectionHeading invert title={becas.titulo} description={becas.intro} />
             <p className="text-primary-foreground/80 mt-5 leading-relaxed">{becas.proposito}</p>
-            <p className="text-brand-gold mt-8 text-2xl font-semibold">{becas.porcentaje}</p>
-            <p className="text-primary-foreground/60 mt-2 text-xs">{becas.aclaracion}</p>
+            <p className="text-brand-gold-on-dark mt-8 text-2xl font-semibold">{becas.porcentaje}</p>
+            <p className="text-primary-foreground/80 mt-2 text-xs">{becas.aclaracion}</p>
           </div>
           <div className="bg-primary-foreground/5 rounded-2xl border border-white/10 p-8 backdrop-blur-xs">
             <h3 className="font-display text-xl font-semibold text-white">

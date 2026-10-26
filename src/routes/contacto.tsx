@@ -159,8 +159,7 @@ function Contacto() {
       <Section tone="soft">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10">
-            <span className="eyebrow">Buzón directo</span>
-            <h2 className="text-foreground mt-3 text-3xl font-display font-semibold">
+            <h2 className="text-foreground text-3xl font-display font-semibold">
               Envíanos un mensaje
             </h2>
             <p className="text-muted-foreground mt-2 text-sm">
@@ -322,8 +321,7 @@ function Contacto() {
       <Section tone="surface">
         <div className="flex flex-col gap-7 md:flex-row md:items-center md:justify-between">
           <div>
-            <span className="eyebrow">Sede principal</span>
-            <h2 className="text-foreground mt-3 text-3xl">Cali, Valle del Cauca</h2>
+            <h2 className="text-foreground text-3xl">Sede principal: Cali, Valle del Cauca</h2>
             <p className="text-muted-foreground mt-3 flex items-center gap-2">
               <MapPin aria-hidden className="size-4" /> {org.direccionPrincipal}
             </p>

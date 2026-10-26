@@ -122,7 +122,7 @@ function QuienesSomos() {
 
       <Section id="resena-historica">
         <SectionHeading title={resenaHistorica.titulo} />
-        <div className="mt-10 grid gap-12 lg:grid-cols-[1.3fr_0.7fr]">
+        <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:items-center">
           <div className="text-muted-foreground space-y-4 leading-relaxed">
             {resenaHistorica.parrafos.map((p) => (
               <p key={p}>{p}</p>
@@ -256,7 +256,7 @@ function QuienesSomos() {
               key={t.nombre}
               className="border-primary-foreground/20 bg-primary-foreground/5 rounded-xl border p-5"
             >
-              <h3 className="text-brand-gold text-base">{t.nombre}</h3>
+              <h3 className="text-brand-gold-on-dark text-base">{t.nombre}</h3>
               <p className="text-primary-foreground/80 mt-2 text-sm leading-relaxed">{t.texto}</p>
             </div>
           ))}

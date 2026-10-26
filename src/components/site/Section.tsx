@@ -54,7 +54,8 @@ export function SectionHeading({
       {description ? (
         <p
           className={cn(
-            "text-balance-pretty mt-4 text-base leading-relaxed md:text-lg",
+            "text-balance-pretty mt-4 max-w-2xl text-base leading-relaxed md:text-lg",
+            align === "center" && "mx-auto",
             invert ? "text-primary-foreground/85" : "text-muted-foreground",
           )}
         >

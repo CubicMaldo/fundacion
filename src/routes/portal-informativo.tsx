@@ -128,7 +128,7 @@ function PortalInformativo() {
         />
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <div>
-            <h3 className="text-brand-gold text-sm font-bold tracking-[0.14em] uppercase">
+            <h3 className="text-brand-gold-on-dark text-sm font-bold tracking-[0.14em] uppercase">
               Puedes aportar
             </h3>
             <ul className="text-primary-foreground/85 mt-4 grid gap-2 text-sm sm:grid-cols-2">
@@ -138,7 +138,7 @@ function PortalInformativo() {
             </ul>
           </div>
           <div>
-            <h3 className="text-brand-gold text-sm font-bold tracking-[0.14em] uppercase">
+            <h3 className="text-brand-gold-on-dark text-sm font-bold tracking-[0.14em] uppercase">
               Áreas de voluntariado
             </h3>
             <ul className="text-primary-foreground/85 mt-4 grid gap-2 text-sm sm:grid-cols-2">
@@ -148,7 +148,7 @@ function PortalInformativo() {
             </ul>
           </div>
         </div>
-        <p className="text-brand-gold mt-10 text-xl font-medium italic">{voluntariado.destacado}</p>
+        <p className="text-brand-gold-on-dark mt-10 text-xl font-medium italic">{voluntariado.destacado}</p>
         <Button asChild className="mt-8" variant="gold">
           <Link to="/contacto">Quiero ser voluntario</Link>
         </Button>

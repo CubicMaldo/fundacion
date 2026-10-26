@@ -31,7 +31,7 @@ function TratamientoDatosPage() {
       />
 
       <Section>
-        <div className="mx-auto max-w-4xl space-y-10 text-foreground/90">
+        <div className="mx-auto max-w-2xl space-y-10 text-foreground/90">
           <div className="rounded-xl border border-border bg-card p-6 md:p-8 shadow-xs space-y-3">
             <div className="flex items-center gap-3 text-brand-green font-bold text-sm uppercase tracking-wider">
               <FileText className="size-5" />
@@ -46,7 +46,7 @@ function TratamientoDatosPage() {
             </p>
           </div>
 
-          <div className="space-y-6 text-sm sm:text-base leading-relaxed">
+          <div className="space-y-6 text-base sm:text-lg leading-relaxed">
             <div className="space-y-3">
               <h2 className="font-display text-2xl font-bold text-foreground">
                 1. Autorización del Titular

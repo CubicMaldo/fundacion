@@ -75,10 +75,7 @@ function ProgramasIndexComponent() {
       {/* Catálogo de programas con buscador y filtros */}
       <main className="container-page py-12 md:py-16">
         <div className="mb-10 max-w-3xl">
-          <span className="text-brand-brown text-xs font-bold tracking-[0.16em] uppercase">
-            Catálogo navegable
-          </span>
-          <h2 className="text-foreground mt-2 text-2xl font-semibold sm:text-3xl">
+          <h2 className="text-foreground text-2xl font-semibold sm:text-3xl">
             Encuentra el programa ideal para tu proyecto de vida
           </h2>
           <p className="text-muted-foreground mt-3 text-base leading-relaxed">
@@ -93,10 +90,7 @@ function ProgramasIndexComponent() {
         <section className="mt-16 rounded-2xl border border-border bg-card p-6 md:p-10 shadow-sm">
           <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
             <div>
-              <span className="text-brand-green-deep text-xs font-bold tracking-[0.16em] uppercase">
-                Transparencia institucional
-              </span>
-              <h3 className="text-foreground mt-3 text-xl font-bold sm:text-2xl">
+              <h3 className="text-foreground text-xl font-bold sm:text-2xl">
                 {formacionAcademica.titulo}
               </h3>
               <div className="text-muted-foreground mt-4 space-y-3 text-sm leading-relaxed">
@@ -106,7 +100,7 @@ function ProgramasIndexComponent() {
               </div>
             </div>
 
-            <div className="space-y-4 rounded-xl border border-border/70 bg-surface p-5">
+            <div className="space-y-4 lg:border-l lg:border-border lg:pl-8">
               <h4 className="text-sm font-bold uppercase tracking-wider text-brand-brown">
                 ¿Cómo funciona el proceso?
               </h4>
@@ -127,7 +121,7 @@ function ProgramasIndexComponent() {
         {/* Llamado a la acción: Becas */}
         <section className="mt-16 rounded-2xl bg-brand-green-deep p-8 md:p-12 text-primary-foreground text-center">
           <div className="max-w-2xl mx-auto space-y-4">
-            <span className="inline-block rounded-full bg-brand-gold/20 px-4 py-1 text-xs font-semibold text-brand-gold uppercase tracking-wider">
+            <span className="inline-block rounded-full bg-brand-gold/20 px-4 py-1 text-xs font-semibold text-brand-gold-on-dark uppercase tracking-wider">
               {becas.porcentaje}
             </span>
             <h3 className="text-2xl md:text-3xl font-bold">{becas.titulo}</h3>

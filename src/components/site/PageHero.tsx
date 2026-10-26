@@ -38,7 +38,7 @@ export function PageHero({
             {title}
           </h1>
           {displayDescription ? (
-            <p className="text-primary-foreground/85 text-balance-pretty mt-5 text-lg leading-relaxed">
+            <p className="text-primary-foreground/85 text-balance-pretty mt-5 max-w-2xl text-lg leading-relaxed">
               {displayDescription}
             </p>
           ) : null}

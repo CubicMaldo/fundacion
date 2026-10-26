@@ -104,7 +104,7 @@ function InscripcionPage() {
               </div>
               <ul className="space-y-3.5 text-xs text-foreground/80 leading-relaxed">
                 <li className="flex items-start gap-2.5">
-                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[10px]">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[11px]">
                     1
                   </span>
                   <span>
@@ -112,7 +112,7 @@ function InscripcionPage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[10px]">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[11px]">
                     2
                   </span>
                   <span>
@@ -120,7 +120,7 @@ function InscripcionPage() {
                   </span>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[10px]">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-green text-white font-bold text-[11px]">
                     3
                   </span>
                   <span>
@@ -157,7 +157,7 @@ function InscripcionPage() {
                 href={whatsappLink}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 text-xs transition-colors shadow-xs"
+                className="inline-flex items-center justify-center gap-2 w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-2.5 text-xs transition-colors shadow-xs"
               >
                 Chatear con Orientador de Admisiones
               </a>

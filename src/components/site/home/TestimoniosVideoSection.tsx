@@ -109,7 +109,7 @@ export function TestimoniosVideoSection() {
           <h3 className="font-display text-lg font-bold text-brand-green-deep mb-3">
             Responsabilidades de las instituciones aliadas
           </h3>
-          <p className="text-xs text-muted-foreground mb-4 leading-relaxed max-w-[65ch]">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-4 leading-relaxed">
             {modeloAlianzas.responsabilidades.intro}
           </p>
           <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">

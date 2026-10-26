@@ -111,12 +111,12 @@ function GaleriaPage() {
                   />
                   {/* Overlay en hover / focus */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 flex flex-col justify-end p-4 text-white">
-                    <span className="text-[11px] font-semibold uppercase tracking-wider text-brand-gold">
+                    <span className="text-[11px] font-semibold uppercase tracking-wider text-brand-gold-on-dark">
                       {foto.categoria}
                     </span>
-                    <h3 className="font-semibold text-sm leading-snug mt-0.5 line-clamp-2 text-white">
+                    <h2 className="font-semibold text-sm leading-snug mt-0.5 line-clamp-2 text-white">
                       {foto.titulo}
-                    </h3>
+                    </h2>
                     <div className="mt-2 flex items-center gap-1 text-[11px] text-white/80">
                       <Maximize2 className="size-3" aria-hidden="true" /> Ver en grande
                     </div>
@@ -124,7 +124,7 @@ function GaleriaPage() {
                 </div>
 
                 <div className="p-3.5 block group-hover:hidden sm:hidden">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-brand-brown">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-brand-brown">
                     {foto.categoria}
                   </span>
                   <p className="font-medium text-xs text-foreground truncate mt-0.5">
