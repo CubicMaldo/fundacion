@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, GraduationCap, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { whatsappLink } from "@/data/funasf";
 
@@ -25,11 +25,6 @@ export function HeroSection({ org, quienesSomos }: HeroSectionProps) {
     <section className="surface-hero relative overflow-hidden py-14 md:py-20">
       <div className="container-page relative grid gap-10 md:grid-cols-2 md:items-center">
         <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 bg-brand-gold/15 px-3.5 py-1 text-xs font-semibold text-brand-gold-on-dark">
-            <GraduationCap className="size-3.5 text-brand-gold-on-dark" />
-            <span>Convocatoria de Becas Solidarias 2026</span>
-          </div>
-
           <div className="space-y-3">
             <h1 className="font-display text-primary-foreground text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-[2.75rem] leading-[1.15]">
               Estudia una carrera técnica con beca de hasta el 90%
