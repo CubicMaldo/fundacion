@@ -278,12 +278,14 @@ export function Logo({
   }
 
   if (variant === "vertical") {
+    const isStart = className?.includes("items-start");
+    const alignClass = isStart ? "items-start text-left" : "items-center text-center";
     return (
-      <div className={cn("flex flex-col items-center text-center", className)}>
+      <div className={cn("inline-flex flex-col", alignClass, className)}>
         <div className={cn(sizeMap.emblem, "mb-2")}>
           <EmblemSvg />
         </div>
-        <div className="flex flex-col items-center leading-none">
+        <div className={cn("flex flex-col leading-none", alignClass)}>
           <span
             className={cn(
               "font-display font-extrabold tracking-widest",
@@ -294,7 +296,7 @@ export function Logo({
             FUNASF
           </span>
           {showSubtitle && (
-            <div className="mt-1 flex flex-col items-center">
+            <div className={cn("mt-1 flex flex-col", alignClass)}>
               <span
                 className={cn(
                   "font-bold uppercase leading-tight",

@@ -60,13 +60,7 @@ export function Footer() {
         <h2 className="sr-only">Pie de página institucional y navegación secundaria</h2>
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           <div>
-            <Logo
-              variant="vertical"
-              invert
-              size="lg"
-              showSubtitle
-              className="items-start text-left mb-4"
-            />
+            <Logo variant="horizontal" invert size="lg" showSubtitle className="mb-4" />
             <p className="text-brand-gold-on-dark mt-1 text-sm font-semibold tracking-wide">
               {org.eslogan}
             </p>
@@ -162,8 +156,8 @@ export function Footer() {
                 Información institucional
               </h3>
               <p className="text-primary-foreground/80 max-w-3xl text-xs leading-relaxed">
-                Razón social: {org.razonSocial} · Sigla: {org.sigla} · Tipo: {org.tipoContribuyente} ·
-                NIT: {org.nit} · Domicilio principal: {org.ciudadPrincipal}.
+                Razón social: {org.razonSocial} · Sigla: {org.sigla} · Tipo: {org.tipoContribuyente}{" "}
+                · NIT: {org.nit} · Domicilio principal: {org.ciudadPrincipal}.
               </p>
             </div>
 
