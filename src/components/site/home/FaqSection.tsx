@@ -13,9 +13,13 @@ interface FaqSectionProps {
 
 export function FaqSection({ faq }: FaqSectionProps) {
   return (
-    <Section>
+    <Section id="faq">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-        <SectionHeading eyebrow="Preguntas frecuentes" title="Resuelve tus dudas" />
+        <SectionHeading
+          eyebrow="Preguntas frecuentes"
+          title="Resuelve tus dudas sobre becas y programas"
+          description="Encuentra respuestas claras a las dudas más comunes sobre el proceso de postulación, requisitos, duración y certificación oficial."
+        />
         <Accordion type="single" collapsible className="w-full">
           {faq.map((f, i) => (
             <AccordionItem key={f.pregunta} value={`faq-${i}`}>

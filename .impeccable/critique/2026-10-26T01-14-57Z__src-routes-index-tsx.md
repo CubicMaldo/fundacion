@@ -10,6 +10,7 @@ target_fingerprint: "sha256:cf054d970931edbc922ee5ff852c6d6312cabe25f3ab1e266462
 target_path: "C:\\Users\\Maldonado\\Documents\\Projects\\Paginas Venta\\fundacion\\src\\routes\\index.tsx"
 timestamp: 2026-10-26T01-14-57Z
 slug: src-routes-index-tsx
+closed: true
 ---
 # Critique Snapshot: src/routes/index.tsx (FUNASF Homepage)
 Date: 2026-10-25

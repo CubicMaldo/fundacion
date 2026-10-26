@@ -1,113 +1,31 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2, GraduationCap, Laptop, ShieldCheck, UserCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, GraduationCap, Laptop, Sparkles, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/site/Section";
 
 export function PortalesHubSection() {
   return (
     <Section id="campus-portales" className="bg-muted/30 border-y border-border/60">
-      <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-14">
+      <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12">
         <SectionHeading
           eyebrow="Accesos Académicos"
-          title="Entra a tus clases, notas e inscripciones en un solo lugar"
-          description="Consulta tu expediente estudiantil, registra calificaciones como docente o postúlate en línea a una beca de estudio."
+          title="Tu camino formativo en un solo lugar"
+          description="Elige tu vía de acceso: postúlate a una beca técnica si buscas iniciar estudios o ingresa al campus virtual si ya eres estudiante de la Fundación."
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-        {/* Tarjeta 1: Portal Estudiantil */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 md:p-8 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
+      {/* Grid dual enfocado para los dos perfiles principales: Aspirantes y Estudiantes */}
+      <div className="grid gap-6 md:grid-cols-2 max-w-5xl mx-auto">
+        {/* Tarjeta 1: Nuevos Aspirantes y Becas 2026 (Máxima prioridad de conversión) */}
+        <article className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xs hover:border-brand-green/60 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
           <div>
             <div className="flex items-center justify-between mb-5">
               <span className="inline-flex items-center justify-center size-12 rounded-xl bg-brand-green/10 text-brand-green-deep group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                <GraduationCap className="size-6" />
+                <Laptop className="size-6" aria-hidden="true" />
               </span>
-            </div>
-
-            <h3 className="font-display text-xl font-bold text-foreground mb-2 group-hover:text-brand-green-deep transition-colors">
-              Portal Estudiantil
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Consulta en tiempo real tus asignaturas matriculadas, el desglose de notas por componentes con porcentajes, tu definitiva acumulada y solicita certificados oficiales.
-            </p>
-
-            <ul className="space-y-2.5 text-xs text-foreground/80 mb-6">
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Expediente de calificaciones y malla evaluativa</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Radicación de trámites y certificados de estudio</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Ingreso con usuario o correo institucional</span>
-              </li>
-            </ul>
-          </div>
-
-          <Button
-            asChild
-            className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold rounded-xl h-11 shadow-xs group-hover:shadow-md"
-          >
-            <Link to="/portal-estudiantil">
-              Ingresar al Portal Estudiantil
-              <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </Button>
-        </div>
-
-        {/* Tarjeta 2: Portal Docente */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 md:p-8 shadow-xs hover:border-brand-gold/60 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
-          <div>
-            <div className="flex items-center justify-between mb-5">
-              <span className="inline-flex items-center justify-center size-12 rounded-xl bg-brand-gold/15 text-brand-gold-deep group-hover:bg-brand-gold group-hover:text-brand-green-deep transition-colors duration-300">
-                <UserCheck className="size-6 text-brand-gold-deep" />
-              </span>
-            </div>
-
-            <h3 className="font-display text-xl font-bold text-foreground mb-2 group-hover:text-brand-green-deep transition-colors">
-              Portal Docente
-            </h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Gestión académica integral: configura la malla de evaluación del curso (100%), asienta notas parciales (0.0 - 5.0), registra observaciones pedagógicas y cierra periodos.
-            </p>
-
-            <ul className="space-y-2.5 text-xs text-foreground/80 mb-6">
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-brown shrink-0" />
-                <span>Planilla interactiva de evaluación por corte</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-brown shrink-0" />
-                <span>Cálculo automático de notas definitivas ponderadas</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-brown shrink-0" />
-                <span>Observaciones académicas y actas de notas</span>
-              </li>
-            </ul>
-          </div>
-
-          <Button
-            asChild
-            variant="outline"
-            className="w-full border-border hover:border-brand-gold hover:bg-brand-gold/10 text-foreground font-semibold rounded-xl h-11"
-          >
-            <Link to="/docente">
-              Ingresar al Portal Docente
-              <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </Button>
-        </div>
-
-        {/* Tarjeta 3: Admisiones y Becas 2026 */}
-        <div className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 md:p-8 shadow-xs hover:border-brand-green/50 hover:shadow-md transition-[border-color,box-shadow] duration-200 group md:col-span-2 lg:col-span-1">
-          <div>
-            <div className="flex items-center justify-between mb-5">
-              <span className="inline-flex items-center justify-center size-12 rounded-xl bg-brand-green/10 text-brand-green-deep group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
-                <Laptop className="size-6" />
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-gold/20 px-3 py-1 text-xs font-bold text-brand-green-deep">
+                <Sparkles className="size-3 text-brand-gold-deep" aria-hidden="true" />
+                Convocatoria 2026
               </span>
             </div>
 
@@ -115,36 +33,105 @@ export function PortalesHubSection() {
               Admisiones y Becas
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-              Postúlate en línea al subsidio solidario de hasta el 90% en tu programa técnico laboral. Registro ágil y acompañamiento personalizado con la coordinación de admisiones.
+              Postúlate al subsidio solidario de hasta el 90% para carreras técnicas laborales en
+              alianza institucional. Acompañamiento ágil desde el primer día.
             </p>
 
-            <ul className="space-y-2.5 text-xs text-foreground/80 mb-6">
+            <ul className="space-y-2.5 text-xs text-foreground/85 mb-8">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Formulario en línea con respuesta y asesoría directa</span>
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Subsidio educativo aplicable a todos los programas técnicos</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Subsidio educativo en convenio institucional</span>
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Formulario 100% en línea con orientación directa por WhatsApp</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0" />
-                <span>Acompañamiento pedagógico y tutoría continua</span>
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Programas con prácticas asistenciales y validez nacional</span>
               </li>
             </ul>
           </div>
 
           <Button
             asChild
-            variant="secondary"
-            className="w-full bg-muted hover:bg-brand-green-soft text-brand-green-deep font-semibold rounded-xl h-11"
+            className="w-full bg-brand-green hover:bg-brand-green-deep text-white font-semibold rounded-xl h-12 shadow-xs group-hover:shadow-md transition-all text-sm"
           >
             <Link to="/inscripcion">
-              Postularme a Beca 2026
-              <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+              Postularme a una Beca 2026
+              <ArrowRight
+                className="size-4 ml-1.5 group-hover:translate-x-1 transition-transform"
+                aria-hidden="true"
+              />
             </Link>
           </Button>
+        </article>
+
+        {/* Tarjeta 2: Estudiantes Matriculados */}
+        <article className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xs hover:border-brand-green/60 hover:shadow-md transition-[border-color,box-shadow] duration-200 group">
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <span className="inline-flex items-center justify-center size-12 rounded-xl bg-brand-green/10 text-brand-green-deep group-hover:bg-brand-green group-hover:text-white transition-colors duration-300">
+                <GraduationCap className="size-6" aria-hidden="true" />
+              </span>
+              <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                Comunidad Activa
+              </span>
+            </div>
+
+            <h3 className="font-display text-xl font-bold text-foreground mb-2 group-hover:text-brand-green-deep transition-colors">
+              Portal Estudiantil
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+              Espacio exclusivo para alumnos matriculados. Consulta tus asignaturas, calificaciones
+              parciales por componentes, promedio acumulado y certificados.
+            </p>
+
+            <ul className="space-y-2.5 text-xs text-foreground/85 mb-8">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Historial de notas por corte y definitiva ponderada</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Descarga y radicación de certificados oficiales de estudio</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="size-4 text-brand-green shrink-0" aria-hidden="true" />
+                <span>Ingreso seguro con número de cédula o tarjeta de identidad</span>
+              </li>
+            </ul>
+          </div>
+
+          <Button
+            asChild
+            variant="outline"
+            className="w-full border-border hover:border-brand-green hover:bg-brand-green/5 text-foreground font-semibold rounded-xl h-12 text-sm"
+          >
+            <Link to="/portal-estudiantil">
+              Ingresar al Campus Estudiantil
+              <ArrowRight
+                className="size-4 ml-1.5 group-hover:translate-x-1 transition-transform"
+                aria-hidden="true"
+              />
+            </Link>
+          </Button>
+        </article>
+      </div>
+
+      {/* Acceso discreto para docentes y directivos (evita ruido al aspirante) */}
+      <div className="mt-8 pt-6 border-t border-border/60 max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <UserCheck className="size-4 text-brand-gold-deep" aria-hidden="true" />
+          <span>¿Haces parte de nuestro equipo docente o administrativo?</span>
         </div>
+        <Link
+          to="/docente"
+          className="inline-flex items-center gap-1 font-semibold text-brand-green-deep hover:text-brand-green transition-colors"
+        >
+          <span>Acceder al Portal Docente</span>
+          <ArrowRight className="size-3.5" aria-hidden="true" />
+        </Link>
       </div>
     </Section>
   );

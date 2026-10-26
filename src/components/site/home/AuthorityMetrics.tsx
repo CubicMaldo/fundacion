@@ -79,7 +79,7 @@ export function AuthorityMetrics() {
                   <span
                     className={`font-extrabold tracking-tight text-foreground tabular-nums whitespace-nowrap ${
                       m.isMono
-                        ? "font-mono text-xl sm:text-2xl lg:text-[1.35rem]"
+                        ? "font-display text-lg sm:text-2xl lg:text-3xl"
                         : "font-display text-2xl sm:text-3xl lg:text-4xl"
                     }`}
                   >
@@ -91,9 +91,7 @@ export function AuthorityMetrics() {
                     </span>
                   )}
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-foreground mt-2">
-                  {m.etiqueta}
-                </h3>
+                <h3 className="text-xs sm:text-sm font-bold text-foreground mt-2">{m.etiqueta}</h3>
               </div>
               <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug line-clamp-2">
                 {m.detalle}

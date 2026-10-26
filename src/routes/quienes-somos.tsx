@@ -72,7 +72,7 @@ function QuienesSomos() {
               Nuestro compromiso
             </h2>
             <p>{quienesSomos.compromiso}</p>
-            <p className="border-brand-green text-foreground mt-6 border-l-4 pl-5 text-lg font-medium italic">
+            <p className="border-l-2 border-brand-green text-foreground/90 mt-6 pl-4 text-base sm:text-lg font-medium italic">
               {quienesSomos.destacado}
             </p>
           </div>
@@ -131,7 +131,7 @@ function QuienesSomos() {
               {resenaHistorica.destacados.map((d) => (
                 <p
                   key={d}
-                  className="border-brand-brown text-foreground border-l-4 pl-5 font-medium italic"
+                  className="border-l-2 border-brand-brown/50 text-foreground/90 pl-4 font-medium italic"
                 >
                   {d}
                 </p>

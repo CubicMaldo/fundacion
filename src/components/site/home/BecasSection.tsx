@@ -15,7 +15,9 @@ export function BecasSection({ becas }: BecasSectionProps) {
         <div>
           <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
           <p className="text-primary-foreground/85 mt-5 leading-relaxed">{becas.proposito}</p>
-          <p className="text-brand-gold-on-dark mt-8 text-2xl font-semibold">{becas.destacado}</p>
+          <p className="font-display italic text-brand-gold-on-dark mt-8 text-xl sm:text-2xl font-bold tracking-tight">
+            {becas.destacado}
+          </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Button asChild variant="gold">
               <Link to="/inscripcion">
@@ -35,7 +37,10 @@ export function BecasSection({ becas }: BecasSectionProps) {
               key={b}
               className="text-primary-foreground/90 flex items-start gap-3 py-3.5 first:pt-0 last:pb-0 text-sm leading-relaxed"
             >
-              <span aria-hidden className="bg-brand-gold-on-dark mt-2 size-2 shrink-0 rounded-full" />
+              <span
+                aria-hidden
+                className="bg-brand-gold-on-dark mt-2 size-2 shrink-0 rounded-full"
+              />
               <span>{b}</span>
             </li>
           ))}
