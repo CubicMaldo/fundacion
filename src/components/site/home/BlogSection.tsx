@@ -33,7 +33,6 @@ export function BlogSection({ articulos }: BlogSectionProps) {
     <Section id="blog" tone="soft">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <SectionHeading
-          eyebrow="Actualidad y Comunidad"
           title="Últimas novedades y publicaciones"
           description="Entérate de nuestras convocatorias académicas, historias de superación y las actividades de impacto de la Fundación en los territorios."
         />
@@ -81,7 +80,7 @@ export function BlogSection({ articulos }: BlogSectionProps) {
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
                   {articulo.categoria && (
                     <>
-                      <span className="font-semibold text-brand-brown text-[11px] uppercase tracking-wider">
+                      <span className="font-semibold text-brand-brown text-xs uppercase tracking-wider">
                         {articulo.categoria}
                       </span>
                       <span aria-hidden="true">·</span>

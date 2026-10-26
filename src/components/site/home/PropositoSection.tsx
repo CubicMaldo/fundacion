@@ -45,7 +45,6 @@ export function PropositoSection({ proposito }: PropositoSectionProps) {
     <Section tone="soft" id="proposito-accion-social">
       <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-14">
         <SectionHeading
-          eyebrow="Propósito y Acción Social"
           title={proposito.titulo}
           description={proposito.intro}
           align="center"
@@ -67,7 +66,7 @@ export function PropositoSection({ proposito }: PropositoSectionProps) {
                 </span>
 
                 <div className="flex-1">
-                  <span className="inline-block text-[11px] font-semibold uppercase tracking-wider text-brand-gold-deep mb-1">
+                  <span className="inline-block text-xs font-semibold uppercase tracking-wider text-brand-gold-deep mb-1">
                     {pilar.programa}
                   </span>
                   <h3 className="font-display text-lg font-bold text-foreground">{pilar.titulo}</h3>

@@ -11,7 +11,6 @@ export function AlcanceSection({ alcance }: AlcanceSectionProps) {
       <div className="grid gap-12 lg:grid-cols-2">
         <div>
           <SectionHeading
-            eyebrow="Nuestro alcance"
             title="Presencia territorial"
             description={alcance.intro}
           />

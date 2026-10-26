@@ -9,7 +9,6 @@ export function TestimoniosVideoSection() {
     <Section id="sedes-alianzas" tone="soft">
       <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-14">
         <SectionHeading
-          eyebrow="Sedes y Alianzas Educativas"
           title="Presencia real en los territorios y respaldo institucional"
           description={modeloAlianzas.intro}
         />
@@ -34,7 +33,7 @@ export function TestimoniosVideoSection() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
-              <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-brand-gold px-2.5 py-0.5 text-[11px] font-bold text-brand-green-deep shadow-xs">
+              <span className="absolute top-3 left-3 inline-flex items-center gap-1 rounded-full bg-brand-gold px-2.5 py-0.5 text-xs font-bold text-brand-green-deep shadow-xs">
                 <MapPin className="size-3" aria-hidden="true" />
                 {sede.pais}
               </span>
@@ -49,7 +48,7 @@ export function TestimoniosVideoSection() {
             <div className="flex flex-1 flex-col justify-between p-5">
               <p className="text-xs text-muted-foreground leading-relaxed">{sede.descripcion}</p>
 
-              <div className="mt-4 pt-3 border-t border-border space-y-1.5 text-[11px] text-muted-foreground">
+              <div className="mt-4 pt-3 border-t border-border space-y-1.5 text-xs text-muted-foreground">
                 <p className="flex items-start gap-1.5 text-foreground/85 font-medium">
                   <Building2
                     className="size-3.5 text-brand-green shrink-0 mt-0.5"
@@ -86,7 +85,7 @@ export function TestimoniosVideoSection() {
             {alcance.presencia.map((m: string) => (
               <span
                 key={m}
-                className="inline-flex items-center rounded-md bg-brand-green/10 border border-brand-green/20 px-2.5 py-1 text-[11px] font-semibold text-brand-green-deep"
+                className="inline-flex items-center rounded-md bg-brand-green/10 border border-brand-green/20 px-2.5 py-1 text-xs font-semibold text-brand-green-deep"
               >
                 {m}
               </span>
@@ -95,7 +94,7 @@ export function TestimoniosVideoSection() {
             {alcance.proyeccion.map((p: string) => (
               <span
                 key={p}
-                className="inline-flex items-center rounded-md bg-brand-gold/15 border border-brand-gold/25 px-2.5 py-1 text-[11px] font-semibold text-brand-gold-deep"
+                className="inline-flex items-center rounded-md bg-brand-gold/15 border border-brand-gold/25 px-2.5 py-1 text-xs font-semibold text-brand-gold-deep"
               >
                 {p}
               </span>
@@ -110,7 +109,7 @@ export function TestimoniosVideoSection() {
           <h3 className="font-display text-lg font-bold text-brand-green-deep mb-3">
             Responsabilidades de las instituciones aliadas
           </h3>
-          <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+          <p className="text-xs text-muted-foreground mb-4 leading-relaxed max-w-[65ch]">
             {modeloAlianzas.responsabilidades.intro}
           </p>
           <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
@@ -134,7 +133,7 @@ export function TestimoniosVideoSection() {
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-4">
               {modeloAlianzas.destacado}
             </p>
-            <div className="bg-brand-green/10 border border-brand-green/20 rounded-xl p-4 text-xs font-medium text-brand-green-deep">
+            <div className="border-l-2 border-brand-green pl-4 text-xs sm:text-sm font-medium text-brand-green-deep">
               {modeloAlianzas.responsabilidades.destacado}
             </div>
           </div>

@@ -13,7 +13,7 @@ export function QuienesSomosSection({ quienesSomos }: QuienesSomosSectionProps) 
     <Section id="quienes-somos">
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
         <div>
-          <SectionHeading eyebrow="Quiénes somos" title="Una oportunidad puede cambiar una vida" />
+          <SectionHeading title="Una oportunidad puede cambiar una vida" />
           <div className="text-muted-foreground mt-6 space-y-4 leading-relaxed">
             {quienesSomos.parrafos.map((p) => (
               <p key={p}>{p}</p>

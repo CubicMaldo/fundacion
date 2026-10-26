@@ -31,7 +31,7 @@ export function PlataformasEstudio() {
             <div className="flex size-12 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green mb-4">
               <Laptop className="size-6" />
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-green">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-green">
               Campus Digital
             </span>
             <h3 className="text-lg font-bold text-foreground mt-1">
@@ -50,7 +50,7 @@ export function PlataformasEstudio() {
               <span>Instructivo de Acceso</span>
               <ExternalLink className="size-3.5 ml-1.5" />
             </Button>
-            <p className="text-[11px] text-center text-muted-foreground">
+            <p className="text-xs text-center text-muted-foreground">
               Usa tu documento de identidad como usuario
             </p>
           </div>
@@ -62,7 +62,7 @@ export function PlataformasEstudio() {
             <div className="flex size-12 items-center justify-center rounded-xl bg-amber-500/10 text-amber-700 mb-4">
               <BookOpen className="size-6" />
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-brand-brown">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-brown">
               Guías Académicas
             </span>
             <h3 className="text-lg font-bold text-foreground mt-1">
@@ -93,7 +93,7 @@ export function PlataformasEstudio() {
             <div className="flex size-12 items-center justify-center rounded-xl bg-sky-500/10 text-sky-700 mb-4">
               <Calendar className="size-6" />
             </div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-sky-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-sky-800">
               Sincrónico
             </span>
             <h3 className="text-lg font-bold text-slate-900 mt-1">
@@ -143,7 +143,7 @@ export function PlataformasEstudio() {
                 <ShieldCheck className="size-3.5" />
                 <span>Credenciales de ingreso a plataforma Moodle</span>
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 <strong>Usuario:</strong> Tu número de documento de identidad (sin puntos ni espacios).<br />
                 <strong>Contraseña inicial:</strong> Asignada durante tu inducción o enviada a tu correo institucional.
               </p>

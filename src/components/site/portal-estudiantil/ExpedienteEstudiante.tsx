@@ -144,7 +144,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 <h2 className="text-xl font-bold font-display text-foreground">
                   {profile?.nombre_completo || "Estudiante FUNASF"}
                 </h2>
-                <Badge variant="outline" className="bg-brand-green/10 text-brand-green-deep border-brand-green/30 text-[11px]">
+                <Badge variant="outline" className="bg-brand-green/10 text-brand-green-deep border-brand-green/30 text-xs">
                   Activo
                 </Badge>
               </div>
@@ -255,7 +255,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-brand-gold-deep">
+                      <span className="text-xs font-bold uppercase tracking-wider text-brand-gold-deep">
                         {matriculaActiva.curso.programaNombre}
                       </span>
                       <h3 className="text-xl font-bold font-display text-foreground mt-1">
@@ -292,7 +292,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                     </div>
 
                     <div className="text-left sm:text-right bg-muted/40 sm:bg-transparent p-3 sm:p-0 rounded-xl">
-                      <span className="text-[11px] text-muted-foreground font-medium block">
+                      <span className="text-xs text-muted-foreground font-medium block">
                         Nota Definitiva
                       </span>
                       <span
@@ -315,7 +315,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                   <div className="border-b border-border/80 px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h4 className="text-sm font-bold text-foreground">Malla Evaluativa y Calificaciones</h4>
-                      <p className="text-[11px] text-muted-foreground">Ponderación de notas oficiales y aportes a la definitiva</p>
+                      <p className="text-xs text-muted-foreground">Ponderación de notas oficiales y aportes a la definitiva</p>
                     </div>
                     {matriculaActiva.desglose && matriculaActiva.desglose.length > 0 && (
                       <span className="text-xs font-mono font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 tabular-nums">
@@ -360,7 +360,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                                   {item.nota.toFixed(1)}
                                 </span>
                               ) : (
-                                <span className="text-muted-foreground text-[11px] italic">Pendiente</span>
+                                <span className="text-muted-foreground text-xs italic">Pendiente</span>
                               )}
                             </TableCell>
                             <TableCell className="text-xs text-center font-mono font-medium text-foreground/80">
@@ -384,7 +384,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                         <FileCheck className="size-4 text-brand-green" />
                         Evidencias y Trabajos Prácticos
                       </h4>
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-xs text-muted-foreground">
                         Sube tus archivos de tareas y consulta el estado de revisión.
                       </p>
                     </div>
@@ -411,12 +411,12 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                               {entrega.titulo}
                             </span>
                             {entrega.descripcion && (
-                              <p className="text-muted-foreground text-[11px]">
+                              <p className="text-muted-foreground text-xs">
                                 {entrega.descripcion}
                               </p>
                             )}
                             {entrega.retroalimentacion && (
-                              <p className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5 w-fit">
+                              <p className="text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5 w-fit">
                                 Retroalimentación: {entrega.retroalimentacion}
                               </p>
                             )}
@@ -502,7 +502,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                               {new Date(obs.createdAt).toLocaleDateString()}
                             </span>
                           </div>
-                          <p className="text-muted-foreground leading-relaxed text-[11px]">
+                          <p className="text-muted-foreground leading-relaxed text-xs">
                             {obs.detalle}
                           </p>
                         </div>
@@ -539,7 +539,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 <p className="text-xs font-semibold text-slate-700">
                   NIT: 901964394-1 &bull; Personería Jurídica Vigente &bull; Institución de Educación y Desarrollo Humano
                 </p>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-xs text-slate-500">
                   Sede Principal: CR 96 45 119, Cali, Valle del Cauca &bull; Tel: +57 313 577 9384
                 </p>
               </div>
@@ -603,7 +603,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                         <TableRow key={mat.id} className="text-xs">
                           <TableCell>
                             <div className="font-bold text-slate-900">{mat.curso.nombre}</div>
-                            <div className="text-[11px] text-slate-500 font-mono">{mat.curso.codigo} &bull; {mat.curso.programaNombre}</div>
+                            <div className="text-xs text-slate-500 font-mono">{mat.curso.codigo} &bull; {mat.curso.programaNombre}</div>
                           </TableCell>
                           <TableCell className="text-center font-mono text-slate-700">{mat.curso.periodo}</TableCell>
                           <TableCell className="text-center font-mono font-bold text-base text-slate-900">
@@ -636,11 +636,11 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
             <div className="pt-10 grid grid-cols-2 gap-8 text-center text-xs">
               <div className="border-t border-slate-400 pt-2">
                 <span className="block font-bold text-slate-800">Coordinación Académica</span>
-                <span className="text-[11px] text-slate-500">FUNASF Colombia</span>
+                <span className="text-xs text-slate-500">FUNASF Colombia</span>
               </div>
               <div className="border-t border-slate-400 pt-2">
                 <span className="block font-bold text-slate-800">Secretaría General y Registro</span>
-                <span className="text-[11px] text-slate-500">NIT 901964394-1</span>
+                <span className="text-xs text-slate-500">NIT 901964394-1</span>
               </div>
             </div>
 
@@ -726,11 +726,11 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
             <div className="pt-8 grid grid-cols-2 gap-8 text-center text-xs">
               <div className="border-t border-slate-400 pt-2">
                 <span className="block font-bold text-slate-800">Secretaría Académica</span>
-                <span className="text-[11px] text-slate-500">FUNASF — NIT 901964394-1</span>
+                <span className="text-xs text-slate-500">FUNASF — NIT 901964394-1</span>
               </div>
               <div className="border-t border-slate-400 pt-2">
                 <span className="block font-bold text-slate-800">Código de Verificación</span>
-                <span className="text-[11px] font-mono text-slate-600">
+                <span className="text-xs font-mono text-slate-600">
                   FUNASF-{profile?.id?.slice(0, 8).toUpperCase() || "2026"}
                 </span>
               </div>
@@ -810,7 +810,7 @@ export function ExpedienteEstudiante({ matriculas, onRefresh }: ExpedienteEstudi
                 placeholder="Dejar en blanco para mantener la actual"
                 className="text-xs h-9 font-mono"
               />
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Mínimo 6 caracteres. Si la cambias, úsala la próxima vez que ingreses.
               </p>
             </div>

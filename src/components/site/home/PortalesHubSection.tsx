@@ -8,7 +8,6 @@ export function PortalesHubSection() {
     <Section id="campus-portales" className="bg-muted/30 border-y border-border/60">
       <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-12">
         <SectionHeading
-          eyebrow="Accesos Académicos"
           title="Tu camino formativo en un solo lugar"
           description="Elige tu vía de acceso: postúlate a una beca técnica si buscas iniciar estudios o ingresa al campus virtual si ya eres estudiante de la Fundación."
         />

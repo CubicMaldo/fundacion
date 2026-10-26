@@ -93,7 +93,7 @@ export function AuthorityMetrics() {
                 </div>
                 <h3 className="text-xs sm:text-sm font-bold text-foreground mt-2">{m.etiqueta}</h3>
               </div>
-              <p className="text-[11px] sm:text-xs text-muted-foreground mt-1.5 leading-snug line-clamp-2">
+              <p className="text-xs sm:text-xs text-muted-foreground mt-1.5 leading-snug line-clamp-2">
                 {m.detalle}
               </p>
             </div>

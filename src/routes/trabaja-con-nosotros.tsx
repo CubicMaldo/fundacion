@@ -76,7 +76,6 @@ function TrabajaConNosotrosPage() {
         <div className="grid gap-12 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
           <div>
             <SectionHeading
-              eyebrow="Oportunidades abiertas"
               title="Perfiles y convocatorias permanentes"
               description="La Fundación mantiene abierto su banco de talento para suplir necesidades en proyectos formativos y de desarrollo comunitario."
             />

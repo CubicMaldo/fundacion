@@ -14,7 +14,6 @@ export function ProgramasSocialesSection({
   return (
     <Section tone="soft">
       <SectionHeading
-        eyebrow="Programas sociales"
         title="Líneas de acción de la Fundación"
         align="center"
       />

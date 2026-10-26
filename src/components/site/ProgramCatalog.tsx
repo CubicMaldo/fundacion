@@ -221,7 +221,7 @@ export function ProgramCatalog({
                   <span className="bg-brand-green-soft text-brand-green-deep flex size-10 items-center justify-center rounded-md">
                     <BookOpen aria-hidden className="size-5" />
                   </span>
-                  <span className="text-brand-brown text-[11px] font-bold uppercase tracking-wider">
+                  <span className="text-brand-brown text-xs font-bold uppercase tracking-wider">
                     {programa.categoriaId === "salud" ? "Salud" : programa.categoria}
                   </span>
                 </div>

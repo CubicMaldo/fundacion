@@ -81,7 +81,7 @@ export function ModalDonacion({ triggerButton }: ModalDonacionProps) {
               <CheckCircle2 className="size-3.5 text-amber-600 shrink-0" />
               Canal directo de aportes y alianzas
             </p>
-            <p className="text-[11px] leading-relaxed text-amber-700/90 dark:text-amber-400">
+            <p className="text-xs leading-relaxed text-amber-700/90 dark:text-amber-400">
               Para recibir orientación sobre aportes solidarios, convenios o donaciones en especie,
               comunícate directamente con nuestro canal oficial de atención en WhatsApp.
             </p>

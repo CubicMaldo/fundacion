@@ -57,7 +57,6 @@ function PortalInformativo() {
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           <div>
             <SectionHeading
-              eyebrow="Talleres"
               title="Educación sin fronteras"
               description={educacionSinFronteras.intro}
             />
@@ -80,7 +79,6 @@ function PortalInformativo() {
 
       <Section id="formacion" tone="soft">
         <SectionHeading
-          eyebrow="Formación"
           title={formacionAcademica.titulo}
           description={formacionAcademica.parrafos[0]}
         />
@@ -103,7 +101,6 @@ function PortalInformativo() {
 
       <Section id="emprendimiento">
         <SectionHeading
-          eyebrow="Emprendimiento"
           title="De la idea al proyecto sostenible"
           description={emprendimiento.intro}
         />
@@ -112,7 +109,7 @@ function PortalInformativo() {
       </Section>
 
       <Section id="programas-sociales" tone="surface">
-        <SectionHeading eyebrow="Programas sociales" title="Nuestras líneas de acción" />
+        <SectionHeading title="Nuestras líneas de acción" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {programasSociales.map((p) => (
             <article key={p.nombre} className="card-institucional">
@@ -126,7 +123,6 @@ function PortalInformativo() {
       <Section id="voluntariado" tone="deep">
         <SectionHeading
           invert
-          eyebrow="Voluntariado"
           title={voluntariado.titulo}
           description={voluntariado.intro}
         />
@@ -160,7 +156,6 @@ function PortalInformativo() {
 
       <Section id="alianzas">
         <SectionHeading
-          eyebrow="Alianzas"
           title="Construimos juntos"
           description={alianzas.intro}
         />

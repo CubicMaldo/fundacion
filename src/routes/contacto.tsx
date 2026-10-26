@@ -113,7 +113,6 @@ function Contacto() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <SectionHeading
-            eyebrow="Canales oficiales"
             title="Hablemos"
             description="Elige el canal que te resulte más cómodo para comunicarte con la Fundación."
           />

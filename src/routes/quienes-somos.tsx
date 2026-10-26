@@ -93,7 +93,7 @@ function QuienesSomos() {
       <Section id="mision" tone="soft">
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <SectionHeading eyebrow="Misión" title="Nuestra razón de ser" />
+            <SectionHeading title="Nuestra razón de ser" />
             <div className="text-muted-foreground mt-6 space-y-4 leading-relaxed">
               {mision.map((p) => (
                 <p key={p}>{p}</p>
@@ -101,7 +101,7 @@ function QuienesSomos() {
             </div>
           </div>
           <div id="vision" className="scroll-mt-28">
-            <SectionHeading eyebrow="Visión" title="Hacia dónde vamos" />
+            <SectionHeading title="Hacia dónde vamos" />
             <div className="text-muted-foreground mt-6 space-y-4 leading-relaxed">
               {vision.parrafos.map((p) => (
                 <p key={p}>{p}</p>
@@ -121,7 +121,7 @@ function QuienesSomos() {
       </Section>
 
       <Section id="resena-historica">
-        <SectionHeading eyebrow="Reseña histórica" title={resenaHistorica.titulo} />
+        <SectionHeading title={resenaHistorica.titulo} />
         <div className="mt-10 grid gap-12 lg:grid-cols-[1.3fr_0.7fr]">
           <div className="text-muted-foreground space-y-4 leading-relaxed">
             {resenaHistorica.parrafos.map((p) => (
@@ -154,7 +154,6 @@ function QuienesSomos() {
 
       <Section id="proposito" tone="surface">
         <SectionHeading
-          eyebrow="Nuestro propósito"
           title={proposito.titulo}
           description={proposito.intro}
         />
@@ -169,7 +168,7 @@ function QuienesSomos() {
       </Section>
 
       <Section id="valores">
-        <SectionHeading eyebrow="Nuestros valores" title="Principios que guían nuestro trabajo" />
+        <SectionHeading title="Principios que guían nuestro trabajo" />
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {valores.map((v) => (
             <div key={v.nombre} className="border-border bg-card rounded-xl border p-5">
@@ -182,7 +181,6 @@ function QuienesSomos() {
 
       <Section id="alcance" tone="soft">
         <SectionHeading
-          eyebrow="Nuestro alcance"
           title="Dónde estamos"
           description={alcance.intro}
         />
@@ -208,7 +206,7 @@ function QuienesSomos() {
       </Section>
 
       <Section id="sedes">
-        <SectionHeading eyebrow="Sedes" title="Nuestros territorios" />
+        <SectionHeading title="Nuestros territorios" />
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {sedes.map((s) => (
             <article key={s.ciudad} className="card-institucional">
@@ -251,7 +249,7 @@ function QuienesSomos() {
       </Section>
 
       <Section tone="deep">
-        <SectionHeading invert eyebrow="Transparencia" title="Nuestro compromiso institucional" />
+        <SectionHeading invert title="Nuestro compromiso institucional" />
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {transparencia.map((t) => (
             <div

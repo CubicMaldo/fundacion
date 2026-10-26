@@ -16,7 +16,6 @@ export function FaqSection({ faq }: FaqSectionProps) {
     <Section id="faq">
       <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
         <SectionHeading
-          eyebrow="Preguntas frecuentes"
           title="Resuelve tus dudas sobre becas y programas"
           description="Encuentra respuestas claras a las dudas más comunes sobre el proceso de postulación, requisitos, duración y certificación oficial."
         />

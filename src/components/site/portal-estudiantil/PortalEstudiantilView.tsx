@@ -98,7 +98,6 @@ export function PortalEstudiantilView() {
         {user ? (
           <div>
             <SectionHeading
-              eyebrow="Expediente Académico Oficial"
               title={`Bienvenido, ${profile?.nombre_completo || "Estudiante"}`}
               description="A continuación encuentras tus asignaturas activas, calificaciones parciales y el estado de tus entregas prácticas."
             />
@@ -159,7 +158,6 @@ export function PortalEstudiantilView() {
       {/* SECCIÓN 2: PLATAFORMAS DE FORMACIÓN */}
       <Section id="plataformas" className="py-12 md:py-16 bg-slate-50 border-b border-slate-200/80">
         <SectionHeading
-          eyebrow="Entornos Digitales"
           title="Plataformas y Aulas Virtuales"
           description="Espacios virtuales integrados para potenciar tus clases sincrónicas y asincrónicas en FUNASF."
         />
@@ -169,7 +167,6 @@ export function PortalEstudiantilView() {
       {/* SECCIÓN 3: TRÁMITES Y SOLICITUDES ACADÉMICAS */}
       <Section id="tramites" className="py-12 md:py-16 bg-white border-b border-slate-200/80">
         <SectionHeading
-          eyebrow="Secretaría Académica"
           title="Trámites y Solicitudes en Línea"
           description="Radica tus solicitudes institucionales directamente sin filas ni intermediarios."
         />
@@ -268,7 +265,6 @@ export function PortalEstudiantilView() {
       {/* SECCIÓN 4: CALENDARIO ACADÉMICO */}
       <Section id="calendario" className="py-12 md:py-16 bg-muted/40 border-b border-border/80">
         <SectionHeading
-          eyebrow="Proceso Formativo"
           title="Etapas del Ciclo Académico"
           description="El seguimiento académico se desarrolla de acuerdo con la programación de cada programa técnico laboral y la institución educativa aliada."
         />
@@ -282,7 +278,7 @@ export function PortalEstudiantilView() {
               </div>
               <p className="text-base font-bold text-foreground">Matrícula e Inducción</p>
               <p className="text-xs text-muted-foreground mt-1">Según convocatoria vigente</p>
-              <p className="text-[11px] text-emerald-700 font-medium mt-2 bg-emerald-50 rounded-md px-2 py-1">
+              <p className="text-xs text-emerald-700 font-medium mt-2 bg-emerald-50 rounded-md px-2 py-1">
                 Orientación e ingreso al campus
               </p>
             </div>
@@ -294,7 +290,7 @@ export function PortalEstudiantilView() {
               </div>
               <p className="text-base font-bold text-foreground">Cortes Evaluativos</p>
               <p className="text-xs text-muted-foreground mt-1">Evaluación por competencias</p>
-              <p className="text-[11px] text-amber-800 font-medium mt-2 bg-amber-50 rounded-md px-2 py-1">
+              <p className="text-xs text-amber-800 font-medium mt-2 bg-amber-50 rounded-md px-2 py-1">
                 Según malla definida por el docente
               </p>
             </div>
@@ -306,7 +302,7 @@ export function PortalEstudiantilView() {
               </div>
               <p className="text-base font-bold text-foreground">Componente Práctico</p>
               <p className="text-xs text-muted-foreground mt-1">Talleres y prácticas</p>
-              <p className="text-[11px] text-blue-800 font-medium mt-2 bg-blue-50 rounded-md px-2 py-1">
+              <p className="text-xs text-blue-800 font-medium mt-2 bg-blue-50 rounded-md px-2 py-1">
                 En articulación con el instituto aliado
               </p>
             </div>
@@ -318,7 +314,7 @@ export function PortalEstudiantilView() {
               </div>
               <p className="text-base font-bold text-foreground">Cierre de Periodo</p>
               <p className="text-xs text-muted-foreground mt-1">Consolidación de actas</p>
-              <p className="text-[11px] text-foreground/80 font-medium mt-2 bg-muted rounded-md px-2 py-1">
+              <p className="text-xs text-foreground/80 font-medium mt-2 bg-muted rounded-md px-2 py-1">
                 Publicación de nota definitiva
               </p>
             </div>

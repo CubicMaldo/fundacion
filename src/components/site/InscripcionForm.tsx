@@ -341,10 +341,10 @@ export function InscripcionForm({
         </Button>
 
         <div className="text-center pt-1">
-          <p className="text-[11px] text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Al enviar autorizas el tratamiento de tus datos personales conforme a nuestra política de privacidad.
           </p>
-          <p className="text-[11px] text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             ¿Deseas diligenciar el formulario externo?{" "}
             <a
               href={org.formularioInscripcion}

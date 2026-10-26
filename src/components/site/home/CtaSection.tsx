@@ -16,7 +16,6 @@ export function CtaSection({ llamadoAccion }: CtaSectionProps) {
       <SectionHeading
         invert
         align="center"
-        eyebrow="Da el primer paso"
         title={llamadoAccion.titulo}
         description={llamadoAccion.subtitulo}
       />

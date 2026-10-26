@@ -52,10 +52,10 @@ export function FloatingWhatsApp() {
         <div className="flex items-center gap-2 rounded-2xl bg-card border border-border/80 px-4 py-2.5 shadow-xl shadow-black/10 backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="flex flex-col text-left">
             <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="size-2 rounded-full bg-emerald-500" />
               Admisiones FUNASF
             </span>
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-xs text-muted-foreground">
               ¿Deseas información sobre becas y programas? ¡Chatea con nosotros!
             </span>
           </div>

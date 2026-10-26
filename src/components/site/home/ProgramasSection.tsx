@@ -50,7 +50,6 @@ export function ProgramasSection({ categoriasProgramas, programas }: ProgramasSe
   return (
     <Section id="programas">
       <SectionHeading
-        eyebrow="Estudia con FUNASF"
         title="Explora nuestras áreas de formación técnica"
         description="Programas técnico laborales desarrollados con instituciones educativas aliadas responsables de la formación, la certificación oficial y las prácticas empresariales."
       />

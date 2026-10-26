@@ -223,11 +223,11 @@ export function Header() {
         <div className="container-page flex h-6 items-center justify-between gap-6">
           <div className="flex items-center gap-2">
             <span className="bg-brand-gold inline-block size-1.5 rounded-full" />
-            <p className="text-primary-foreground/95 text-[11px] font-medium tracking-wide">
+            <p className="text-primary-foreground/95 text-xs font-medium tracking-wide">
               {org.eslogan}
             </p>
           </div>
-          <div className="text-primary-foreground/80 flex items-center gap-4 text-[11px]">
+          <div className="text-primary-foreground/80 flex items-center gap-4 text-xs">
             <a
               className="hover:text-brand-gold inline-flex items-center gap-1.5 transition-colors"
               href={phoneHref}
@@ -382,7 +382,7 @@ export function Header() {
                             {child.description && (
                               <span
                                 className={cn(
-                                  "mt-0.5 text-[11px] leading-snug",
+                                  "mt-0.5 text-xs leading-snug",
                                   isChildActive
                                     ? "text-brand-green-deep/80"
                                     : "text-muted-foreground",
@@ -463,7 +463,7 @@ export function Header() {
                         <p className="text-xs font-bold leading-tight">
                           Postulación a Becas del 90 %
                         </p>
-                        <p className="text-[11px] text-white/85 mt-0.5">
+                        <p className="text-xs text-white/85 mt-0.5">
                           Diligencia tu cupo en línea sin costo
                         </p>
                       </div>
@@ -570,7 +570,7 @@ export function Header() {
                   </Link>
                 </div>
 
-                <div className="pt-1 flex items-center justify-between text-[11px] text-muted-foreground">
+                <div className="pt-1 flex items-center justify-between text-xs text-muted-foreground">
                   <a href={phoneHref} className="hover:text-foreground flex items-center gap-1">
                     <Phone className="size-3" /> {org.telefonos[0]}
                   </a>

@@ -183,7 +183,7 @@ export function Footer() {
               © {new Date().getFullYear()} Fundación Internacional Amigos Sin Fronteras – FUNASF.
               Todos los derechos reservados.
             </p>
-            <p className="text-[11px] text-primary-foreground/75">
+            <p className="text-xs text-primary-foreground/75">
               EduFUNASF · Gestión Institucional & Académica
             </p>
           </div>

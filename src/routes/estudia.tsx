@@ -69,7 +69,6 @@ function Estudia() {
 
       <Section id="programas">
         <SectionHeading
-          eyebrow="Programas académicos"
           title="Oferta de formación por áreas"
           description={formacionAcademica.parrafos[1]}
         />
@@ -124,7 +123,6 @@ function Estudia() {
 
       <Section id="matriculas" tone="surface">
         <SectionHeading
-          eyebrow="Educación sin fronteras"
           title="Oportunidades de formación para la comunidad"
           description={educacionSinFronteras.intro}
         />
@@ -166,7 +164,7 @@ function Estudia() {
       <Section id="becas" tone="deep">
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
+            <SectionHeading invert title={becas.titulo} description={becas.intro} />
             <p className="text-primary-foreground/80 mt-5 leading-relaxed">{becas.proposito}</p>
             <p className="text-brand-gold mt-8 text-2xl font-semibold">{becas.porcentaje}</p>
             <p className="text-primary-foreground/60 mt-2 text-xs">{becas.aclaracion}</p>
@@ -194,7 +192,6 @@ function Estudia() {
 
       <Section id="modelo">
         <SectionHeading
-          eyebrow="Modelo institucional"
           title="Cómo funciona nuestra labor"
           description={modeloAlianzas.intro}
         />
@@ -213,7 +210,6 @@ function Estudia() {
 
       <Section id="faq" tone="soft">
         <SectionHeading
-          eyebrow="Preguntas frecuentes"
           title="Resolvemos tus dudas sobre becas y estudio"
         />
         <div className="mt-12 max-w-3xl mx-auto">

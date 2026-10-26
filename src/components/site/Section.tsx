@@ -29,14 +29,12 @@ export function Section({
 }
 
 export function SectionHeading({
-  eyebrow,
   title,
   description,
   align = "left",
   as: Tag = "h2",
   invert = false,
 }: {
-  eyebrow?: string | undefined;
   title: string;
   description?: string | undefined;
   align?: "left" | "center";
@@ -45,12 +43,9 @@ export function SectionHeading({
 }) {
   return (
     <div className={cn("max-w-3xl", align === "center" && "mx-auto text-center")}>
-      {eyebrow ? (
-        <span className={cn("eyebrow", invert && "text-brand-gold-on-dark")}>{eyebrow}</span>
-      ) : null}
       <Tag
         className={cn(
-          "mt-3 text-3xl md:text-4xl",
+          "text-3xl md:text-4xl",
           invert ? "text-primary-foreground" : "text-foreground",
         )}
       >

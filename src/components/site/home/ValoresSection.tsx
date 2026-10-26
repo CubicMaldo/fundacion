@@ -10,7 +10,6 @@ export function ValoresSection({ valores }: ValoresSectionProps) {
     <Section tone="surface" id="valores">
       <div className="max-w-3xl mx-auto text-center mb-8 sm:mb-10">
         <SectionHeading
-          eyebrow="Nuestros valores"
           title="Principios que nos sostienen"
           description="Valores éticos que orientan cada acción pedagógica, comunitaria y solidaria de FUNASF."
           align="center"
@@ -27,7 +26,7 @@ export function ValoresSection({ valores }: ValoresSectionProps) {
             <span className="font-display text-sm font-bold text-brand-green-deep tracking-tight">
               {v.nombre}
             </span>
-            <p className="mt-1 text-[11px] text-muted-foreground leading-snug">{v.texto}</p>
+            <p className="mt-1 text-xs text-muted-foreground leading-snug">{v.texto}</p>
           </div>
         ))}
       </div>

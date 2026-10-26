@@ -13,7 +13,7 @@ export function BecasSection({ becas }: BecasSectionProps) {
     <Section tone="deep">
       <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
         <div>
-          <SectionHeading invert eyebrow="Becas" title={becas.titulo} description={becas.intro} />
+          <SectionHeading invert title={becas.titulo} description={becas.intro} />
           <p className="text-primary-foreground/85 mt-5 leading-relaxed">{becas.proposito}</p>
           <p className="font-display italic text-brand-gold-on-dark mt-8 text-xl sm:text-2xl font-bold tracking-tight">
             {becas.destacado}

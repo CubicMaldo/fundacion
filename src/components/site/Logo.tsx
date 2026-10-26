@@ -206,22 +206,22 @@ export function Logo({
     sm: {
       emblem: "size-8 sm:size-9",
       brandText: "text-base sm:text-lg",
-      sub1: "text-[7.5px] tracking-[0.16em]",
-      sub2: "text-[8px] tracking-[0.20em]",
+      sub1: "text-[11px] tracking-[0.06em]",
+      sub2: "text-[11px] tracking-[0.06em]",
       gap: "gap-2.5",
     },
     md: {
       emblem: "size-10 sm:size-11",
       brandText: "text-lg sm:text-xl",
-      sub1: "text-[8.5px] tracking-[0.16em]",
-      sub2: "text-[9px] tracking-[0.22em]",
+      sub1: "text-[11px] tracking-[0.06em]",
+      sub2: "text-[11px] tracking-[0.06em]",
       gap: "gap-3",
     },
     lg: {
       emblem: "size-14 sm:size-16",
       brandText: "text-2xl sm:text-3xl",
-      sub1: "text-[10px] tracking-[0.18em]",
-      sub2: "text-[11px] tracking-[0.24em]",
+      sub1: "text-xs tracking-[0.08em]",
+      sub2: "text-xs tracking-[0.08em]",
       gap: "gap-3.5",
     },
     xl: {
@@ -266,7 +266,7 @@ export function Logo({
           </span>
           <span
             className={cn(
-              "text-[11.5px] font-bold tracking-wider uppercase leading-tight",
+              "text-xs font-bold tracking-wider uppercase leading-tight",
               invert ? "text-brand-gold-on-dark" : "text-brand-brown",
             )}
           >
