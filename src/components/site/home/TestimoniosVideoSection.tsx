@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Building2, CheckCircle2, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Building2, CheckCircle2, MapPin, Navigation, Phone } from "lucide-react";
 import { Section, SectionHeading } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
-import { sedes, modeloAlianzas } from "@/data/funasf";
+import { sedes, modeloAlianzas, alcance } from "@/data/funasf";
 
 export function TestimoniosVideoSection() {
   return (
@@ -47,13 +47,14 @@ export function TestimoniosVideoSection() {
             </div>
 
             <div className="flex flex-1 flex-col justify-between p-5">
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {sede.descripcion}
-              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">{sede.descripcion}</p>
 
               <div className="mt-4 pt-3 border-t border-border space-y-1.5 text-[11px] text-muted-foreground">
                 <p className="flex items-start gap-1.5 text-foreground/85 font-medium">
-                  <Building2 className="size-3.5 text-brand-green shrink-0 mt-0.5" aria-hidden="true" />
+                  <Building2
+                    className="size-3.5 text-brand-green shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
                   <span>{sede.direccion}</span>
                 </p>
                 {sede.telefono && (
@@ -68,6 +69,41 @@ export function TestimoniosVideoSection() {
         ))}
       </div>
 
+      {/* Franja integrada de alcance municipal y proyección territorial */}
+      <div className="mt-8 rounded-2xl border border-border/80 bg-background/90 p-5 sm:p-6 shadow-xs">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="max-w-xl">
+            <div className="flex items-center gap-2 text-brand-green-deep text-xs font-bold uppercase tracking-wider">
+              <Navigation className="size-3.5 text-brand-green" aria-hidden="true" />
+              <span>Cobertura y Proyección Territorial</span>
+            </div>
+            <p className="text-sm font-medium text-foreground mt-1">{alcance.destacado}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{alcance.intro}</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-2 lg:pt-0 border-t lg:border-t-0 border-border text-xs">
+            <span className="font-medium text-muted-foreground">Presencia activa:</span>
+            {alcance.presencia.map((m: string) => (
+              <span
+                key={m}
+                className="inline-flex items-center rounded-md bg-brand-green/10 border border-brand-green/20 px-2.5 py-1 text-[11px] font-semibold text-brand-green-deep"
+              >
+                {m}
+              </span>
+            ))}
+            <span className="font-medium text-muted-foreground ml-1">Proyección:</span>
+            {alcance.proyeccion.map((p: string) => (
+              <span
+                key={p}
+                className="inline-flex items-center rounded-md bg-brand-gold/15 border border-brand-gold/25 px-2.5 py-1 text-[11px] font-semibold text-brand-gold-deep"
+              >
+                {p}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Claridad sobre el modelo de alianzas institucionales */}
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <div className="rounded-2xl border border-border bg-card p-6 shadow-xs">
@@ -80,7 +116,10 @@ export function TestimoniosVideoSection() {
           <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
             {modeloAlianzas.responsabilidades.items.map((item) => (
               <li key={item} className="flex items-start gap-2.5">
-                <CheckCircle2 className="size-4 text-brand-green shrink-0 mt-0.5" aria-hidden="true" />
+                <CheckCircle2
+                  className="size-4 text-brand-green shrink-0 mt-0.5"
+                  aria-hidden="true"
+                />
                 <span>{item}</span>
               </li>
             ))}

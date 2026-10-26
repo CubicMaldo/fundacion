@@ -23,8 +23,6 @@ import { QuienesSomosSection } from "@/components/site/home/QuienesSomosSection"
 import { PropositoSection } from "@/components/site/home/PropositoSection";
 import { ProgramasSection } from "@/components/site/home/ProgramasSection";
 import { BecasSection } from "@/components/site/home/BecasSection";
-import { ProgramasSocialesSection } from "@/components/site/home/ProgramasSocialesSection";
-import { AlcanceSection } from "@/components/site/home/AlcanceSection";
 import { ValoresSection } from "@/components/site/home/ValoresSection";
 import { BlogSection } from "@/components/site/home/BlogSection";
 import { FaqSection } from "@/components/site/home/FaqSection";
@@ -64,7 +62,9 @@ const iconos: Record<string, LucideIcon> = {
   Briefcase,
 };
 
-function MainWebsiteView({ data }: { data: any }) {
+type HomeData = Awaited<ReturnType<typeof getHomeData>>;
+
+function MainWebsiteView({ data }: { data: HomeData }) {
   const {
     org,
     quienesSomos,
@@ -72,8 +72,6 @@ function MainWebsiteView({ data }: { data: any }) {
     becas,
     categoriasProgramas,
     programas,
-    programasSociales,
-    alcance,
     faq,
     llamadoAccion,
     valores,
@@ -88,10 +86,8 @@ function MainWebsiteView({ data }: { data: any }) {
       <ProgramasSection categoriasProgramas={categoriasProgramas} programas={programas} />
       <BecasSection becas={becas} />
       <TestimoniosVideoSection />
-      <AlcanceSection alcance={alcance} />
       <QuienesSomosSection quienesSomos={quienesSomos} />
-      <PropositoSection proposito={proposito} iconos={iconos} />
-      <ProgramasSocialesSection programasSociales={programasSociales} iconos={iconos} />
+      <PropositoSection proposito={proposito} />
       <ValoresSection valores={valores} />
       <BlogSection articulos={articulos} />
       <FaqSection faq={faq} />

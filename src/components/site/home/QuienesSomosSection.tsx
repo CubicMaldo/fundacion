@@ -20,7 +20,7 @@ export function QuienesSomosSection({ quienesSomos }: QuienesSomosSectionProps) 
             ))}
             <p>{quienesSomos.compromiso}</p>
           </div>
-          <p className="border-brand-green text-foreground mt-8 border-l-4 pl-5 text-lg font-medium italic">
+          <p className="border-l-2 border-brand-green text-foreground/90 mt-8 pl-4 text-base sm:text-lg font-medium italic">
             {quienesSomos.destacado}
           </p>
           <Button asChild className="mt-8" variant="default">
